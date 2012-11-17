@@ -34,14 +34,14 @@ package
 			menuButtons = [new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton()];
 			
 			toolbar = new Toolbar();
-			toolbar.x = stage.stageWidth-50;
+			toolbar.x = stage.stageWidth-100;
 			toolbar.y = 20;
 			addChild(toolbar);
 			
 			for( var i:int = 0; i <menuButtons.length; i++)
 			{
 				var ab:AccelerometerButton = menuButtons[i];
-				ab.initialX = 50;
+				ab.initialX = 140;
 				ab.initialY = 100+i*120;
 				toolbar.addChild(ab);
 			}

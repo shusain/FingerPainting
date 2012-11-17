@@ -2,6 +2,7 @@ package
 {
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.sensors.Accelerometer;
@@ -47,6 +48,13 @@ package
 			
 			var acc:Accelerometer = new Accelerometer();
 			acc.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
+			
+			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
+		}
+		
+		private function handleTapped(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
 		}
 		
 		private function handleAccelerometerChange(event:AccelerometerEvent):void
@@ -54,7 +62,7 @@ package
 			var angle:Number = Math.atan2(event.accelerationY, event.accelerationX);
 			angle-=Math.PI/2;
 			angle = -angle;
-			if(Math.abs(event.accelerationZ)<.7)
+			if(Math.abs(event.accelerationZ)<.9)
 			{
 				rotateAroundCenter(angle);
 			}
