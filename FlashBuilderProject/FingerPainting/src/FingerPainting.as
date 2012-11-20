@@ -1,5 +1,6 @@
 package
 {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -11,8 +12,25 @@ package
 	
 	public class FingerPainting extends Sprite
 	{
-		private var paintBrushButton:AccelerometerButton;
-		private var paintBrushButton2:AccelerometerButton;
+		[Embed(source="images/brushIcon.png")]
+		private var _brushIcon:Class;
+		private var _brushIconBmp:Bitmap = new _brushIcon();
+		
+		[Embed(source="images/eraserIcon.png")]
+		private var _eraserIcon:Class;
+		private var _eraserIconBmp:Bitmap = new _eraserIcon();
+		
+		[Embed(source="images/bucketIcon.png")]
+		private var _bucketIcon:Class;
+		private var _bucketIconBmp:Bitmap = new _bucketIcon();
+		
+		[Embed(source="images/undoIcon.png")]
+		private var _undoIcon:Class;
+		private var _undoIconBmp:Bitmap = new _undoIcon();
+		
+		[Embed(source="images/shapesIcon.png")]
+		private var _shapesIcon:Class;
+		private var _shapesIconBmp:Bitmap = new _shapesIcon();
 		
 		private var menuButtons:Array;
 		
@@ -31,7 +49,17 @@ package
 			
 			//setupDebugText();
 			
-			menuButtons = [new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton(),new AccelerometerButton()];
+			menuButtons = 
+						[
+							new AccelerometerButton(_brushIconBmp),
+							new AccelerometerButton(_eraserIconBmp),
+							new AccelerometerButton(_bucketIconBmp),
+							new AccelerometerButton(_shapesIconBmp),
+							new AccelerometerButton(_undoIconBmp),
+							new AccelerometerButton(),
+							new AccelerometerButton(),
+							new AccelerometerButton()
+						];
 			
 			toolbar = new Toolbar();
 			toolbar.x = stage.stageWidth-100;

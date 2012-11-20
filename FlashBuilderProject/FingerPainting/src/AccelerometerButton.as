@@ -29,6 +29,8 @@ package
 		private var _iconImage:Class;
 		private var _iconBmp:Bitmap = new _iconImage();
 		
+		private var _iconMatrix:Matrix;
+		
 		private var _isSelected:Boolean;
 		
 		public function get isSelected():Boolean
@@ -64,30 +66,26 @@ package
 			backgroundSprite.graphics.endFill();
 		}
 		
-		public function AccelerometerButton()
+		public function AccelerometerButton(iconBmp:Bitmap = null)
 		{
 			super();
+		
+			_iconMatrix = new Matrix();
 			
+			if(iconBmp)
+				_iconBmp = iconBmp;
 			
 			backgroundSprite = new Sprite();
 			addChild(backgroundSprite);
 			
 			iconSprite = new Sprite();
-			iconSprite.x = _backgroundBmp.width/2-_iconBmp.width/2;
-			iconSprite.y = _backgroundBmp.height/2-_iconBmp.height/2;
 			addChild(iconSprite);
 			
 			backgroundSprite.graphics.beginBitmapFill(_backgroundBmp.bitmapData);
 			backgroundSprite.graphics.drawRect(0,0,_backgroundBmp.width,_backgroundBmp.height);
 			backgroundSprite.graphics.endFill();
 			
-			iconSprite.graphics.beginBitmapFill(_iconBmp.bitmapData);
-			iconSprite.graphics.drawRect(0,0,_iconBmp.width,_iconBmp.height);
-			iconSprite.graphics.endFill();
-			
-			width = 100;
-			height = 100;
-			
+			rotateAroundCenter(0);
 			
 			var acc:Accelerometer = new Accelerometer();
 			acc.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
@@ -106,19 +104,17 @@ package
 			}
 		}
 		
-		private function rotateAroundCenter(angleRadians:Number):void
+		private function rotateAroundCenter (angleRadians:Number):void
 		{
-			rotateAroundPoint(angleRadians,new Point(_backgroundBmp.width/2,_backgroundBmp.height/2));
-		}
-		
-		private function rotateAroundPoint (angleRadians:Number, point:Point):void {
-			var adjustedAngle:Number = angleRadians - _previousAngle;
-			var m:Matrix=iconSprite.transform.matrix;
-			m.translate(-point.x,-point.y);
-			m.rotate (adjustedAngle);
-			m.translate(point.x,point.y);
-			iconSprite.transform.matrix=m;
-			_previousAngle = angleRadians;
+			_iconMatrix.identity();
+			_iconMatrix.translate(-_iconBmp.width/2, -_iconBmp.height/2);
+			_iconMatrix.rotate (angleRadians);
+			_iconMatrix.translate(_backgroundBmp.width/2, _backgroundBmp.height/2);
+			
+			iconSprite.graphics.clear();
+			iconSprite.graphics.beginBitmapFill(_iconBmp.bitmapData, _iconMatrix, false, true);
+			iconSprite.graphics.drawRect(0,0, _backgroundBmp.width,_backgroundBmp.height);
+			iconSprite.graphics.endFill();
 		}
 	}
 }

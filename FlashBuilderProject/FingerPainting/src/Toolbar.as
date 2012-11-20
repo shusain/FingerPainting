@@ -19,7 +19,6 @@ package
 			super();
 			addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
 			
-			
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 		}
 		
