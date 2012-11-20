@@ -34,8 +34,19 @@ package com.shaunhusain.mobileUIControls
 		
 		private var _iconMatrix:Matrix;
 		
-		private var _isSelected:Boolean;
+		private var _data:Object;
+		public function get data():Object
+		{
+			return _data;
+		}
+
+		public function set data(value:Object):void
+		{
+			_data = value;
+		}
+
 		
+		private var _isSelected:Boolean;
 		public function get isSelected():Boolean
 		{
 			return _isSelected;
@@ -56,7 +67,7 @@ package com.shaunhusain.mobileUIControls
 			dispatchEvent(new Event("buttonClicked"));
 		}
 		
-		public function AccelerometerButton(iconBmp:Bitmap = null, selected:Boolean=false)
+		public function AccelerometerButton(iconBmp:Bitmap = null, data:Object=null, selected:Boolean=false)
 		{
 			super();
 			
@@ -64,7 +75,8 @@ package com.shaunhusain.mobileUIControls
 			
 			if(iconBmp)
 				_iconBmp = iconBmp;
-			isSelected = selected
+			isSelected = selected;
+			this.data = data;
 			
 			backgroundSprite = new Sprite();
 			addChild(backgroundSprite);
