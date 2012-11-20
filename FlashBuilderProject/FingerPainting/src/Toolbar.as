@@ -1,14 +1,12 @@
 package
 {
-	import com.eclecticdesignstudio.motion.GTweener;
+	import com.eclecticdesignstudio.motion.Actuate;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
-	import flash.display.TriangleCulling;
 	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import org.bytearray.ScaleBitmap;
@@ -56,11 +54,11 @@ package
 		{
 			if(isOpen)
 			{
-				GTweener.addTween(this, 1, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 100});
+				Actuate.tween(this, 1, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 100});
 			}
 			else
 			{
-				GTweener.addTween(this, 1, {arrowRotation:0,x:stage.fullScreenWidth - 270});
+				Actuate.tween(this, 1, {arrowRotation:0,x:stage.fullScreenWidth - 270});
 			}
 			isOpen = !isOpen;
 		}
