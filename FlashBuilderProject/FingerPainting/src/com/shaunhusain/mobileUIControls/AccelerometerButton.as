@@ -8,6 +8,7 @@ package com.shaunhusain.mobileUIControls
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.sensors.Accelerometer;
+	import flash.utils.setTimeout;
 	
 	import flashx.textLayout.formats.BackgroundColor;
 	
@@ -34,6 +35,8 @@ package com.shaunhusain.mobileUIControls
 		
 		private var _iconMatrix:Matrix;
 		
+		private var instantaneous:Boolean;
+		
 		private var _data:Object;
 		public function get data():Object
 		{
@@ -55,7 +58,7 @@ package com.shaunhusain.mobileUIControls
 		public function set isSelected(value:Boolean):void
 		{
 			_isSelected = value;
-			showAppropriateButton();
+			showAppropriateBackground();
 		}
 		
 		private function handleTapped(event:TouchEvent):void
@@ -63,20 +66,34 @@ package com.shaunhusain.mobileUIControls
 			event.stopImmediatePropagation();
 			
 			isSelected = true;
-			showAppropriateButton();
-			dispatchEvent(new Event("buttonClicked"));
+			
+			if(instantaneous)
+			{
+				dispatchEvent(new Event("instantaneousButtonClicked"));
+				setTimeout(resetBackground,250);
+			}
+			else
+			{
+				dispatchEvent(new Event("buttonClicked"));
+			}
 		}
 		
-		public function AccelerometerButton(iconBmp:Bitmap = null, data:Object=null, selected:Boolean=false)
+		private function resetBackground():void
+		{
+			isSelected = false;
+			showAppropriateBackground();
+		}
+		
+		public function AccelerometerButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false)
 		{
 			super();
 			
-			_iconMatrix = new Matrix();
 			
 			if(iconBmp)
 				_iconBmp = iconBmp;
-			isSelected = selected;
+			this.isSelected = isSelected;
 			this.data = data;
+			this.instantaneous = instantaneous;
 			
 			backgroundSprite = new Sprite();
 			addChild(backgroundSprite);
@@ -84,9 +101,11 @@ package com.shaunhusain.mobileUIControls
 			iconSprite = new Sprite();
 			addChild(iconSprite);
 			
-			showAppropriateButton();
+			showAppropriateBackground();
 			
-			rotateAroundCenter(0);
+			_iconMatrix = new Matrix();
+			
+			rotateAroundCenter(Math.PI);
 			
 			var accManager:AccelerometerManager = AccelerometerManager.getIntance();
 			accManager.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
@@ -94,7 +113,7 @@ package com.shaunhusain.mobileUIControls
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 		}
 		
-		private function showAppropriateButton():void
+		private function showAppropriateBackground():void
 		{
 			if(!backgroundSprite)
 				return;

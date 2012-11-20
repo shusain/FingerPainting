@@ -11,7 +11,6 @@ package
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
@@ -35,9 +34,25 @@ package
 		private var _undoIcon:Class;
 		private var _undoIconBmp:Bitmap = new _undoIcon();
 		
+		[Embed(source="images/redoIcon.png")]
+		private var _redoIcon:Class;
+		private var _redoIconBmp:Bitmap = new _redoIcon();
+		
 		[Embed(source="images/shapesIcon.png")]
 		private var _shapesIcon:Class;
 		private var _shapesIconBmp:Bitmap = new _shapesIcon();
+		
+		[Embed(source="images/pipetIcon.png")]
+		private var _pipetIcon:Class;
+		private var _pipetIconBmp:Bitmap = new _pipetIcon();
+		
+		[Embed(source="images/colorSpectrumIcon.png")]
+		private var _colorSpectrumIcon:Class;
+		private var _colorSpectrumBmp:Bitmap = new _colorSpectrumIcon();
+		
+		[Embed(source="images/blankDocIcon.png")]
+		private var _blankDocIcon:Class;
+		private var _blankDocBmp:Bitmap = new _blankDocIcon();
 		
 		private var menuButtons:Array;
 		
@@ -52,6 +67,8 @@ package
 		
 		private var currentTool:String = "brush";
 		
+		private var currentColor:uint = 0xFF000000;
+		
 		public function FingerPainting()
 		{
 			super();
@@ -64,6 +81,7 @@ package
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
 			bitmapCanvas = new Bitmap(new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight));
+			bitmapCanvas.smoothing = true;
 			stage.addEventListener(TouchEvent.TOUCH_MOVE, touchMoveHandler);
 			stage.addEventListener(TouchEvent.TOUCH_TAP, touchMoveHandler);
 			addChild(bitmapCanvas);
@@ -71,14 +89,15 @@ package
 			
 			menuButtons = 
 						[
-							new AccelerometerButton(_brushIconBmp, "brush", true),
+							new AccelerometerButton(_brushIconBmp, "brush", false, true),
 							new AccelerometerButton(_eraserIconBmp, "eraser"),
 							new AccelerometerButton(_bucketIconBmp, "bucket"),
 							new AccelerometerButton(_shapesIconBmp, "shapes"),
-							new AccelerometerButton(_undoIconBmp, "undo"),
-							new AccelerometerButton(),
-							new AccelerometerButton(),
-							new AccelerometerButton()
+							new AccelerometerButton(_undoIconBmp, "undo", true),
+							new AccelerometerButton(_redoIconBmp, "redo", true),
+							new AccelerometerButton(_pipetIconBmp, "pipet"),
+							new AccelerometerButton(_colorSpectrumBmp, "colorSpectrum"),
+							new AccelerometerButton(_blankDocBmp, "blank", true)
 						];
 			
 			toolbar = new Toolbar();
@@ -90,6 +109,7 @@ package
 			{
 				var ab:AccelerometerButton = menuButtons[i];
 				ab.addEventListener("buttonClicked", deselectAllOthers);
+				ab.addEventListener("instantaneousButtonClicked", instantaneousActionHandler);
 				ab.x = 140;
 				ab.y = 100+i*120;
 				toolbar.addChild(ab);
@@ -106,6 +126,16 @@ package
 				var ab:AccelerometerButton = menuButtons[i];
 				if(event.target!=ab)
 					ab.isSelected = false;
+			}
+		}
+		
+		private function instantaneousActionHandler(event:Event):void
+		{
+			switch(event.target.data)
+			{
+				case "blank":
+					bitmapCanvas.bitmapData.fillRect(new Rectangle(0,0,bitmapCanvas.bitmapData.width,bitmapCanvas.bitmapData.height),0xFFFFFFFF);
+					break;
 			}
 		}
 		
@@ -151,7 +181,7 @@ package
 				yCoord = touchSamples.readFloat();
 				pressure = touchSamples.readFloat();
 				
-				bitmapCanvas.bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*30,pressure*30),0x00000000);
+				bitmapCanvas.bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*50,pressure*50),0xFFFFFFFF);
 				//do something with the sample data
 			}
 		}
@@ -174,7 +204,7 @@ package
 				yCoord = touchSamples.readFloat();
 				pressure = touchSamples.readFloat();
 				
-				bitmapCanvas.bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*30,pressure*30),0xFF000000);
+				bitmapCanvas.bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*50,pressure*50), currentColor);
 				//do something with the sample data
 			}
 		}

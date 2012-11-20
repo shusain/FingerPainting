@@ -26,12 +26,14 @@ package
 		
 		private var triangleSprite:Sprite;
 		
+		private var hitAreaSprite:Sprite;
+		
 		public function Toolbar()
 		{
 			super();
 			addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-			
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
+			addEventListener(TouchEvent.TOUCH_MOVE, touchMoveHandler);
 		}
 		
 		private function handleAddedToStage(event:Event):void
@@ -48,17 +50,30 @@ package
 			addChild(triangleSprite);
 			
 			triangleSprite.addChild(_triangleIconBmp);
+			
+			hitAreaSprite = new Sprite();
+			hitAreaSprite.graphics.beginFill(0x000000);
+			hitAreaSprite.graphics.drawRect(0,0,1000,100);
+			hitAreaSprite.graphics.endFill();
+			hitAreaSprite.visible = false;
+			hitArea = hitAreaSprite;
+			
+			
+			addChild(hitAreaSprite);
 		}
 		
 		private function handleTapped(event:TouchEvent):void
 		{
+			event.stopImmediatePropagation();
+			trace("handling tapped");
+			
 			if(isOpen)
 			{
-				Actuate.tween(this, 1, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 100});
+				Actuate.tween(this, .5, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 100});
 			}
 			else
 			{
-				Actuate.tween(this, 1, {arrowRotation:0,x:stage.fullScreenWidth - 270});
+				Actuate.tween(this, .5, {arrowRotation:0,x:stage.fullScreenWidth - 270});
 			}
 			isOpen = !isOpen;
 		}
@@ -71,7 +86,10 @@ package
 		{
 			return _arrowRotation;
 		}
-		
+		private function touchMoveHandler(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+		}
 		private function rotateTriangle(angleRadians:Number):void
 		{
 			_arrowRotation = angleRadians;
