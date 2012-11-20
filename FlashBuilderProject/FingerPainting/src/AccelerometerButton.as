@@ -20,30 +20,48 @@ package
 		private var _backgroundImage:Class;
 		private var _backgroundBmp:Bitmap = new _backgroundImage();
 		
+		[Embed(source="images/buttonBackgroundSelected.png")]
+		private var _backgroundImageSelected:Class;
+		private var _backgroundSelectedBmp:Bitmap = new _backgroundImageSelected();
+		
+		
 		[Embed(source="images/brushIcon.png")]
 		private var _iconImage:Class;
 		private var _iconBmp:Bitmap = new _iconImage();
 		
-		private var _initialX:Number;
-		public function set initialX(value:Number):void
+		private var _isSelected:Boolean;
+		
+		public function get isSelected():Boolean
 		{
-			_initialX = value;
-			x = value;
-		}
-		public function get initialX():Number
-		{
-			return _initialX;
+			return _isSelected;
 		}
 		
-		private var _initialY:Number;
-		public function set initialY(value:Number):void
+		public function set isSelected(value:Boolean):void
 		{
-			_initialY = value;
-			y = value;
+			_isSelected = value;
 		}
-		public function get initialY():Number
+		
+		private function handleTapped(event:TouchEvent):void
 		{
-			return _initialY;
+			event.stopImmediatePropagation();
+			
+			isSelected = !isSelected;
+			showAppropriateButton();
+		}
+		
+		private function showAppropriateButton():void
+		{
+			if(isSelected)
+			{
+				backgroundSprite.graphics.beginBitmapFill(_backgroundSelectedBmp.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,_backgroundSelectedBmp.width,_backgroundSelectedBmp.height);
+			}
+			else
+			{
+				backgroundSprite.graphics.beginBitmapFill(_backgroundBmp.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,_backgroundBmp.width,_backgroundBmp.height);
+			}
+			backgroundSprite.graphics.endFill();
 		}
 		
 		public function AccelerometerButton()
@@ -75,11 +93,6 @@ package
 			acc.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
 			
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
-		}
-		
-		private function handleTapped(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
 		}
 		
 		private function handleAccelerometerChange(event:AccelerometerEvent):void

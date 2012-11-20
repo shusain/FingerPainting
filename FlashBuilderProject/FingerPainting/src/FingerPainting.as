@@ -41,8 +41,8 @@ package
 			for( var i:int = 0; i <menuButtons.length; i++)
 			{
 				var ab:AccelerometerButton = menuButtons[i];
-				ab.initialX = 140;
-				ab.initialY = 100+i*120;
+				ab.x = 140;
+				ab.y = 100+i*120;
 				toolbar.addChild(ab);
 			}
 			
