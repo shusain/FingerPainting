@@ -1,4 +1,4 @@
-package
+package com.shaunhusain.mobileUIControls
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -12,14 +12,16 @@ package
 	
 	public class AccelerometerButton extends Sprite
 	{
+		//Sprites for layering the background and the icon
 		private var backgroundSprite:Sprite;
 		private var iconSprite:Sprite;
 		
-		private var _previousAngle:Number = 0;
+		//background image for button when deselected
 		[Embed(source="images/buttonBackground.png")]
 		private var _backgroundImage:Class;
 		private var _backgroundBmp:Bitmap = new _backgroundImage();
 		
+		//background image for button when selected
 		[Embed(source="images/buttonBackgroundSelected.png")]
 		private var _backgroundImageSelected:Class;
 		private var _backgroundSelectedBmp:Bitmap = new _backgroundImageSelected();
@@ -51,6 +53,32 @@ package
 			showAppropriateButton();
 		}
 		
+		public function AccelerometerButton(iconBmp:Bitmap = null, selected:Boolean=false)
+		{
+			super();
+			
+			_iconMatrix = new Matrix();
+			
+			if(iconBmp)
+				_iconBmp = iconBmp;
+			isSelected = selected
+			
+			backgroundSprite = new Sprite();
+			addChild(backgroundSprite);
+			
+			iconSprite = new Sprite();
+			addChild(iconSprite);
+			
+			showAppropriateButton();
+			
+			rotateAroundCenter(0);
+			
+			var accManager:AccelerometerManager = AccelerometerManager.getIntance();
+			accManager.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
+			
+			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
+		}
+		
 		private function showAppropriateButton():void
 		{
 			if(isSelected)
@@ -64,33 +92,6 @@ package
 				backgroundSprite.graphics.drawRect(0,0,_backgroundBmp.width,_backgroundBmp.height);
 			}
 			backgroundSprite.graphics.endFill();
-		}
-		
-		public function AccelerometerButton(iconBmp:Bitmap = null)
-		{
-			super();
-		
-			_iconMatrix = new Matrix();
-			
-			if(iconBmp)
-				_iconBmp = iconBmp;
-			
-			backgroundSprite = new Sprite();
-			addChild(backgroundSprite);
-			
-			iconSprite = new Sprite();
-			addChild(iconSprite);
-			
-			backgroundSprite.graphics.beginBitmapFill(_backgroundBmp.bitmapData);
-			backgroundSprite.graphics.drawRect(0,0,_backgroundBmp.width,_backgroundBmp.height);
-			backgroundSprite.graphics.endFill();
-			
-			rotateAroundCenter(0);
-			
-			var acc:Accelerometer = new Accelerometer();
-			acc.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
-			
-			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 		}
 		
 		private function handleAccelerometerChange(event:AccelerometerEvent):void

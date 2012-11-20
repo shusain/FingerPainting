@@ -5,6 +5,7 @@ package
 	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
+	import org.bytearray.ScaleBitmap;
 	
 	public class Toolbar extends Sprite
 	{

@@ -15,11 +15,13 @@
  *
  */
 
-package {
+package org.bytearray {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
-	import flash.geom.Rectangle;	 	public class ScaleBitmap extends Bitmap {
+	import flash.geom.Rectangle;
+
+	public class ScaleBitmap extends Bitmap {
 		
 		// ------------------------------------------------
 		//
