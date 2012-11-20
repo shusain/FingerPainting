@@ -3,6 +3,7 @@ package com.shaunhusain.mobileUIControls
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
+	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -43,14 +44,16 @@ package com.shaunhusain.mobileUIControls
 		public function set isSelected(value:Boolean):void
 		{
 			_isSelected = value;
+			showAppropriateButton();
 		}
 		
 		private function handleTapped(event:TouchEvent):void
 		{
 			event.stopImmediatePropagation();
 			
-			isSelected = !isSelected;
+			isSelected = true;
 			showAppropriateButton();
+			dispatchEvent(new Event("buttonClicked"));
 		}
 		
 		public function AccelerometerButton(iconBmp:Bitmap = null, selected:Boolean=false)
@@ -81,6 +84,8 @@ package com.shaunhusain.mobileUIControls
 		
 		private function showAppropriateButton():void
 		{
+			if(!backgroundSprite)
+				return;
 			if(isSelected)
 			{
 				backgroundSprite.graphics.beginBitmapFill(_backgroundSelectedBmp.bitmapData);

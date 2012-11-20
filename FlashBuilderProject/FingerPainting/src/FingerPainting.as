@@ -6,6 +6,7 @@ package
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -71,6 +72,7 @@ package
 			for( var i:int = 0; i <menuButtons.length; i++)
 			{
 				var ab:AccelerometerButton = menuButtons[i];
+				ab.addEventListener("buttonClicked", deselectAllOthers);
 				ab.x = 140;
 				ab.y = 100+i*120;
 				toolbar.addChild(ab);
@@ -78,6 +80,16 @@ package
 			
 		}
 		
+		private function deselectAllOthers(event:Event):void
+		{
+			
+			for( var i:int = 0; i <menuButtons.length; i++)
+			{
+				var ab:AccelerometerButton = menuButtons[i];
+				if(event.target!=ab)
+					ab.isSelected = false;
+			}
+		}
 		
 		private function setupDebugText():void
 		{
