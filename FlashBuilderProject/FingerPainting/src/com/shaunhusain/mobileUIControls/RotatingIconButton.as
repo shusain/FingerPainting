@@ -1,5 +1,7 @@
 package com.shaunhusain.mobileUIControls
 {
+	import com.shaunhusain.fingerPainting.model.PaintModel;
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
@@ -14,6 +16,7 @@ package com.shaunhusain.mobileUIControls
 	
 	public class RotatingIconButton extends Sprite
 	{
+		private var model:PaintModel = PaintModel.getInstance();
 		//Sprites for layering the background and the icon
 		private var backgroundSprite:Sprite;
 		private var iconSprite:Sprite;
@@ -73,6 +76,9 @@ package com.shaunhusain.mobileUIControls
 		private function handleTapped(event:TouchEvent):void
 		{
 			event.stopImmediatePropagation();
+			
+			if(model.menuMoving)
+				return;
 			
 			isSelected = true;
 			

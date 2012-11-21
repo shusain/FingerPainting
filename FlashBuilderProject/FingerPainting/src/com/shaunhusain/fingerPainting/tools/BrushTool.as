@@ -1,11 +1,13 @@
-package 
+package com.shaunhusain.fingerPainting.tools 
 {
+	import com.shaunhusain.fingerPainting.model.PaintModel;
+	
 	import flash.display.BitmapData;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
-	public class BrushTool implements ITool
+	public class BrushTool extends ToolBase implements ITool
 	{
 		private var touchSamples:ByteArray;
 		public function BrushTool()
@@ -13,8 +15,9 @@ package
 			touchSamples = new ByteArray();
 		}
 		
-		public function takeAction(event:TouchEvent=null, bitmapData:BitmapData=null, currentColor:uint=NaN):void
+		public function takeAction(event:TouchEvent=null):void
 		{
+			var bm:BitmapData = model.bitmapData;
 			var result:uint = event.getSamples(touchSamples,false);
 			touchSamples.position = 0;     // rewind to beginning of array before reading
 			
@@ -26,7 +29,7 @@ package
 				yCoord = touchSamples.readFloat();
 				pressure = touchSamples.readFloat();
 				
-				bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*20,pressure*20), currentColor);
+				bm.fillRect(new Rectangle(xCoord,yCoord,pressure*20,pressure*20), PaintModel.getInstance().currentColor);
 				//do something with the sample data
 			}
 		}
