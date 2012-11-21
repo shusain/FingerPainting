@@ -69,7 +69,7 @@ package
 			
 			if(isOpen)
 			{
-				Actuate.tween(this, .5, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 100});
+				Actuate.tween(this, .5, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 85});
 			}
 			else
 			{

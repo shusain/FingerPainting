@@ -1,6 +1,6 @@
 package 
 {
-	import com.shaunhusain.mobileUIControls.AccelerometerButton;
+	import com.shaunhusain.mobileUIControls.RotatingIconButton;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -9,7 +9,6 @@ package
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.TouchEvent;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
@@ -65,7 +64,7 @@ package
 		
 		private var touchSamples:ByteArray;
 		
-		private var currentTool:String = "brush";
+		private var currentTool:ITool;
 		
 		private var currentColor:uint = 0xFF000000;
 		
@@ -89,41 +88,45 @@ package
 			
 			menuButtons = 
 						[
-							new AccelerometerButton(_brushIconBmp, "brush", false, true),
-							new AccelerometerButton(_eraserIconBmp, "eraser"),
-							new AccelerometerButton(_bucketIconBmp, "bucket"),
-							new AccelerometerButton(_shapesIconBmp, "shapes"),
-							new AccelerometerButton(_undoIconBmp, "undo", true),
-							new AccelerometerButton(_redoIconBmp, "redo", true),
-							new AccelerometerButton(_pipetIconBmp, "pipet"),
-							new AccelerometerButton(_colorSpectrumBmp, "colorSpectrum"),
-							new AccelerometerButton(_blankDocBmp, "blank", true)
+							new RotatingIconButton(_brushIconBmp, new BrushTool(), false, true, true),
+							new RotatingIconButton(_eraserIconBmp, new EraserTool()),
+							new RotatingIconButton(_bucketIconBmp, new BucketTool()),
+							new RotatingIconButton(_shapesIconBmp, new ShapeTool(),false,false,true),
+							new RotatingIconButton(_undoIconBmp, "undo", true),
+							new RotatingIconButton(_redoIconBmp, "redo", true),
+							new RotatingIconButton(_pipetIconBmp, "pipet"),
+							new RotatingIconButton(_colorSpectrumBmp, "colorSpectrum"),
+							new RotatingIconButton(_blankDocBmp, new BlankTool(), true)
 						];
 			
 			toolbar = new Toolbar();
-			toolbar.x = stage.stageWidth-100;
+			toolbar.x = stage.stageWidth-85;
 			toolbar.y = 20;
 			addChild(toolbar);
 			
 			for( var i:int = 0; i <menuButtons.length; i++)
 			{
-				var ab:AccelerometerButton = menuButtons[i];
+				var ab:RotatingIconButton = menuButtons[i];
 				ab.addEventListener("buttonClicked", deselectAllOthers);
 				ab.addEventListener("instantaneousButtonClicked", instantaneousActionHandler);
-				ab.x = 140;
+				if(ab.useSecondaryBackground)
+					ab.x=85;
+				else
+					ab.x = 140;
 				ab.y = 100+i*120;
 				toolbar.addChild(ab);
 			}
 			
+			currentTool = menuButtons[0].data;
 			
 		}
 		
 		private function deselectAllOthers(event:Event):void
 		{
-			currentTool = event.target.data as String;
+			currentTool = event.target.data as ITool;
 			for( var i:int = 0; i <menuButtons.length; i++)
 			{
-				var ab:AccelerometerButton = menuButtons[i];
+				var ab:RotatingIconButton = menuButtons[i];
 				if(event.target!=ab)
 					ab.isSelected = false;
 			}
@@ -131,82 +134,13 @@ package
 		
 		private function instantaneousActionHandler(event:Event):void
 		{
-			switch(event.target.data)
-			{
-				case "blank":
-					bitmapCanvas.bitmapData.fillRect(new Rectangle(0,0,bitmapCanvas.bitmapData.width,bitmapCanvas.bitmapData.height),0xFFFFFFFF);
-					break;
-			}
+			var tempTool:ITool = event.target.data as ITool;
+			tempTool.takeAction(null,bitmapCanvas.bitmapData,currentColor);
 		}
 		
-/*		private function setupDebugText():void
-		{
-			debugTextFormat = new TextFormat();
-			debugTextFormat.size = 36;
-			
-			debugText = new TextField();
-			debugText.autoSize = TextFieldAutoSize.LEFT;
-			debugText.setTextFormat(debugTextFormat);
-			addChild(debugText);
-		}*/
 		private function touchMoveHandler(event:TouchEvent):void
 		{
-			switch(currentTool)
-			{
-				case "brush":
-					drawWithBrush(event);
-					break;
-				case "eraser":
-					erase(event);
-					break;
-				case "bucket":
-					bucketFill(event);
-					break;
-					
-				default:
-					break;
-			}
-		}
-		
-		private function erase(event:TouchEvent):void
-		{
-			var result:uint = event.getSamples(touchSamples,false);
-			touchSamples.position = 0;     // rewind to beginning of array before reading
-			
-			var xCoord:Number, yCoord:Number, pressure:Number;
-			
-			while( touchSamples.bytesAvailable > 0 )
-			{
-				xCoord = touchSamples.readFloat();
-				yCoord = touchSamples.readFloat();
-				pressure = touchSamples.readFloat();
-				
-				bitmapCanvas.bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*50,pressure*50),0xFFFFFFFF);
-				//do something with the sample data
-			}
-		}
-		
-		private function bucketFill(event:TouchEvent):void
-		{
-			bitmapCanvas.bitmapData.floodFill(event.stageX,event.stageY,0xff000000);
-		}
-		
-		private function drawWithBrush(event:TouchEvent):void
-		{
-			var result:uint = event.getSamples(touchSamples,false);
-			touchSamples.position = 0;     // rewind to beginning of array before reading
-			
-			var xCoord:Number, yCoord:Number, pressure:Number;
-			
-			while( touchSamples.bytesAvailable > 0 )
-			{
-				xCoord = touchSamples.readFloat();
-				yCoord = touchSamples.readFloat();
-				pressure = touchSamples.readFloat();
-				
-				bitmapCanvas.bitmapData.fillRect(new Rectangle(xCoord,yCoord,pressure*50,pressure*50), currentColor);
-				//do something with the sample data
-			}
+			currentTool.takeAction(event,bitmapCanvas.bitmapData,currentColor);
 		}
 	}
 }

@@ -12,11 +12,13 @@ package com.shaunhusain.mobileUIControls
 	
 	import flashx.textLayout.formats.BackgroundColor;
 	
-	public class AccelerometerButton extends Sprite
+	public class RotatingIconButton extends Sprite
 	{
 		//Sprites for layering the background and the icon
 		private var backgroundSprite:Sprite;
 		private var iconSprite:Sprite;
+		
+		public var useSecondaryBackground:Boolean;
 		
 		//background image for button when deselected
 		[Embed(source="images/buttonBackground.png")]
@@ -28,6 +30,13 @@ package com.shaunhusain.mobileUIControls
 		private var _backgroundImageSelected:Class;
 		private var _backgroundSelectedBmp:Bitmap = new _backgroundImageSelected();
 		
+		[Embed(source="images/secondaryButtonBackground.png")]
+		private var _secondaryButtonImage:Class;
+		private var _secondaryButtonBmp:Bitmap = new _secondaryButtonImage();
+		
+		[Embed(source="images/secondaryButtonSelectedBackground.png")]
+		private var _secondaryButtonSelectedImage:Class;
+		private var _secondaryButtonSelectedBmp:Bitmap = new _secondaryButtonSelectedImage();
 		
 		[Embed(source="images/brushIcon.png")]
 		private var _iconImage:Class;
@@ -84,13 +93,19 @@ package com.shaunhusain.mobileUIControls
 			showAppropriateBackground();
 		}
 		
-		public function AccelerometerButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false)
+		public function RotatingIconButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, useSecondaryBackground:Boolean=false)
 		{
 			super();
 			
 			
 			if(iconBmp)
 				_iconBmp = iconBmp;
+			if(useSecondaryBackground)
+			{
+				_backgroundBmp = _secondaryButtonBmp;
+				_backgroundSelectedBmp = _secondaryButtonSelectedBmp;
+			}
+			this.useSecondaryBackground = useSecondaryBackground
 			this.isSelected = isSelected;
 			this.data = data;
 			this.instantaneous = instantaneous;
@@ -117,6 +132,7 @@ package com.shaunhusain.mobileUIControls
 		{
 			if(!backgroundSprite)
 				return;
+			backgroundSprite.graphics.clear();
 			if(isSelected)
 			{
 				backgroundSprite.graphics.beginBitmapFill(_backgroundSelectedBmp.bitmapData);
