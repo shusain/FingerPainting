@@ -13,7 +13,7 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			var bm:BitmapData = model.bitmapData;
 			if(event && bm)
-				bm.floodFill(event.stageX,event.stageY,0xff000000);
+				bm.floodFill(event.stageX,event.stageY,model.currentColor);
 		}
 	}
 }

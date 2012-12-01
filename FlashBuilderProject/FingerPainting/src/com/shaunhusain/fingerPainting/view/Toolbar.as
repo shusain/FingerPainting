@@ -63,6 +63,8 @@ package com.shaunhusain.fingerPainting.view
 		private var toolbarBmp:Bitmap = new toolbarBmpClass();
 		private var scaledBitmap:ScaleBitmap = new ScaleBitmap(toolbarBmp.bitmapData);
 		
+		private var model:PaintModel = PaintModel.getInstance();
+		
 		private var isOpen:Boolean;
 		private var _arrowRotation:Number=0;
 		
@@ -74,10 +76,12 @@ package com.shaunhusain.fingerPainting.view
 		private var menuButtonMask:Sprite;
 		private var menuButtons:Array;
 		private var menuMoved:Boolean;
+		private var menuButtonsTouchStartPoint:Point;
 		
-		private var model:PaintModel = PaintModel.getInstance();
-		
-		private var touchStartPoint:Point;
+		private var mainToolbarStartPoint:Point;
+		private var toolbarMoved:Boolean;
+		private var secondaryBrushOptions:SecondaryBrushOptions;
+		private var secondaryColorOptions:SecondaryColorOptions;
 		
 		public function Toolbar()
 		{
@@ -86,27 +90,13 @@ package com.shaunhusain.fingerPainting.view
 			//waiting for added to stage to add the rest of children so
 			//the full screen size can be accounted for
 			addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+			
+			addEventListener(TouchEvent.TOUCH_BEGIN, handleTouchBegin);
+			addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 			addEventListener(TouchEvent.TOUCH_MOVE, touchMoveHandler);
 			
-			
-		}
-		
-		private function instantaneousActionHandler(event:Event):void
-		{
-			var tempTool:ITool = event.target.data as ITool;
-			tempTool.takeAction();
-		}
-		
-		private function deselectAllOthers(event:Event):void
-		{
-			model.currentTool = event.target.data as ITool;
-			for( var i:int = 0; i <menuButtons.length; i++)
-			{
-				var ab:RotatingIconButton = menuButtons[i];
-				if(event.target!=ab)
-					ab.isSelected = false;
-			}
+			model.currentColorBitmap = _colorSpectrumBmp;
 		}
 		
 		private function handleAddedToStage(event:Event):void
@@ -149,12 +139,12 @@ package com.shaunhusain.fingerPainting.view
 					new RotatingIconButton(_blankDocBmp, new BlankTool(), true),
 					new RotatingIconButton(_undoIconBmp, "undo", true),
 					new RotatingIconButton(_redoIconBmp, "redo", true),
-					new RotatingIconButton(_pipetIconBmp, "pipet"),
+					new RotatingIconButton(_pipetIconBmp, new PipetTool()),
 					new RotatingIconButton(_shapesIconBmp, new ShapeTool(),false,false,true),
 					new RotatingIconButton(_eraserIconBmp, new EraserTool()),
 					new RotatingIconButton(_bucketIconBmp, new BucketTool()),
 					new RotatingIconButton(_brushIconBmp, new BrushTool(), false, true, true),
-					new RotatingIconButton(_colorSpectrumBmp, "colorSpectrum")
+					new RotatingIconButton(_colorSpectrumBmp, new ColorSpectrumTool(),false,false,true)
 				];
 			
 			for( var i:int = 0; i <menuButtons.length; i++)
@@ -173,28 +163,83 @@ package com.shaunhusain.fingerPainting.view
 				ab.y = i*125;
 				menuButtonSprite.addChild(ab);
 			}
+			
+			
+			secondaryBrushOptions = new SecondaryBrushOptions();
+			secondaryBrushOptions.x = -638;
+			secondaryBrushOptions.y = 100;
+			secondaryBrushOptions.visible = false;
+			addChild(secondaryBrushOptions);
+			
+			secondaryColorOptions = new SecondaryColorOptions();
+			secondaryColorOptions.x = -400;
+			secondaryColorOptions.y = 100;
+			secondaryColorOptions.visible = false;
+			addChild(secondaryColorOptions);
+		}
+		
+		
+		private function instantaneousActionHandler(event:Event):void
+		{
+			var tempTool:ITool = event.target.data as ITool;
+			tempTool.takeAction();
+		}
+		
+		private function deselectAllOthers(event:Event):void
+		{
+			if(model.currentTool == event.target.data as ITool)
+			{
+				if(model.currentTool is BrushTool)
+				{
+					secondaryBrushOptions.visible = !secondaryBrushOptions.visible;
+					secondaryColorOptions.visible = false;
+				}
+				if(model.currentTool is ColorSpectrumTool)
+				{
+					secondaryColorOptions.visible = !secondaryColorOptions.visible;
+					secondaryBrushOptions.visible = false;
+				}
+			}
+			else
+			{
+				secondaryColorOptions.visible = false;
+				secondaryBrushOptions.visible = false;
+			}
+			model.currentTool = event.target.data as ITool;
+			for( var i:int = 0; i <menuButtons.length; i++)
+			{
+				var ab:RotatingIconButton = menuButtons[i];
+				if(event.target!=ab)
+					ab.isSelected = false;
+			}
 		}
 		
 		private function beganTouchingMenu(event:TouchEvent):void
 		{
 			event.stopImmediatePropagation();
 			menuMoved = false;
-			touchStartPoint = new Point(event.stageX,event.stageY);
+			menuButtonsTouchStartPoint = new Point(event.stageX,event.stageY);
 		}
 		
 		private function moveTouchingMenu(event:TouchEvent):void
 		{
 			event.stopImmediatePropagation();
-			if(!touchStartPoint)
+			if(!menuButtonsTouchStartPoint)
 				return;
 			
-			var yChange:Number = touchStartPoint.y - event.stageY;
-			if(menuMoved||Math.abs(yChange) > 5)
+			var yChange:Number = menuButtonsTouchStartPoint.y - event.stageY;
+			if((menuMoved||Math.abs(yChange) > 5) && (menuButtonSprite.y>10||yChange<0))
 			{
 				model.menuMoving = menuMoved = true;
-				touchStartPoint.y = event.stageY;
+				menuButtonsTouchStartPoint.y = event.stageY;
 				menuButtonSprite.y -= yChange;
+				
+				trace(menuButtonSprite.y);
+				
+				secondaryBrushOptions.setConnectionYPosition(menuButtonSprite.y+400);
 			}
+			if(menuButtonSprite.y<10)
+				menuButtonSprite.y = 10;
 		}
 		
 		private function endTouchingMenu(event:TouchEvent):void
@@ -204,7 +249,41 @@ package com.shaunhusain.fingerPainting.view
 			{
 				setTimeout(function():void{model.menuMoving = false},500);
 			}
-			touchStartPoint = null;
+			menuButtonsTouchStartPoint = null;
+		}
+		
+		
+		
+		
+		private function handleTouchBegin(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+			toolbarMoved = false;
+			mainToolbarStartPoint = new Point(event.stageX,event.stageY);
+		}
+		
+		private function touchMoveHandler(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+			if(!mainToolbarStartPoint)
+				return;
+			
+			var xChange:Number = mainToolbarStartPoint.x - event.stageX;
+			if(toolbarMoved||Math.abs(xChange) > 5)
+			{
+				model.toolbarMoving = toolbarMoved = true;
+				mainToolbarStartPoint.x = event.stageX;
+				x -= xChange;
+			}
+		}
+		private function handleTouchEnd(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+			if(toolbarMoved)
+			{
+				setTimeout(function():void{model.toolbarMoving = false},500);
+			}
+			mainToolbarStartPoint = null;
 		}
 		
 		private function handleTapped(event:TouchEvent):void
@@ -230,10 +309,6 @@ package com.shaunhusain.fingerPainting.view
 		public function get arrowRotation():Number
 		{
 			return _arrowRotation;
-		}
-		private function touchMoveHandler(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
 		}
 		private function rotateTriangle(angleRadians:Number):void
 		{

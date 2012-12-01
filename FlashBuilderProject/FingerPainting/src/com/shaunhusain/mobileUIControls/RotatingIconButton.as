@@ -25,21 +25,23 @@ package com.shaunhusain.mobileUIControls
 		
 		//background image for button when deselected
 		[Embed(source="images/buttonBackground.png")]
-		private var _backgroundImage:Class;
-		private var _backgroundBmp:Bitmap = new _backgroundImage();
+		private var _firstBackgroundImage:Class;
+		private var _firstBackgroundBmp:Bitmap = new _firstBackgroundImage();
 		
 		//background image for button when selected
 		[Embed(source="images/buttonBackgroundSelected.png")]
-		private var _backgroundImageSelected:Class;
-		private var _backgroundSelectedBmp:Bitmap = new _backgroundImageSelected();
+		private var _firstBackgroundImageSelected:Class;
+		private var _firstBackgroundSelectedBmp:Bitmap = new _firstBackgroundImageSelected();
 		
 		[Embed(source="images/secondaryButtonBackground.png")]
-		private var _secondaryButtonImage:Class;
-		private var _secondaryButtonBmp:Bitmap = new _secondaryButtonImage();
+		private var _secondBackgroundImage:Class;
+		private var _secondBackgroundBmp:Bitmap = new _secondBackgroundImage();
 		
 		[Embed(source="images/secondaryButtonSelectedBackground.png")]
-		private var _secondaryButtonSelectedImage:Class;
-		private var _secondaryButtonSelectedBmp:Bitmap = new _secondaryButtonSelectedImage();
+		private var _secondBackgroundSelectedImage:Class;
+		private var _secondBackgroundSelectedBmp:Bitmap = new _secondBackgroundSelectedImage();
+		
+		
 		
 		[Embed(source="images/brushIcon.png")]
 		private var _iconImage:Class;
@@ -108,8 +110,8 @@ package com.shaunhusain.mobileUIControls
 				_iconBmp = iconBmp;
 			if(useSecondaryBackground)
 			{
-				_backgroundBmp = _secondaryButtonBmp;
-				_backgroundSelectedBmp = _secondaryButtonSelectedBmp;
+				_firstBackgroundBmp = _secondBackgroundBmp;
+				_firstBackgroundSelectedBmp = _secondBackgroundSelectedBmp;
 			}
 			this.useSecondaryBackground = useSecondaryBackground
 			this.isSelected = isSelected;
@@ -141,13 +143,13 @@ package com.shaunhusain.mobileUIControls
 			backgroundSprite.graphics.clear();
 			if(isSelected)
 			{
-				backgroundSprite.graphics.beginBitmapFill(_backgroundSelectedBmp.bitmapData);
-				backgroundSprite.graphics.drawRect(0,0,_backgroundSelectedBmp.width,_backgroundSelectedBmp.height);
+				backgroundSprite.graphics.beginBitmapFill(_firstBackgroundSelectedBmp.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,_firstBackgroundSelectedBmp.width,_firstBackgroundSelectedBmp.height);
 			}
 			else
 			{
-				backgroundSprite.graphics.beginBitmapFill(_backgroundBmp.bitmapData);
-				backgroundSprite.graphics.drawRect(0,0,_backgroundBmp.width,_backgroundBmp.height);
+				backgroundSprite.graphics.beginBitmapFill(_firstBackgroundBmp.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,_firstBackgroundBmp.width,_firstBackgroundBmp.height);
 			}
 			backgroundSprite.graphics.endFill();
 		}
@@ -168,11 +170,11 @@ package com.shaunhusain.mobileUIControls
 			_iconMatrix.identity();
 			_iconMatrix.translate(-_iconBmp.width/2, -_iconBmp.height/2);
 			_iconMatrix.rotate (angleRadians);
-			_iconMatrix.translate(_backgroundBmp.width/2, _backgroundBmp.height/2);
+			_iconMatrix.translate(_firstBackgroundBmp.width/2, _firstBackgroundBmp.height/2);
 			
 			iconSprite.graphics.clear();
 			iconSprite.graphics.beginBitmapFill(_iconBmp.bitmapData, _iconMatrix, false, true);
-			iconSprite.graphics.drawRect(0,0, _backgroundBmp.width,_backgroundBmp.height);
+			iconSprite.graphics.drawRect(0,0, _firstBackgroundBmp.width,_firstBackgroundBmp.height);
 			iconSprite.graphics.endFill();
 		}
 	}
