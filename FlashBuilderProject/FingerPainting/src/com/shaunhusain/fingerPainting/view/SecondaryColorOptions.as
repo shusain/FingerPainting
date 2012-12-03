@@ -7,10 +7,12 @@ package com.shaunhusain.fingerPainting.view
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.Timer;
 
 	public class SecondaryColorOptions extends Sprite
 	{
@@ -31,6 +33,9 @@ package com.shaunhusain.fingerPainting.view
 		
 		private var colorSample:Bitmap;
 		
+		private var requiresUpdate:Boolean;
+		private var updateHSVTimer:Timer;
+		
 		public function SecondaryColorOptions()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
@@ -39,7 +44,7 @@ package com.shaunhusain.fingerPainting.view
 		{
 			backgroundSprite = new Sprite();
 			backgroundSprite.graphics.clear();
-			backgroundSprite.graphics.beginFill(0xeeeeee);
+			backgroundSprite.graphics.beginFill(0xeeeeee,.5);
 			backgroundSprite.graphics.drawRoundRect(0,0,420,stage.fullScreenHeight-200,50,50);
 			backgroundSprite.graphics.endFill();
 			addChild(backgroundSprite);
@@ -91,12 +96,26 @@ package com.shaunhusain.fingerPainting.view
 			
 			colorSample = new Bitmap(new BitmapData(200,100,false,model.currentColor));
 			colorSample.y = 520;
+			colorSample.x = 20;
 			addChild(colorSample);
 			/*hueText = new TextField();
 			addChild(hueText)
 			hueText.autoSize = TextFieldAutoSize.LEFT;
 			hueText.y = 140;
 			hueText.text = "testing";*/
+			
+			updateHSVTimer = new Timer(500);
+			updateHSVTimer.addEventListener(TimerEvent.TIMER, timerHandler);
+			updateHSVTimer.start();
+		}
+		
+		private function timerHandler(event:Event):void
+		{
+			if(requiresUpdate)
+			{
+				drawLightAndSatGradient();
+				requiresUpdate = false;
+			}
 		}
 		
 		private function hueBarTouchMoveHandler(event:TouchEvent):void
@@ -106,7 +125,7 @@ package com.shaunhusain.fingerPainting.view
 			event.stopImmediatePropagation();
 			model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x,selectedColorHBar.y);
 			colorSample.bitmapData.floodFill(0,0,model.currentColor);
-			drawLightAndSatGradient();
+			requiresUpdate=true;
 		}
 		private function lightAndSatGradientTouchMoveHandler(event:TouchEvent):void
 		{

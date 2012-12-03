@@ -50,6 +50,8 @@ package
 			bitmapCanvas = new Bitmap(model.bitmapData);
 			bitmapCanvas.smoothing = true;
 			stage.addEventListener(TouchEvent.TOUCH_MOVE, touchMoveHandler);
+			stage.addEventListener(TouchEvent.TOUCH_BEGIN, touchMoveHandler);
+			stage.addEventListener(TouchEvent.TOUCH_END, touchMoveHandler);
 			stage.addEventListener(TouchEvent.TOUCH_TAP, touchMoveHandler);
 			addChild(bitmapCanvas);
 			

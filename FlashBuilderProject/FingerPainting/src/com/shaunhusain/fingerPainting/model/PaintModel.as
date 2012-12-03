@@ -21,10 +21,12 @@ package com.shaunhusain.fingerPainting.model
 		//Brush Options
 		public var brushCurrentWidth:Number = 20;
 		public var brushObservePressure:Boolean;
-		public var brushOpacity:Number;
+		public var brushOpacity:Number=1;
 		
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
+		
+		public var isPressureSensitive:Boolean;
 		
 		private static var instance:PaintModel;
 		

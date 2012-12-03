@@ -156,11 +156,11 @@ package com.shaunhusain.mobileUIControls
 		
 		private function handleAccelerometerChange(event:AccelerometerEvent):void
 		{
-			var angle:Number = Math.atan2(event.accelerationY, event.accelerationX);
-			angle-=Math.PI/2;
-			angle = -angle;
 			if(Math.abs(event.accelerationZ)<.9)
 			{
+				var angle:Number = Math.atan2(event.accelerationY, event.accelerationX);
+				angle-=Math.PI/2;
+				angle = -angle;
 				rotateAroundCenter(angle);
 			}
 		}

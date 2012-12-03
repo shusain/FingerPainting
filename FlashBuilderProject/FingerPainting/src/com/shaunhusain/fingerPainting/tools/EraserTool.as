@@ -26,7 +26,7 @@ package com.shaunhusain.fingerPainting.tools
 				yCoord = touchSamples.readFloat();
 				pressure = touchSamples.readFloat();
 				
-				bm.fillRect(new Rectangle(xCoord,yCoord,pressure*50,pressure*50),0xFFFFFFFF);
+				bm.fillRect(new Rectangle(xCoord,yCoord,pressure*25,pressure*25),0xFFFFFFFF);
 				//do something with the sample data
 			}
 		}

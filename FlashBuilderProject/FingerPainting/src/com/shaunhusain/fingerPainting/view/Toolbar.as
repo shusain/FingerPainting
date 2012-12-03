@@ -166,7 +166,7 @@ package com.shaunhusain.fingerPainting.view
 			
 			
 			secondaryBrushOptions = new SecondaryBrushOptions();
-			secondaryBrushOptions.x = -638;
+			secondaryBrushOptions.x = -400;
 			secondaryBrushOptions.y = 100;
 			secondaryBrushOptions.visible = false;
 			addChild(secondaryBrushOptions);
@@ -187,18 +187,15 @@ package com.shaunhusain.fingerPainting.view
 		
 		private function deselectAllOthers(event:Event):void
 		{
-			if(model.currentTool == event.target.data as ITool)
+			if(model.currentTool == event.target.data as ITool && model.currentTool is BrushTool)
 			{
-				if(model.currentTool is BrushTool)
-				{
-					secondaryBrushOptions.visible = !secondaryBrushOptions.visible;
-					secondaryColorOptions.visible = false;
-				}
-				if(model.currentTool is ColorSpectrumTool)
-				{
-					secondaryColorOptions.visible = !secondaryColorOptions.visible;
-					secondaryBrushOptions.visible = false;
-				}
+				secondaryBrushOptions.visible = !secondaryBrushOptions.visible;
+				secondaryColorOptions.visible = false;
+			}
+			else if(event.target.data is ColorSpectrumTool)
+			{
+				secondaryColorOptions.visible = !secondaryColorOptions.visible;
+				secondaryBrushOptions.visible = false;
 			}
 			else
 			{
@@ -236,7 +233,7 @@ package com.shaunhusain.fingerPainting.view
 				
 				trace(menuButtonSprite.y);
 				
-				secondaryBrushOptions.setConnectionYPosition(menuButtonSprite.y+400);
+				//secondaryBrushOptions.setConnectionYPosition(menuButtonSprite.y+400);
 			}
 			if(menuButtonSprite.y<10)
 				menuButtonSprite.y = 10;
@@ -300,6 +297,8 @@ package com.shaunhusain.fingerPainting.view
 				Actuate.tween(this, .5, {arrowRotation:0,x:stage.fullScreenWidth - 270});
 			}
 			isOpen = !isOpen;
+			secondaryColorOptions.visible = false;
+			secondaryBrushOptions.visible = false;
 		}
 		
 		public function set arrowRotation(angleRadians:Number):void
