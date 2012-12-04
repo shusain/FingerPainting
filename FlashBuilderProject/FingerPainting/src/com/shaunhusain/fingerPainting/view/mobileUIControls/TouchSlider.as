@@ -1,4 +1,4 @@
-package com.shaunhusain.mobileUIControls
+package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
 	import flash.display.Graphics;
 	import flash.display.Sprite;

@@ -1,5 +1,6 @@
-package com.shaunhusain.mobileUIControls
+package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
+	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	
 	import flash.display.Bitmap;
@@ -8,11 +9,7 @@ package com.shaunhusain.mobileUIControls
 	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.sensors.Accelerometer;
 	import flash.utils.setTimeout;
-	
-	import flashx.textLayout.formats.BackgroundColor;
 	
 	public class RotatingIconButton extends Sprite
 	{
@@ -24,26 +21,26 @@ package com.shaunhusain.mobileUIControls
 		public var useSecondaryBackground:Boolean;
 		
 		//background image for button when deselected
-		[Embed(source="images/buttonBackground.png")]
+		[Embed(source="/images/buttonBackground.png")]
 		private var _firstBackgroundImage:Class;
 		private var _firstBackgroundBmp:Bitmap = new _firstBackgroundImage();
 		
 		//background image for button when selected
-		[Embed(source="images/buttonBackgroundSelected.png")]
+		[Embed(source="/images/buttonBackgroundSelected.png")]
 		private var _firstBackgroundImageSelected:Class;
 		private var _firstBackgroundSelectedBmp:Bitmap = new _firstBackgroundImageSelected();
 		
-		[Embed(source="images/secondaryButtonBackground.png")]
+		[Embed(source="/images/secondaryButtonBackground.png")]
 		private var _secondBackgroundImage:Class;
 		private var _secondBackgroundBmp:Bitmap = new _secondBackgroundImage();
 		
-		[Embed(source="images/secondaryButtonSelectedBackground.png")]
+		[Embed(source="/images/secondaryButtonSelectedBackground.png")]
 		private var _secondBackgroundSelectedImage:Class;
 		private var _secondBackgroundSelectedBmp:Bitmap = new _secondBackgroundSelectedImage();
 		
 		
 		
-		[Embed(source="images/brushIcon.png")]
+		[Embed(source="/images/brushIcon.png")]
 		private var _iconImage:Class;
 		private var _iconBmp:Bitmap = new _iconImage();
 		

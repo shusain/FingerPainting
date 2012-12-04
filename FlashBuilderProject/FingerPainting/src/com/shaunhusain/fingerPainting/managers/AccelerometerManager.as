@@ -1,4 +1,4 @@
-package com.shaunhusain.mobileUIControls
+package com.shaunhusain.fingerPainting.managers
 {
 	import flash.events.AccelerometerEvent;
 	import flash.events.EventDispatcher;

@@ -1,7 +1,6 @@
-package com.shaunhusain.fingerPainting.view
+package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.mobileUIControls.AccelerometerManager;
 	
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
@@ -10,6 +9,7 @@ package com.shaunhusain.fingerPainting.view
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
+	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
 	
 	public class CircleButton extends Sprite
 	{
@@ -20,7 +20,7 @@ package com.shaunhusain.fingerPainting.view
 		private var textContainer:Sprite;
 		
 		// to embed a system font
-		[Embed(systemFont="Arial", fontName = "myFont", mimeType = "application/x-font", fontWeight="normal", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="false")]
+		[Embed(source="/ARIAL.TTF", fontName = "myFont", mimeType = "application/x-font", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
 		
 		

@@ -1,11 +1,12 @@
 package com.shaunhusain.fingerPainting.view
 {
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.mobileUIControls.TouchSlider;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.TouchSlider;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TouchEvent;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.CircleButton;
 
 	public class SecondaryBrushOptions extends Sprite
 	{

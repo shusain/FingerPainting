@@ -4,6 +4,7 @@ package com.shaunhusain.fingerPainting.model
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
@@ -12,6 +13,7 @@ package com.shaunhusain.fingerPainting.model
 	public class PaintModel extends EventDispatcher
 	{
 		public var bitmapData:BitmapData;
+		public var currentDrawingOverlay:Sprite;
 		public var currentTool:ITool;
 		
 		//Color Options

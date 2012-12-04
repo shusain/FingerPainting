@@ -1,5 +1,6 @@
 package 
 {
+	import com.shaunhusain.fingerPainting.managers.UndoManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.tools.BlankTool;
 	import com.shaunhusain.fingerPainting.tools.BrushTool;
@@ -8,7 +9,7 @@ package
 	import com.shaunhusain.fingerPainting.tools.ITool;
 	import com.shaunhusain.fingerPainting.tools.ShapeTool;
 	import com.shaunhusain.fingerPainting.view.Toolbar;
-	import com.shaunhusain.mobileUIControls.RotatingIconButton;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -23,6 +24,9 @@ package
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.ByteArray;
 	
+	import net.hires.debug.Stats;
+	
+	[SWF(frameRate="60")]
 	public class FingerPainting extends Sprite
 	{
 		
@@ -34,6 +38,7 @@ package
 		private var bitmapCanvas:Bitmap;
 		
 		private var model:PaintModel = PaintModel.getInstance();
+		private var undoManager:UndoManager = UndoManager.getIntance();
 		
 		
 		public function FingerPainting()
@@ -46,6 +51,8 @@ package
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
 			model.bitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight,true,0xFFFFFFFF);
+			model.currentDrawingOverlay = new Sprite();
+			undoManager.addHistoryElement(model.bitmapData.clone());
 			
 			bitmapCanvas = new Bitmap(model.bitmapData);
 			bitmapCanvas.smoothing = true;
@@ -55,10 +62,16 @@ package
 			stage.addEventListener(TouchEvent.TOUCH_TAP, touchMoveHandler);
 			addChild(bitmapCanvas);
 			
+			addChild(model.currentDrawingOverlay);
+			
 			toolbar = new Toolbar();
 			toolbar.x = stage.stageWidth-85;
 			toolbar.y = 20;
 			addChild(toolbar);
+			
+			var stats:Stats = new Stats();
+			stats.scaleX=stats.scaleY=2;
+			addChild(stats);
 		}
 		
 		private function touchMoveHandler(event:TouchEvent):void

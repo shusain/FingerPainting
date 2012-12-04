@@ -3,7 +3,7 @@ package com.shaunhusain.fingerPainting.view
 	import com.eclecticdesignstudio.motion.Actuate;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.tools.*;
-	import com.shaunhusain.mobileUIControls.RotatingIconButton;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -18,47 +18,47 @@ package com.shaunhusain.fingerPainting.view
 	
 	public class Toolbar extends Sprite
 	{
-		[Embed(source="images/brushIcon.png")]
+		[Embed(source="/images/brushIcon.png")]
 		private var _brushIcon:Class;
 		private var _brushIconBmp:Bitmap = new _brushIcon();
 		
-		[Embed(source="images/eraserIcon.png")]
+		[Embed(source="/images/eraserIcon.png")]
 		private var _eraserIcon:Class;
 		private var _eraserIconBmp:Bitmap = new _eraserIcon();
 		
-		[Embed(source="images/bucketIcon.png")]
+		[Embed(source="/images/bucketIcon.png")]
 		private var _bucketIcon:Class;
 		private var _bucketIconBmp:Bitmap = new _bucketIcon();
 		
-		[Embed(source="images/undoIcon.png")]
+		[Embed(source="/images/undoIcon.png")]
 		private var _undoIcon:Class;
 		private var _undoIconBmp:Bitmap = new _undoIcon();
 		
-		[Embed(source="images/redoIcon.png")]
+		[Embed(source="/images/redoIcon.png")]
 		private var _redoIcon:Class;
 		private var _redoIconBmp:Bitmap = new _redoIcon();
 		
-		[Embed(source="images/shapesIcon.png")]
+		[Embed(source="/images/shapesIcon.png")]
 		private var _shapesIcon:Class;
 		private var _shapesIconBmp:Bitmap = new _shapesIcon();
 		
-		[Embed(source="images/pipetIcon.png")]
+		[Embed(source="/images/pipetIcon.png")]
 		private var _pipetIcon:Class;
 		private var _pipetIconBmp:Bitmap = new _pipetIcon();
 		
-		[Embed(source="images/colorSpectrumIcon.png")]
+		[Embed(source="/images/colorSpectrumIcon.png")]
 		private var _colorSpectrumIcon:Class;
 		private var _colorSpectrumBmp:Bitmap = new _colorSpectrumIcon();
 		
-		[Embed(source="images/blankDocIcon.png")]
+		[Embed(source="/images/blankDocIcon.png")]
 		private var _blankDocIcon:Class;
 		private var _blankDocBmp:Bitmap = new _blankDocIcon();
 		
-		[Embed(source="images/triangleIcon.png")]
+		[Embed(source="/images/triangleIcon.png")]
 		private var _triangleIcon:Class;
 		private var _triangleIconBmp:Bitmap = new _triangleIcon();
 		
-		[Embed(source="images/toolbarBackground.png")]
+		[Embed(source="/images/toolbarBackground.png")]
 		private var toolbarBmpClass:Class;
 		private var toolbarBmp:Bitmap = new toolbarBmpClass();
 		private var scaledBitmap:ScaleBitmap = new ScaleBitmap(toolbarBmp.bitmapData);
@@ -137,8 +137,8 @@ package com.shaunhusain.fingerPainting.view
 				[
 					
 					new RotatingIconButton(_blankDocBmp, new BlankTool(), true),
-					new RotatingIconButton(_undoIconBmp, "undo", true),
-					new RotatingIconButton(_redoIconBmp, "redo", true),
+					new RotatingIconButton(_undoIconBmp, new UndoTool(), true),
+					new RotatingIconButton(_redoIconBmp, new RedoTool(), true),
 					new RotatingIconButton(_pipetIconBmp, new PipetTool()),
 					new RotatingIconButton(_shapesIconBmp, new ShapeTool(),false,false,true),
 					new RotatingIconButton(_eraserIconBmp, new EraserTool()),
