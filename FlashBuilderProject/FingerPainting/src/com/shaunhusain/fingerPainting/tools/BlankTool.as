@@ -3,7 +3,6 @@ package com.shaunhusain.fingerPainting.tools
 	import flash.display.BitmapData;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
-	import flash.utils.ByteArray;
 	
 	public class BlankTool extends ToolBase implements ITool
 	{
