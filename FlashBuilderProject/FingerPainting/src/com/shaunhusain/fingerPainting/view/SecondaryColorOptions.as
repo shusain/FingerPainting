@@ -42,6 +42,10 @@ package com.shaunhusain.fingerPainting.view
 		}
 		private function addedToStageHandler(event:Event):void
 		{
+			addEventListener(TouchEvent.TOUCH_MOVE, blockEvent);
+			addEventListener(TouchEvent.TOUCH_TAP, blockEvent);
+			addEventListener(TouchEvent.TOUCH_ROLL_OUT, blockEvent);
+			
 			backgroundSprite = new Sprite();
 			backgroundSprite.graphics.clear();
 			backgroundSprite.graphics.beginFill(0xeeeeee,.5);
@@ -62,9 +66,6 @@ package com.shaunhusain.fingerPainting.view
 			
 			hueBarSprite = new Sprite();
 			hueBarSprite.addEventListener(TouchEvent.TOUCH_MOVE, hueBarTouchMoveHandler);
-			hueBarSprite.addEventListener(TouchEvent.TOUCH_BEGIN, blockEvent);
-			hueBarSprite.addEventListener(TouchEvent.TOUCH_END, blockEvent);
-			hueBarSprite.addEventListener(TouchEvent.TOUCH_TAP, blockEvent);
 			addChild(hueBarSprite);
 			hueBarSprite.x = 20;
 			hueBarSprite.y = 20;
@@ -75,16 +76,14 @@ package com.shaunhusain.fingerPainting.view
 			selectedHueBar.blendMode = BlendMode.INVERT;
 			hueBarSprite.addChild(selectedHueBar);
 			
-			lightAndSatGradient = new Bitmap(new BitmapData(360,360));
+			lightAndSatGradient = new Bitmap(new BitmapData(90,90));
 			lightAndSatGradientSprite = new Sprite();
 			lightAndSatGradientSprite.addChild(lightAndSatGradient);
+			lightAndSatGradient.scaleX = lightAndSatGradient.scaleY = 4;
 			lightAndSatGradientSprite.y = 140;
 			lightAndSatGradientSprite.x = 20;
 			addChild(lightAndSatGradientSprite);
 			lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_MOVE, lightAndSatGradientTouchMoveHandler);
-			lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_BEGIN, blockEvent);
-			lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_END, blockEvent);
-			lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_TAP, blockEvent);
 			
 			selectedColorHBar = new Bitmap(new BitmapData(360,2,false,0xff000000));
 			selectedColorHBar.blendMode = BlendMode.INVERT;
@@ -104,7 +103,7 @@ package com.shaunhusain.fingerPainting.view
 			hueText.y = 140;
 			hueText.text = "testing";*/
 			
-			updateHSVTimer = new Timer(500);
+			updateHSVTimer = new Timer(100);
 			updateHSVTimer.addEventListener(TimerEvent.TIMER, timerHandler);
 			updateHSVTimer.start();
 		}
@@ -123,7 +122,7 @@ package com.shaunhusain.fingerPainting.view
 			//hueText.text = allPossibleColors.bitmapData.getPixel32(event.localX,event.localY).toString();
 			selectedHueBar.x = event.localX;
 			event.stopImmediatePropagation();
-			model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x,selectedColorHBar.y);
+			model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x/4,selectedColorHBar.y/4);
 			colorSample.bitmapData.floodFill(0,0,model.currentColor);
 			requiresUpdate=true;
 		}
@@ -132,7 +131,7 @@ package com.shaunhusain.fingerPainting.view
 			//hueText.text = allPossibleColors.bitmapData.getPixel32(event.localX,event.localY).toString(); 
 			selectedColorVBar.x = event.localX;
 			selectedColorHBar.y = event.localY;
-			model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x,selectedColorHBar.y);
+			model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x/4,selectedColorHBar.y/4);
 			colorSample.bitmapData.floodFill(0,0,model.currentColor);
 			event.stopImmediatePropagation();
 		}
@@ -143,10 +142,11 @@ package com.shaunhusain.fingerPainting.view
 		
 		private function drawLightAndSatGradient():void
 		{
+			trace("drawingLightAndSatGradient");
 			lightAndSatGradient.bitmapData.lock();
-			for(var i:Number = 360; i >= 0; i--)
-				for(var j:Number= 360; j >= 0; j--)
-					lightAndSatGradient.bitmapData.setPixel32(i,360-j,HSVtoRGB(1,selectedHueBar.x,i/360,j/360));
+			for(var i:Number = 90; i >= 0; i--)
+				for(var j:Number= 90; j >= 0; j--)
+					lightAndSatGradient.bitmapData.setPixel32(i,90-j,HSVtoRGB(1,selectedHueBar.x,i/90,j/90));
 			lightAndSatGradient.bitmapData.unlock();
 		}
 		

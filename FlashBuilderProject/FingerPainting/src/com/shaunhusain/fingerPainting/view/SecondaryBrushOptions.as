@@ -38,6 +38,7 @@ package com.shaunhusain.fingerPainting.view
 			pressureButton = new CircleButton();
 			pressureButton.x = 20;
 			pressureButton.y = 20;
+			pressureButton.text = "Pressure\nButton";
 			addChild(pressureButton);
 			
 			brushSizeSlider = new TouchSlider();
@@ -66,6 +67,7 @@ package com.shaunhusain.fingerPainting.view
 			
 			addEventListener(TouchEvent.TOUCH_MOVE, blockEvent);
 			addEventListener(TouchEvent.TOUCH_TAP, blockEvent);
+			addEventListener(TouchEvent.TOUCH_ROLL_OUT, blockEvent);
 		}
 		
 		private function updateBrushSampleSize(event:Event):void

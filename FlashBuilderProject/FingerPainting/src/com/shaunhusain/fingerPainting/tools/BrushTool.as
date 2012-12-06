@@ -1,14 +1,11 @@
 package com.shaunhusain.fingerPainting.tools 
 {
-	import com.shaunhusain.fingerPainting.model.PaintModel;
-	
 	import flash.display.BitmapData;
+	import flash.display.BlendMode;
 	import flash.display.CapsStyle;
 	import flash.display.JointStyle;
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.events.TouchEvent;
-	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
@@ -37,6 +34,7 @@ package com.shaunhusain.fingerPainting.tools
 			if(xCoord == 0 || yCoord == 0)
 				return;
 			var sp:Sprite = model.currentDrawingOverlay;
+			sp.blendMode = BlendMode.INVERT;
 			var drawingWidth:Number;
 			if(model.isPressureSensitive)
 				drawingWidth = pressure*model.brushCurrentWidth;
@@ -44,13 +42,15 @@ package com.shaunhusain.fingerPainting.tools
 				drawingWidth = model.brushCurrentWidth;
 			
 			//trace("xCoord: " +drawingRect.x+ " yCoord: " + drawingRect.y + " Pressure: " + drawingRect.width);
-			
+			trace(pressure);
 			sp.graphics.lineStyle(drawingWidth,curColor,model.brushOpacity,true,"normal",CapsStyle.ROUND,JointStyle.MITER);
 			sp.graphics.lineTo(xCoord,yCoord);
 		}
 		
 		public function takeAction(event:TouchEvent=null):void
 		{
+			undoManager.extendTimer();
+			
 			var sp:Sprite = model.currentDrawingOverlay;
 			if(event.type == TouchEvent.TOUCH_MOVE)
 			{
@@ -71,6 +71,7 @@ package com.shaunhusain.fingerPainting.tools
 					
 					//drawDirectlyToBitmapData(xCoord,yCoord,pressure,curColor,drawingRect);
 					drawToOverlaySprite(curColor,xCoord,yCoord,pressure);
+					//break;
 				}
 			}
 			else if(event.type == TouchEvent.TOUCH_TAP)

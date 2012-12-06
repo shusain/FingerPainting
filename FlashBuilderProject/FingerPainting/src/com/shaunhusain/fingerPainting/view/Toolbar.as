@@ -1,11 +1,21 @@
 package com.shaunhusain.fingerPainting.view
 {
 	import com.eclecticdesignstudio.motion.Actuate;
+	import com.shaunhusain.fingerPainting.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.fingerPainting.tools.*;
+	import com.shaunhusain.fingerPainting.tools.BlankTool;
+	import com.shaunhusain.fingerPainting.tools.BrushTool;
+	import com.shaunhusain.fingerPainting.tools.BucketTool;
+	import com.shaunhusain.fingerPainting.tools.ColorSpectrumTool;
+	import com.shaunhusain.fingerPainting.tools.EraserTool;
+	import com.shaunhusain.fingerPainting.tools.ITool;
+	import com.shaunhusain.fingerPainting.tools.PipetTool;
+	import com.shaunhusain.fingerPainting.tools.RedoTool;
+	import com.shaunhusain.fingerPainting.tools.SaveTool;
+	import com.shaunhusain.fingerPainting.tools.ShapeTool;
+	import com.shaunhusain.fingerPainting.tools.UndoTool;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TouchEvent;
@@ -14,54 +24,8 @@ package com.shaunhusain.fingerPainting.view
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
-	import org.bytearray.ScaleBitmap;
-	
 	public class Toolbar extends Sprite
 	{
-		[Embed(source="/images/brushIcon.png")]
-		private var _brushIcon:Class;
-		private var _brushIconBmp:Bitmap = new _brushIcon();
-		
-		[Embed(source="/images/eraserIcon.png")]
-		private var _eraserIcon:Class;
-		private var _eraserIconBmp:Bitmap = new _eraserIcon();
-		
-		[Embed(source="/images/bucketIcon.png")]
-		private var _bucketIcon:Class;
-		private var _bucketIconBmp:Bitmap = new _bucketIcon();
-		
-		[Embed(source="/images/undoIcon.png")]
-		private var _undoIcon:Class;
-		private var _undoIconBmp:Bitmap = new _undoIcon();
-		
-		[Embed(source="/images/redoIcon.png")]
-		private var _redoIcon:Class;
-		private var _redoIconBmp:Bitmap = new _redoIcon();
-		
-		[Embed(source="/images/shapesIcon.png")]
-		private var _shapesIcon:Class;
-		private var _shapesIconBmp:Bitmap = new _shapesIcon();
-		
-		[Embed(source="/images/pipetIcon.png")]
-		private var _pipetIcon:Class;
-		private var _pipetIconBmp:Bitmap = new _pipetIcon();
-		
-		[Embed(source="/images/colorSpectrumIcon.png")]
-		private var _colorSpectrumIcon:Class;
-		private var _colorSpectrumBmp:Bitmap = new _colorSpectrumIcon();
-		
-		[Embed(source="/images/blankDocIcon.png")]
-		private var _blankDocIcon:Class;
-		private var _blankDocBmp:Bitmap = new _blankDocIcon();
-		
-		[Embed(source="/images/triangleIcon.png")]
-		private var _triangleIcon:Class;
-		private var _triangleIconBmp:Bitmap = new _triangleIcon();
-		
-		[Embed(source="/images/toolbarBackground.png")]
-		private var toolbarBmpClass:Class;
-		private var toolbarBmp:Bitmap = new toolbarBmpClass();
-		private var scaledBitmap:ScaleBitmap = new ScaleBitmap(toolbarBmp.bitmapData);
 		
 		private var model:PaintModel = PaintModel.getInstance();
 		
@@ -83,6 +47,10 @@ package com.shaunhusain.fingerPainting.view
 		private var secondaryBrushOptions:SecondaryBrushOptions;
 		private var secondaryColorOptions:SecondaryColorOptions;
 		
+		private var secondaryPanelManager:SecondaryPanelManager = SecondaryPanelManager.getIntance();
+		
+		private var BR:Class = BitmapReference;
+		
 		public function Toolbar()
 		{
 			super();
@@ -95,17 +63,19 @@ package com.shaunhusain.fingerPainting.view
 			addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 			addEventListener(TouchEvent.TOUCH_MOVE, touchMoveHandler);
+			addEventListener(TouchEvent.TOUCH_ROLL_OUT, handleRollout);
 			
-			model.currentColorBitmap = _colorSpectrumBmp;
+			model.currentColorBitmap = BR._colorSpectrumBmp;
 		}
+		
 		
 		private function handleAddedToStage(event:Event):void
 		{
 			//Setting up the background scale9Grid and scaling
-			scaledBitmap.scale9Grid = new Rectangle(118, 100, 271, 2286);
-			scaledBitmap.height = stage.fullScreenHeight - y;
+			BitmapReference.scaledBitmap.scale9Grid = new Rectangle(118, 100, 271, 2286);
+			BitmapReference.scaledBitmap.height = stage.fullScreenHeight - y;
 			//toolbarBmp.width = toolbarBmp.scaleY*toolbarBmp.width;
-			addChild(scaledBitmap);
+			addChild(BitmapReference.scaledBitmap);
 			
 			//Setting up the triangle button that spins when opening
 			rotateTriangle(Math.PI);
@@ -114,7 +84,7 @@ package com.shaunhusain.fingerPainting.view
 			triangleSprite.y = 35;
 			addChild(triangleSprite);
 			
-			triangleSprite.addChild(_triangleIconBmp);
+			triangleSprite.addChild(BitmapReference._triangleIconBmp);
 			
 			//Setting up the hit area so the entire toolbar doesn't respond to events
 			var hitAreaSprite:Sprite = new Sprite();
@@ -130,21 +100,23 @@ package com.shaunhusain.fingerPainting.view
 			menuButtonSprite.addEventListener(TouchEvent.TOUCH_BEGIN, beganTouchingMenu);
 			menuButtonSprite.addEventListener(TouchEvent.TOUCH_MOVE, moveTouchingMenu);
 			menuButtonSprite.addEventListener(TouchEvent.TOUCH_END, endTouchingMenu);
+			menuButtonSprite.addEventListener(TouchEvent.TOUCH_ROLL_OUT, blockEvent);
 			menuButtonSprite.y = 100;
 			addChild(menuButtonSprite);
 			
 			menuButtons = 
 				[
 					
-					new RotatingIconButton(_blankDocBmp, new BlankTool(), true),
-					new RotatingIconButton(_undoIconBmp, new UndoTool(), true),
-					new RotatingIconButton(_redoIconBmp, new RedoTool(), true),
-					new RotatingIconButton(_pipetIconBmp, new PipetTool()),
-					new RotatingIconButton(_shapesIconBmp, new ShapeTool(),false,false,true),
-					new RotatingIconButton(_eraserIconBmp, new EraserTool()),
-					new RotatingIconButton(_bucketIconBmp, new BucketTool()),
-					new RotatingIconButton(_brushIconBmp, new BrushTool(), false, true, true),
-					new RotatingIconButton(_colorSpectrumBmp, new ColorSpectrumTool(),false,false,true)
+					new RotatingIconButton(BR._saveIconBmp, new SaveTool(), true),
+					new RotatingIconButton(BR._blankDocBmp, new BlankTool(), true),
+					new RotatingIconButton(BR._undoIconBmp, new UndoTool(), true),
+					new RotatingIconButton(BR._redoIconBmp, new RedoTool(), true),
+					new RotatingIconButton(BR._pipetIconBmp, new PipetTool()),
+					new RotatingIconButton(BR._shapesIconBmp, new ShapeTool(),false,false,true),
+					new RotatingIconButton(BR._eraserIconBmp, new EraserTool()),
+					new RotatingIconButton(BR._bucketIconBmp, new BucketTool()),
+					new RotatingIconButton(BR._brushIconBmp, new BrushTool(), false, true, true),
+					new RotatingIconButton(BR._colorSpectrumBmp, new ColorSpectrumTool(),false,false,true)
 				];
 			
 			for( var i:int = 0; i <menuButtons.length; i++)
@@ -166,16 +138,13 @@ package com.shaunhusain.fingerPainting.view
 			
 			
 			secondaryBrushOptions = new SecondaryBrushOptions();
-			secondaryBrushOptions.x = -400;
+			secondaryBrushOptions.x = 100;
 			secondaryBrushOptions.y = 100;
-			secondaryBrushOptions.visible = false;
-			addChild(secondaryBrushOptions);
 			
 			secondaryColorOptions = new SecondaryColorOptions();
-			secondaryColorOptions.x = -400;
+			secondaryColorOptions.x = 100;
 			secondaryColorOptions.y = 100;
-			secondaryColorOptions.visible = false;
-			addChild(secondaryColorOptions);
+			
 		}
 		
 		
@@ -189,18 +158,21 @@ package com.shaunhusain.fingerPainting.view
 		{
 			if(model.currentTool == event.target.data as ITool && model.currentTool is BrushTool)
 			{
-				secondaryBrushOptions.visible = !secondaryBrushOptions.visible;
-				secondaryColorOptions.visible = false;
+				if(secondaryPanelManager.currentlyShowing == secondaryBrushOptions)
+					secondaryPanelManager.hidePanel();
+				else
+					secondaryPanelManager.showPanel(secondaryBrushOptions);
 			}
 			else if(event.target.data is ColorSpectrumTool)
 			{
-				secondaryColorOptions.visible = !secondaryColorOptions.visible;
-				secondaryBrushOptions.visible = false;
+				if(secondaryPanelManager.currentlyShowing == secondaryColorOptions)
+					secondaryPanelManager.hidePanel();
+				else
+					secondaryPanelManager.showPanel(secondaryColorOptions);
 			}
 			else
 			{
-				secondaryColorOptions.visible = false;
-				secondaryBrushOptions.visible = false;
+				secondaryPanelManager.hidePanel();
 			}
 			model.currentTool = event.target.data as ITool;
 			for( var i:int = 0; i <menuButtons.length; i++)
@@ -225,18 +197,29 @@ package com.shaunhusain.fingerPainting.view
 				return;
 			
 			var yChange:Number = menuButtonsTouchStartPoint.y - event.stageY;
-			if((menuMoved||Math.abs(yChange) > 5) && (menuButtonSprite.y>10||yChange<0))
+			if(menuMoved||Math.abs(yChange) > 5)
 			{
+				if(yChange>0 && menuButtonSprite.y+menuButtonSprite.height<=stage.fullScreenHeight-40)
+				{
+					
+					menuButtonSprite.y = stage.fullScreenHeight-40-menuButtonSprite.height;
+					menuButtonsTouchStartPoint.y = event.stageY;
+					return;
+				}
 				model.menuMoving = menuMoved = true;
 				menuButtonsTouchStartPoint.y = event.stageY;
 				menuButtonSprite.y -= yChange;
 				
+				if(yChange>0 && menuButtonSprite.y+menuButtonSprite.height<=stage.fullScreenHeight-40)
+				{
+					
+					menuButtonSprite.y = stage.fullScreenHeight-40-menuButtonSprite.height;
+					menuButtonsTouchStartPoint.y = event.stageY;
+				}
 				trace(menuButtonSprite.y);
 				
 				//secondaryBrushOptions.setConnectionYPosition(menuButtonSprite.y+400);
 			}
-			if(menuButtonSprite.y<10)
-				menuButtonSprite.y = 10;
 		}
 		
 		private function endTouchingMenu(event:TouchEvent):void
@@ -248,9 +231,6 @@ package com.shaunhusain.fingerPainting.view
 			}
 			menuButtonsTouchStartPoint = null;
 		}
-		
-		
-		
 		
 		private function handleTouchBegin(event:TouchEvent):void
 		{
@@ -271,6 +251,8 @@ package com.shaunhusain.fingerPainting.view
 				model.toolbarMoving = toolbarMoved = true;
 				mainToolbarStartPoint.x = event.stageX;
 				x -= xChange;
+				if(x<stage.fullScreenWidth - 270)
+					x = stage.fullScreenWidth - 270;
 			}
 		}
 		private function handleTouchEnd(event:TouchEvent):void
@@ -286,7 +268,6 @@ package com.shaunhusain.fingerPainting.view
 		private function handleTapped(event:TouchEvent):void
 		{
 			event.stopImmediatePropagation();
-			trace("handling tapped");
 			
 			if(isOpen)
 			{
@@ -297,8 +278,25 @@ package com.shaunhusain.fingerPainting.view
 				Actuate.tween(this, .5, {arrowRotation:0,x:stage.fullScreenWidth - 270});
 			}
 			isOpen = !isOpen;
-			secondaryColorOptions.visible = false;
-			secondaryBrushOptions.visible = false;
+			secondaryPanelManager.hidePanel();
+		}
+		
+		protected function handleRollout(event:TouchEvent):void
+		{
+			if(!mainToolbarStartPoint)
+				return;
+			var xChange:Number = mainToolbarStartPoint.x - event.stageX;
+			if(xChange<0)
+			{
+				isOpen = true;
+				Actuate.tween(this, .5, {arrowRotation:0,x:stage.fullScreenWidth - 270});
+			}
+			else
+			{
+				isOpen = false;
+				Actuate.tween(this, .5, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 85});
+				secondaryPanelManager.hidePanel();
+			}
 		}
 		
 		public function set arrowRotation(angleRadians:Number):void
@@ -312,12 +310,17 @@ package com.shaunhusain.fingerPainting.view
 		private function rotateTriangle(angleRadians:Number):void
 		{
 			_arrowRotation = angleRadians;
-			var m:Matrix = _triangleIconBmp.transform.matrix;
+			var m:Matrix = BR._triangleIconBmp.transform.matrix;
 			m.identity();
-			m.translate(-_triangleIconBmp.width/2,-_triangleIconBmp.height/2);
+			m.translate(-BR._triangleIconBmp.width/2,-BR._triangleIconBmp.height/2);
 			m.rotate(angleRadians);
-			m.translate(_triangleIconBmp.width/2,_triangleIconBmp.height/2);
-			_triangleIconBmp.transform.matrix = m;
+			m.translate(BR._triangleIconBmp.width/2,BR._triangleIconBmp.height/2);
+			BR._triangleIconBmp.transform.matrix = m;
+		}
+		
+		private function blockEvent(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
 		}
 	}
 }

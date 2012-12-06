@@ -5,11 +5,13 @@ package com.shaunhusain.fingerPainting.managers
 	import flash.display.Loader;
 	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
-	public class UndoManager extends EventDispatcher
+	public class UndoManager
 	{
 		private static var instance:UndoManager;
 		private var historyStack:Array;
@@ -23,7 +25,10 @@ package com.shaunhusain.fingerPainting.managers
 		private var loading:Boolean;
 		
 		private var encodingRect:Rectangle;
-		private var encodingOptions:PNGEncoderOptions = new flash.display.PNGEncoderOptions();
+		
+		private var saveDelayTimer:Timer;
+		
+		private var tempBD:BitmapData;
 		
 		public static function getIntance():UndoManager
 		{
@@ -42,7 +47,46 @@ package com.shaunhusain.fingerPainting.managers
 			historyStack=[];
 			redoLoader = new Loader();
 			undoLoader = new Loader();
+			undoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, undoLoaderHandler);
+			redoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, redoLoaderHandler);
 			PNGEncoder2.level = CompressionLevel.GOOD;
+			
+			saveDelayTimer = new Timer(500,1);
+			saveDelayTimer.addEventListener(TimerEvent.TIMER_COMPLETE, actuallySave);
+		}
+		
+		public function extendTimer():void
+		{
+			saveDelayTimer.stop();
+			saveDelayTimer.reset();
+			saveDelayTimer.start();
+		}
+		
+		private function actuallySave(event:TimerEvent):void
+		{
+			
+			if(!encodingRect)
+				encodingRect = new Rectangle(0,0,tempBD.width,tempBD.height);
+			if(currentIndex<historyStack.length-1)
+				historyStack.splice(currentIndex+1);
+			
+			var byteArray:ByteArray = new ByteArray();
+			//bd.encode(encodingRect, encodingOptions, byteArray);
+			//byteArray = PNGEncoder2.encode(tempBD);
+			var pngEncoder:PNGEncoder2 = PNGEncoder2.encodeAsync(tempBD);
+			pngEncoder.targetFPS = 30;
+			pngEncoder.addEventListener(Event.COMPLETE, function(event:Event):void
+			{
+				byteArray = event.target.png;
+				historyStack.push(byteArray);
+				currentIndex++;
+				if(historyStack.length>50)
+				{
+					historyStack.shift();
+					currentIndex--;
+				}
+			});
+			
 		}
 		
 		public function undo(callback:Function):void
@@ -55,7 +99,6 @@ package com.shaunhusain.fingerPainting.managers
 			if(currentIndex<0)
 				currentIndex=0;
 			
-			undoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, undoLoaderHandler);
 			undoLoader.loadBytes(historyStack[currentIndex]);
 		}
 		public function redo(callback:Function):void
@@ -68,7 +111,6 @@ package com.shaunhusain.fingerPainting.managers
 			if(currentIndex>historyStack.length-1)
 				currentIndex = historyStack.length-1;
 			
-			redoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, redoLoaderHandler);
 			redoLoader.loadBytes(historyStack[currentIndex]);
 		}
 		
@@ -76,33 +118,28 @@ package com.shaunhusain.fingerPainting.managers
 		{
 			redoCallback(Bitmap(event.target.content).bitmapData);
 			loading = false;
+			System.gc();
 		}
 		
 		private function undoLoaderHandler(event:Event):void
 		{
 			undoCallback(Bitmap(event.target.content).bitmapData);
 			loading = false;
+			System.gc();
 		}
 		
 		
 		public function addHistoryElement(bd:BitmapData):void
 		{
-			if(!encodingRect)
-				encodingRect = new Rectangle(0,0,bd.width,bd.height)
-			if(currentIndex<historyStack.length-1)
-				historyStack.splice(currentIndex+1);
+			tempBD = bd;
 			
-			var byteArray:ByteArray = new ByteArray();
-			
-			//bd.encode(encodingRect, encodingOptions, byteArray);
-			byteArray = PNGEncoder2.encode(bd);
-			historyStack.push(byteArray);
-			currentIndex++;
-			if(historyStack.length>200)
+			if(saveDelayTimer.running)
 			{
-				historyStack.shift();
-				currentIndex--;
+				saveDelayTimer.stop();
+				saveDelayTimer.reset();
 			}
+			saveDelayTimer.start();
+			
 		}
 	}
 }

@@ -1,32 +1,24 @@
 package 
 {
+	import com.shaunhusain.fingerPainting.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.managers.UndoManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.fingerPainting.tools.BlankTool;
-	import com.shaunhusain.fingerPainting.tools.BrushTool;
-	import com.shaunhusain.fingerPainting.tools.BucketTool;
-	import com.shaunhusain.fingerPainting.tools.EraserTool;
-	import com.shaunhusain.fingerPainting.tools.ITool;
-	import com.shaunhusain.fingerPainting.tools.ShapeTool;
 	import com.shaunhusain.fingerPainting.view.Toolbar;
-	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
-	import flash.utils.ByteArray;
 	
 	import net.hires.debug.Stats;
 	
-	[SWF(frameRate="60")]
+	[SWF(frameRate="30")]
 	public class FingerPainting extends Sprite
 	{
 		
@@ -40,6 +32,7 @@ package
 		private var model:PaintModel = PaintModel.getInstance();
 		private var undoManager:UndoManager = UndoManager.getIntance();
 		
+		private var secondaryPanelManagerSprite:SecondaryPanelManager = SecondaryPanelManager.getIntance(); 
 		
 		public function FingerPainting()
 		{
@@ -52,6 +45,7 @@ package
 			
 			model.bitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight,true,0xFFFFFFFF);
 			model.currentDrawingOverlay = new Sprite();
+			model.currentDrawingOverlay.mouseChildren = model.currentDrawingOverlay.mouseEnabled = false;
 			undoManager.addHistoryElement(model.bitmapData.clone());
 			
 			bitmapCanvas = new Bitmap(model.bitmapData);
@@ -72,6 +66,9 @@ package
 			var stats:Stats = new Stats();
 			stats.scaleX=stats.scaleY=2;
 			addChild(stats);
+			
+			addChild(secondaryPanelManagerSprite);
+			
 		}
 		
 		private function touchMoveHandler(event:TouchEvent):void
