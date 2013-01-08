@@ -26,12 +26,12 @@
 		<link>
 			<name>[source path] assets</name>
 			<type>2</type>
-			<location>C:/HiRes Stats/assets</location>
+			<location>C:/Users/Shaun/Documents/GitHub/Hi-ReS-Stats/assets</location>
 		</link>
 		<link>
 			<name>[source path] src</name>
 			<type>2</type>
-			<location>C:/HiRes Stats/src</location>
+			<location>C:/Users/Shaun/Documents/GitHub/Hi-ReS-Stats/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

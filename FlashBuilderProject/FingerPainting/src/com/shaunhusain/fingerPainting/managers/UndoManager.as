@@ -30,6 +30,8 @@ package com.shaunhusain.fingerPainting.managers
 		
 		private var tempBD:BitmapData;
 		
+		private var currentlySaving:Boolean;
+		
 		public static function getIntance():UndoManager
 		{
 			if( instance == null ) instance = new UndoManager( new SingletonEnforcer() );
@@ -49,7 +51,7 @@ package com.shaunhusain.fingerPainting.managers
 			undoLoader = new Loader();
 			undoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, undoLoaderHandler);
 			redoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, redoLoaderHandler);
-			PNGEncoder2.level = CompressionLevel.GOOD;
+			PNGEncoder2.level = CompressionLevel.NORMAL;
 			
 			saveDelayTimer = new Timer(500,1);
 			saveDelayTimer.addEventListener(TimerEvent.TIMER_COMPLETE, actuallySave);
@@ -64,7 +66,15 @@ package com.shaunhusain.fingerPainting.managers
 		
 		private function actuallySave(event:TimerEvent):void
 		{
-			
+			if(currentlySaving)
+			{
+				extendTimer();
+				return;
+			}
+			if(!tempBD)
+			{
+				return;
+			}
 			if(!encodingRect)
 				encodingRect = new Rectangle(0,0,tempBD.width,tempBD.height);
 			if(currentIndex<historyStack.length-1)
@@ -73,10 +83,12 @@ package com.shaunhusain.fingerPainting.managers
 			var byteArray:ByteArray = new ByteArray();
 			//bd.encode(encodingRect, encodingOptions, byteArray);
 			//byteArray = PNGEncoder2.encode(tempBD);
+			currentlySaving = true;
 			var pngEncoder:PNGEncoder2 = PNGEncoder2.encodeAsync(tempBD);
-			pngEncoder.targetFPS = 30;
+			pngEncoder.targetFPS = 45;
 			pngEncoder.addEventListener(Event.COMPLETE, function(event:Event):void
 			{
+				currentlySaving = false;
 				byteArray = event.target.png;
 				historyStack.push(byteArray);
 				currentIndex++;

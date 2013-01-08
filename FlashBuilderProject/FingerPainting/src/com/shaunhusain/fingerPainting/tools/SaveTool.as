@@ -3,15 +3,17 @@ package com.shaunhusain.fingerPainting.tools
 	import com.shaunhusain.fingerPainting.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.view.SavePanel;
 	
+	import flash.display.Stage;
 	import flash.events.TouchEvent;
 	
 	public class SaveTool extends ToolBase implements ITool
 	{
 		private var secondaryPanelManager:SecondaryPanelManager = SecondaryPanelManager.getIntance();
 		private var savePanel:SavePanel;
-		public function SaveTool()
+		public function SaveTool(stage:Stage)
 		{
-			savePanel = new SavePanel();
+			super(stage);
+			savePanel = new SavePanel(layerManager.currentLayerBitmap);
 			savePanel.x = 100;
 			savePanel.y = 100;
 		}

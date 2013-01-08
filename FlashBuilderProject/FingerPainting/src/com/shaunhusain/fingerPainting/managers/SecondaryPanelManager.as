@@ -45,11 +45,11 @@ package com.shaunhusain.fingerPainting.managers
 			displayObject.alpha = 0;
 			addChild(displayObject);
 			displayObject.x = stage.fullScreenWidth/2-displayObject.width/2;
-			displayObject.y = stage.fullScreenHeight/2-displayObject.height/2 - 400;
+			displayObject.y = stage.fullScreenHeight/2-displayObject.height/2;
 			_currentlyShowing = displayObject;
 			isShowingPanel = true;
 			
-			Actuate.tween(displayObject, .5, {alpha:1, y:stage.fullScreenHeight/2-displayObject.height/2});
+			Actuate.tween(displayObject, .5, {alpha:1});
 		}
 		public function hidePanel():void
 		{
@@ -61,7 +61,7 @@ package com.shaunhusain.fingerPainting.managers
 			isShowingPanel = false;
 			_currentlyShowing = null;
 			
-			var ge:GenericActuator = Actuate.tween(_lastShown, .5, {alpha:0, y:stage.fullScreenHeight/2-_lastShown.height/2+400});
+			var ge:GenericActuator = Actuate.tween(_lastShown, .5, {alpha:0});
 			ge.onComplete(function():void
 			{
 				removeChild(_lastShown);

@@ -18,8 +18,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			if(_currentValue==value)
 				return;
-			_currentValue = value;
-			
+			_currentValue = thumb.x = value;
 			dispatchEvent(new Event("valueChanged"));
 		}
 		public function get currentValue():Number
@@ -66,7 +65,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		
 		private function handleSliding(event:TouchEvent):void
 		{
-			currentValue = thumb.x = event.localX;
+			_currentValue = thumb.x = event.localX;
+			
+			dispatchEvent(new Event("valueChanged"));
 			event.stopImmediatePropagation();
 		}
 		private function blockEvent(event:TouchEvent):void

@@ -3,11 +3,20 @@ package com.shaunhusain.fingerPainting.managers
 	import flash.display.BitmapData;
 	
 	import org.bytearray.gif.encoder.GIFEncoder;
-
+	
+	/**
+	 * Setup to offload the work of putting together GIFs (not yet in use).
+	 */
 	public class GIFAnimationManager
 	{
-		private static var instance:GIFAnimationManager;
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var gifEncoder:GIFEncoder;
+		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function GIFAnimationManager(se:SingletonEnforcer)
 		{
 			gifEncoder = new GIFEncoder();
@@ -15,12 +24,19 @@ package com.shaunhusain.fingerPainting.managers
 			gifEncoder.setFrameRate(3);
 		}
 		
+		//--------------------------------------------------------------------------------
+		//				Singleton
+		//--------------------------------------------------------------------------------
+		private static var instance:GIFAnimationManager;
 		public static function getIntance():GIFAnimationManager
 		{
 			if( instance == null ) instance = new GIFAnimationManager( new SingletonEnforcer() );
 			return instance;
 		}
 		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
 		public function addFrame(bd:BitmapData):void
 		{
 			gifEncoder.addFrame(bd);

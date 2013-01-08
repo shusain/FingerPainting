@@ -3,16 +3,17 @@ package com.shaunhusain.fingerPainting.model
 	import com.shaunhusain.fingerPainting.tools.ITool;
 	
 	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
-	import flash.net.dns.AAAARecord;
 
 	public class PaintModel extends EventDispatcher
 	{
-		public var bitmapData:BitmapData;
+		/*public var cameraWrapper:Sprite;
+		public var video:Video;
+		public var isVideoAttached:Boolean;*/
+		
 		public var currentDrawingOverlay:Sprite;
 		public var currentTool:ITool;
 		
@@ -28,7 +29,7 @@ package com.shaunhusain.fingerPainting.model
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
 		
-		public var isPressureSensitive:Boolean;
+		public var isPressureSensitive:Boolean=true;
 		
 		private static var instance:PaintModel;
 		

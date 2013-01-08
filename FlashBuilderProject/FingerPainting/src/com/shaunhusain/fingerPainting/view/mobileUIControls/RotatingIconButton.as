@@ -1,7 +1,9 @@
 package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
+	import com.shaunhusain.fingerPainting.events.AccEventExtra;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
+	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -17,28 +19,31 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//Sprites for layering the background and the icon
 		private var backgroundSprite:Sprite;
 		private var iconSprite:Sprite;
+		private var allowsRotation:Boolean;
 		
-		public var useSecondaryBackground:Boolean;
-		
-		//background image for button when deselected
-		[Embed(source="/images/buttonBackground.png")]
-		private var _firstBackgroundImage:Class;
-		private var _firstBackgroundBmp:Bitmap = new _firstBackgroundImage();
-		
-		//background image for button when selected
-		[Embed(source="/images/buttonBackgroundSelected.png")]
-		private var _firstBackgroundImageSelected:Class;
-		private var _firstBackgroundSelectedBmp:Bitmap = new _firstBackgroundImageSelected();
-		
-		[Embed(source="/images/secondaryButtonBackground.png")]
-		private var _secondBackgroundImage:Class;
-		private var _secondBackgroundBmp:Bitmap = new _secondBackgroundImage();
-		
-		[Embed(source="/images/secondaryButtonSelectedBackground.png")]
-		private var _secondBackgroundSelectedImage:Class;
-		private var _secondBackgroundSelectedBmp:Bitmap = new _secondBackgroundSelectedImage();
-		
-		
+		private var _backgroundBitmap:Bitmap;
+		public function get backgroundBitmap():Bitmap
+		{
+			return _backgroundBitmap;
+		}
+
+		public function set backgroundBitmap(value:Bitmap):void
+		{
+			_backgroundBitmap = value;
+		}
+
+		private var _backgroundSelectedBitmap:Bitmap;
+
+		public function get backgroundSelectedBitmap():Bitmap
+		{
+			return _backgroundSelectedBitmap;
+		}
+
+		public function set backgroundSelectedBitmap(value:Bitmap):void
+		{
+			_backgroundSelectedBitmap = value;
+		}
+
 		
 		[Embed(source="/images/brushIcon.png")]
 		private var _iconImage:Class;
@@ -83,12 +88,12 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			if(instantaneous)
 			{
-				dispatchEvent(new Event("instantaneousButtonClicked"));
+				dispatchEvent(new Event("instantaneousButtonClicked",true));
 				setTimeout(resetBackground,250);
 			}
 			else
 			{
-				dispatchEvent(new Event("buttonClicked"));
+				dispatchEvent(new Event("buttonClicked",true));
 			}
 		}
 		
@@ -98,22 +103,25 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			showAppropriateBackground();
 		}
 		
-		public function RotatingIconButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, useSecondaryBackground:Boolean=false)
+		public function RotatingIconButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, allowsRotation:Boolean = true, backgroundBitmap:Bitmap=null, backgroundSelectedBitmap:Bitmap = null)
 		{
 			super();
 			
 			
 			if(iconBmp)
 				_iconBmp = iconBmp;
-			if(useSecondaryBackground)
-			{
-				_firstBackgroundBmp = _secondBackgroundBmp;
-				_firstBackgroundSelectedBmp = _secondBackgroundSelectedBmp;
-			}
-			this.useSecondaryBackground = useSecondaryBackground
+			
+			this.backgroundSelectedBitmap = backgroundSelectedBitmap;
+			this.backgroundBitmap = backgroundBitmap;
 			this.isSelected = isSelected;
 			this.data = data;
 			this.instantaneous = instantaneous;
+			this.allowsRotation = allowsRotation;
+			
+			if(!backgroundBitmap)
+				this.backgroundBitmap = BitmapReference._firstBackgroundBmp;
+			if(!backgroundSelectedBitmap)
+				this.backgroundSelectedBitmap = BitmapReference._firstBackgroundSelectedBmp;
 			
 			backgroundSprite = new Sprite();
 			addChild(backgroundSprite);
@@ -125,11 +133,13 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			_iconMatrix = new Matrix();
 			
-			rotateAroundCenter(Math.PI);
+			rotateAroundCenter=0;
 			
-			var accManager:AccelerometerManager = AccelerometerManager.getIntance();
-			accManager.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
-			
+			if(allowsRotation)
+			{
+				var accManager:AccelerometerManager = AccelerometerManager.getIntance();
+				accManager.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
+			}
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 		}
 		
@@ -140,39 +150,42 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			backgroundSprite.graphics.clear();
 			if(isSelected)
 			{
-				backgroundSprite.graphics.beginBitmapFill(_firstBackgroundSelectedBmp.bitmapData);
-				backgroundSprite.graphics.drawRect(0,0,_firstBackgroundSelectedBmp.width,_firstBackgroundSelectedBmp.height);
+				backgroundSprite.graphics.beginBitmapFill(backgroundSelectedBitmap.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,backgroundSelectedBitmap.width,backgroundSelectedBitmap.height);
 			}
 			else
 			{
-				backgroundSprite.graphics.beginBitmapFill(_firstBackgroundBmp.bitmapData);
-				backgroundSprite.graphics.drawRect(0,0,_firstBackgroundBmp.width,_firstBackgroundBmp.height);
+				backgroundSprite.graphics.beginBitmapFill(backgroundBitmap.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,backgroundBitmap.width,backgroundBitmap.height);
 			}
 			backgroundSprite.graphics.endFill();
 		}
 		
-		private function handleAccelerometerChange(event:AccelerometerEvent):void
+		private function handleAccelerometerChange(event:AccEventExtra):void
 		{
-			if(Math.abs(event.accelerationZ)<.9)
-			{
-				var angle:Number = Math.atan2(event.accelerationY, event.accelerationX);
-				angle-=Math.PI/2;
-				angle = -angle;
-				rotateAroundCenter(angle);
-			}
+			rotateAroundCenter = event.linearRotation;
 		}
 		
-		private function rotateAroundCenter (angleRadians:Number):void
+		private var _rotateAroundCenter:Number = NaN;
+		public function set rotateAroundCenter (angleRadians:Number):void
 		{
+			if(!isNaN(_rotateAroundCenter) && Math.abs(angleRadians-_rotateAroundCenter)<.03)
+				return;
+			
+			_rotateAroundCenter = angleRadians;
 			_iconMatrix.identity();
 			_iconMatrix.translate(-_iconBmp.width/2, -_iconBmp.height/2);
 			_iconMatrix.rotate (angleRadians);
-			_iconMatrix.translate(_firstBackgroundBmp.width/2, _firstBackgroundBmp.height/2);
+			_iconMatrix.translate(backgroundBitmap.width/2, backgroundBitmap.height/2);
 			
 			iconSprite.graphics.clear();
 			iconSprite.graphics.beginBitmapFill(_iconBmp.bitmapData, _iconMatrix, false, true);
-			iconSprite.graphics.drawRect(0,0, _firstBackgroundBmp.width,_firstBackgroundBmp.height);
+			iconSprite.graphics.drawRect(0,0, backgroundBitmap.width,backgroundBitmap.height);
 			iconSprite.graphics.endFill();
+		}
+		public function get rotateAroundCenter():Number
+		{
+			return _rotateAroundCenter;
 		}
 	}
 }

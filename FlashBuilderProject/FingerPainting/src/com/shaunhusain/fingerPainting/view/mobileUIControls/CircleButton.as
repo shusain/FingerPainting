@@ -6,6 +6,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
+	import flash.events.Event;
 	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextField;
@@ -33,12 +34,14 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			_text = value;
 			
+			var numLines:int = value.split("\n").length;
+			
 			textField.text = _text;
 			textField.setTextFormat(textFormat);
 			var textLineMetrics:TextLineMetrics = textField.getLineMetrics(0);
 			var boundsRect:Rectangle = textField.getBounds(this);
-			textField.x = -boundsRect.width/2;
-			textField.y = -boundsRect.height/2;
+			textField.x = -textLineMetrics.width/2;
+			textField.y = -textLineMetrics.height/2*numLines;
 		}
 		
 		private var _selected:Boolean;
@@ -73,7 +76,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			textContainer = new Sprite();
 			
 			textFormat = new TextFormat();
-			textFormat.size = 36;
+			textFormat.size = 32;
 			textFormat.font = "myFont";
 			
 			textField = new TextField();
@@ -96,8 +99,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		
 		private function handleButtonTapped(event:TouchEvent):void
 		{
-			PaintModel.getInstance().isPressureSensitive = selected = !selected;
+			selected = !selected;
 			event.stopImmediatePropagation();
+			dispatchEvent(new Event("circleButtonClicked"));
 		}
 		
 		private function handleAccelerometerChange(event:AccelerometerEvent):void
