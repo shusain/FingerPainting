@@ -16,16 +16,25 @@ package com.shaunhusain.fingerPainting.tools
 	
 	public class BrushTool extends ToolBase implements ITool
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var touchSamples:ByteArray;
+		
+		protected var secondaryBrushOptions:SecondaryBrushOptions;
+		
 		protected var curColor:uint;
 		protected var curAlpha:Number;
 		protected var curBrushWidth:Number;
+		
 		protected var receivedDown:Boolean;
-		private var secondaryBrushOptions:SecondaryBrushOptions;
 		
 		protected var positionChangeCounter:Number=0;
 		protected var lastPointBeforeBDDraw:Point;
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function BrushTool(stage:Stage)
 		{
 			super(stage);
@@ -36,12 +45,82 @@ package com.shaunhusain.fingerPainting.tools
 			secondaryBrushOptions.y = 100;
 		}
 		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
+		public function toggleSecondaryOptions():void
+		{
+			if(secondaryPanelManager.currentlyShowing == secondaryBrushOptions)
+				secondaryPanelManager.hidePanel();
+			else
+			{
+				secondaryPanelManager.showPanel(secondaryBrushOptions);
+			}
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
+		public function takeAction(event:TouchEvent=null):void
+		{
+			if(event.touchPointID!=0)
+				return;
+			undoManager.extendTimer();
+			
+			switch(event.type)
+			{
+				case TouchEvent.TOUCH_BEGIN:
+					touchBeginHandler(event);
+					break;
+				case TouchEvent.TOUCH_MOVE:
+					touchMoveHandler(event);
+					break;
+				case TouchEvent.TOUCH_END:
+					drawSpriteDataToBitmap(false);
+					break;
+				case TouchEvent.TOUCH_TAP:
+					break;
+			}
+		}
+		private function touchBeginHandler(event:TouchEvent):void
+		{
+			var sp:Sprite = model.currentDrawingOverlay;
+			receivedDown = true;
+			//trace("brush touch begin");
+			curColor = getColorToUse();
+			curAlpha = getAlphaToUse();
+			curBrushWidth = getBrushWidth();
+			sp.graphics.moveTo(event.stageX,event.stageY);
+		}
+		private function touchMoveHandler(event:TouchEvent):void
+		{
+			if(!receivedDown)
+				return;
+			var result:uint = event.getSamples(touchSamples,false);
+			touchSamples.position = 0;     // rewind to beginning of array before reading
+			
+			var xCoord:Number,yCoord:Number,pressure:Number;
+			while( touchSamples.bytesAvailable > 0 )
+			{
+				xCoord = touchSamples.readFloat();
+				yCoord = touchSamples.readFloat();
+				pressure = touchSamples.readFloat();
+				
+				//drawDirectlyToBitmapData(xCoord,yCoord,pressure,curColor,drawingRect);
+				drawToOverlaySprite(curColor,xCoord,yCoord,pressure);
+			}
+		}
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
 		protected function getColorToUse():uint{
 			return model.currentColor;
 		}
+		
 		protected function getAlphaToUse():Number{
 			return model.brushOpacity;
 		}
+		
 		protected function getBrushWidth():Number{
 			return model.brushCurrentWidth;
 		}
@@ -84,17 +163,6 @@ package com.shaunhusain.fingerPainting.tools
 			}
 		}
 		
-		public function toggleSecondaryOptions():void
-		{
-			if(secondaryPanelManager.currentlyShowing == secondaryBrushOptions)
-				secondaryPanelManager.hidePanel();
-			else
-			{
-				secondaryBrushOptions.updateValues();
-				secondaryPanelManager.showPanel(secondaryBrushOptions);
-			}
-		}
-		
 		protected function drawSpriteDataToBitmap(receivedDown = true):void
 		{
 			var sp:Sprite = model.currentDrawingOverlay;
@@ -125,54 +193,5 @@ package com.shaunhusain.fingerPainting.tools
 				sp.graphics.moveTo(lastPointBeforeBDDraw.x,lastPointBeforeBDDraw.y);
 			}
 		}
-		
-		public function takeAction(event:TouchEvent=null):void
-		{
-			if(event.touchPointID!=0)
-				return;
-			undoManager.extendTimer();
-			
-			var sp:Sprite = model.currentDrawingOverlay;
-			if(event.type == TouchEvent.TOUCH_MOVE)
-			{
-				if(!receivedDown)
-					return;
-				var result:uint = event.getSamples(touchSamples,false);
-				touchSamples.position = 0;     // rewind to beginning of array before reading
-				
-				//curColor = curColor & 0x00FFFFFF;
-				//curColor = curColor + ((Math.round(model.brushOpacity*255))<<24);
-				var xCoord:Number,yCoord:Number,pressure:Number;
-				//trace(curColor);
-				while( touchSamples.bytesAvailable > 0 )
-				{
-					xCoord = touchSamples.readFloat();
-					yCoord = touchSamples.readFloat();
-					pressure = touchSamples.readFloat();
-					
-					
-					//drawDirectlyToBitmapData(xCoord,yCoord,pressure,curColor,drawingRect);
-					drawToOverlaySprite(curColor,xCoord,yCoord,pressure);
-					//break;
-				}
-			}
-			else if(event.type == TouchEvent.TOUCH_TAP)
-			{
-				//bm.fillRect(new Rectangle(xCoord,yCoord,10,10), PaintModel.getInstance().currentColor);
-			}
-			else if(event.type == TouchEvent.TOUCH_BEGIN)
-			{
-				receivedDown = true;
-				//trace("brush touch begin");
-				curColor = getColorToUse();
-				curAlpha = getAlphaToUse();
-				curBrushWidth = getBrushWidth();
-				sp.graphics.moveTo(event.stageX,event.stageY);
-			}
-			else if(event.type == TouchEvent.TOUCH_END)
-			{
-				drawSpriteDataToBitmap(false);
-			}
-		}
-	}
+	}	
 }

@@ -8,8 +8,15 @@ package com.shaunhusain.fingerPainting.tools
 	
 	public class SaveTool extends ToolBase implements ITool
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var secondaryPanelManager:SecondaryPanelManager = SecondaryPanelManager.getIntance();
 		private var savePanel:SavePanel;
+		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function SaveTool(stage:Stage)
 		{
 			super(stage);
@@ -17,6 +24,10 @@ package com.shaunhusain.fingerPainting.tools
 			savePanel.x = 100;
 			savePanel.y = 100;
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
 			if(secondaryPanelManager.currentlyShowing == savePanel)

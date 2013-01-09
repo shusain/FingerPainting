@@ -11,6 +11,9 @@ package com.shaunhusain.fingerPainting.tools
 	
 	public class LayerTool extends ToolBase implements ITool
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var secondaryLayerOptions:SecondaryLayerOptions;
 		
 		private var pointsTracked:Number = 0;
@@ -25,6 +28,9 @@ package com.shaunhusain.fingerPainting.tools
 		private var currentScale:Number;
 		
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function LayerTool(stage:Stage)
 		{
 			super(stage);
@@ -34,6 +40,10 @@ package com.shaunhusain.fingerPainting.tools
 			secondaryLayerOptions.y = 100;
 			ptsTracked = {};
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
 			
@@ -88,7 +98,17 @@ package com.shaunhusain.fingerPainting.tools
 		private function endScaleRotateBitmap(event:TouchEvent):void
 		{
 		}
+		private function moveBitmap(event:TouchEvent):void
+		{
+			var currentTouchPrevPos:Point = ptsTracked[event.touchPointID];
+			var offset:Point = new Point(event.stageX-currentTouchPrevPos.x,event.stageY-currentTouchPrevPos.y);
+			layerManager.currentLayer.bitmap.x += offset.x;
+			layerManager.currentLayer.bitmap.y += offset.y;
+		}
 		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
 		public function toggleSecondaryOptions():void
 		{
 			if(secondaryPanelManager.currentlyShowing == secondaryLayerOptions)
@@ -97,13 +117,10 @@ package com.shaunhusain.fingerPainting.tools
 				secondaryPanelManager.showPanel(secondaryLayerOptions);
 		}
 		
-		private function moveBitmap(event:TouchEvent):void
-		{
-			var currentTouchPrevPos:Point = ptsTracked[event.touchPointID];
-			var offset:Point = new Point(event.stageX-currentTouchPrevPos.x,event.stageY-currentTouchPrevPos.y);
-			layerManager.currentLayer.bitmap.x += offset.x;
-			layerManager.currentLayer.bitmap.y += offset.y;
-		}
+		
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
 		private function scaleRotateBitmap(event:TouchEvent):void
 		{
 			if(isNaN(initialScale)||isNaN(initialAngle))
@@ -138,7 +155,7 @@ package com.shaunhusain.fingerPainting.tools
 				
 			}
 		}
-		public function angleBetween2Lines(line1a:Point, line1b:Point, line2a:Point, line2b:Point):Number
+		private function angleBetween2Lines(line1a:Point, line1b:Point, line2a:Point, line2b:Point):Number
 		{
 			var angle1:Number = Math.atan2(line1a.y - line1b.y,	line1a.x - line1b.x);
 			var angle2:Number = Math.atan2(line2a.y - line2b.y,	line2b.x - line2b.x);

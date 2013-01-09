@@ -7,15 +7,26 @@ package com.shaunhusain.fingerPainting.tools
 	
 	public class RedoTool extends ToolBase implements ITool
 	{
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function RedoTool(stage:Stage)
 		{
 			super(stage);
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
 			layerManager.currentLayerBitmap.fillRect(new Rectangle(0,0,layerManager.currentLayerBitmap.width,layerManager.currentLayerBitmap.height),0x00FFFFFF);
 			undoManager.redo(redoCallback)
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
 		private function redoCallback(bd:BitmapData):void
 		{
 			layerManager.currentLayerBitmap.draw(bd);

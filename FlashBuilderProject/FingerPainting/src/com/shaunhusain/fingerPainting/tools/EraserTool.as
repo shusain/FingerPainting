@@ -1,6 +1,5 @@
 package com.shaunhusain.fingerPainting.tools 
 {
-	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -9,12 +8,23 @@ package com.shaunhusain.fingerPainting.tools
 	
 	public class EraserTool extends BrushTool
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var touchSamples:ByteArray
+		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function EraserTool(stage:Stage)
 		{
 			super(stage);
 			touchSamples = new ByteArray();
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Overrides
+		//--------------------------------------------------------------------------------
 		override protected function getColorToUse():uint
 		{
 			return 0xFFFFFFFF;

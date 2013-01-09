@@ -11,17 +11,33 @@ package com.shaunhusain.fingerPainting.tools
 	
 	public class ShareTool extends ToolBase implements ITool
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var file:File;
 		private var share:ShareExt
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function ShareTool(stage:Stage)
 		{
 			super(stage);
-			
 		}
 		
-		private function getFile():void{
-			
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
+		public function takeAction(event:TouchEvent=null):void
+		{
+			getFile();
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
+		private function getFile():void
+		{
 			//find a file to share
 			var bytearray:ByteArray = PNGEncoder2.encode(layerManager.currentLayerBitmap);
 			file = File.documentsDirectory.resolvePath("temp.png");
@@ -30,16 +46,14 @@ package com.shaunhusain.fingerPainting.tools
 			fs.open(file,FileMode.WRITE);
 			fs.writeBytes(bytearray);
 			fs.close();
-			onGotFile();
+			shareFile();
 		}
-		private function onGotFile():void{
-			
+		private function shareFile():void
+		{
 			//list of all valid extensions - more can be added to support new types  - some of these might not even be supported by android 
 			var imageExtensions:Array = ["jpg","jpeg","png","gif"];
 			var audioExtensions:Array = ["wav","mp3","m4a"];
 			var videoExtensions:Array = ["wmv","mp4","avi","flv","f4v"];
-			
-			
 			
 			//this next chunck of ugly code figures out what the mime type of the file is so that android launches the approprate share list.			
 			var ext:String = file.extension;
@@ -68,19 +82,13 @@ package com.shaunhusain.fingerPainting.tools
 			}
 			
 			/*
-			
 			here's the magic:			
 			instantiate our Native Extension and share our file
-			
 			*/			
 			share = new ShareExt();
 			share.shareMedia(file.name,file.nativePath, mimeType);
 			
 		}
 		
-		public function takeAction(event:TouchEvent=null):void
-		{
-			getFile();
-		}
 	}
 }

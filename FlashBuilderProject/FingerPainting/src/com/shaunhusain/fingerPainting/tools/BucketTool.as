@@ -7,10 +7,18 @@ package com.shaunhusain.fingerPainting.tools
 	public class BucketTool extends ToolBase implements ITool
 	{
 		public static var NAME:String = "bucketTool";
+		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function BucketTool(stage:Stage)
 		{
 			super(stage);
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
 			var bm:BitmapData = layerManager.currentLayerBitmap;

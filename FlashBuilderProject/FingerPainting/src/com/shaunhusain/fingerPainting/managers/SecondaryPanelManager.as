@@ -8,12 +8,29 @@ package com.shaunhusain.fingerPainting.managers
 
 	public class SecondaryPanelManager extends Sprite
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
+		private var _lastShown:DisplayObject;
+		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
+		public function SecondaryPanelManager(se:SingletonEnforcer)	{}
+		
+		//--------------------------------------------------------------------------------
+		//				Singleton
+		//--------------------------------------------------------------------------------
 		private static var instance:SecondaryPanelManager;
 		public static function getIntance():SecondaryPanelManager
 		{
 			if( instance == null ) instance = new SecondaryPanelManager( new SingletonEnforcer() );
 			return instance;
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
 		private var _isShowingPanel:Boolean;
 		public function get isShowingPanel():Boolean
 		{
@@ -23,20 +40,15 @@ package com.shaunhusain.fingerPainting.managers
 		{
 			_isShowingPanel = value;
 		}
-		
-		private var _lastShown:DisplayObject;
-		
 		private var _currentlyShowing:DisplayObject;
 		public function get currentlyShowing():DisplayObject
 		{
 			return _currentlyShowing;
 		}
 		
-		
-		public function SecondaryPanelManager(se:SingletonEnforcer)
-		{
-		}
-		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
 		public function showPanel(displayObject:DisplayObject):void
 		{
 			if(_currentlyShowing)
@@ -67,7 +79,6 @@ package com.shaunhusain.fingerPainting.managers
 				removeChild(_lastShown);
 			});
 		}
-		
 	}
 }
 

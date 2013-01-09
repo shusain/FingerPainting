@@ -12,19 +12,26 @@ package com.shaunhusain.fingerPainting.view
 
 	public class SavePanel extends Sprite
 	{
-		private var bitmapData:BitmapData;
-		
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var model:PaintModel = PaintModel.getInstance();
-		
+		private var bitmapData:BitmapData;
 		private var backgroundSprite:Sprite;
-		
 		private var saveButton:CircleButton;
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function SavePanel(bitmapData:BitmapData)
 		{
 			this.bitmapData = bitmapData;
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		private function addedToStageHandler(event:Event):void
 		{
 			backgroundSprite = new Sprite();
@@ -55,9 +62,7 @@ package com.shaunhusain.fingerPainting.view
 			fr.addEventListener(Event.COMPLETE, fileChosenHandler);
 		}
 		
-		protected function fileChosenHandler(event:Event):void
-		{
-		}
+		protected function fileChosenHandler(event:Event):void{}
 		
 		private function blockEvent(event:TouchEvent):void
 		{

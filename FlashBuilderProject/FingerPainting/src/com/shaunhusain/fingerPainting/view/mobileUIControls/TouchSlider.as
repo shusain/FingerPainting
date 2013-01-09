@@ -7,25 +7,21 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class TouchSlider extends Sprite
 	{
+		//--------------------------------------------------------------------------------
+		//				Constants
+		//--------------------------------------------------------------------------------
 		public static const VALUE_CHANGED:String="valueChanged";
 		
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		public var thumb:Sprite;
 		public var slider:Sprite;
 		public var hitAreaSprite:Sprite;
 		
-		private var _currentValue:Number;
-		public function set currentValue(value:Number):void
-		{
-			if(_currentValue==value)
-				return;
-			_currentValue = thumb.x = value;
-			dispatchEvent(new Event("valueChanged"));
-		}
-		public function get currentValue():Number
-		{
-			return _currentValue;
-		}
-		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function TouchSlider()
 		{
 			super();
@@ -63,6 +59,25 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 		}
 		
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
+		private var _currentValue:Number;
+		public function set currentValue(value:Number):void
+		{
+			if(_currentValue==value)
+				return;
+			_currentValue = thumb.x = value;
+			dispatchEvent(new Event("valueChanged"));
+		}
+		public function get currentValue():Number
+		{
+			return _currentValue;
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		private function handleSliding(event:TouchEvent):void
 		{
 			_currentValue = thumb.x = event.localX;
@@ -74,5 +89,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			event.stopImmediatePropagation();
 		}
+		
 	}
 }

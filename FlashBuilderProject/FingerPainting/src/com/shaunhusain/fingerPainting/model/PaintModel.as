@@ -10,15 +10,12 @@ package com.shaunhusain.fingerPainting.model
 
 	public class PaintModel extends EventDispatcher
 	{
-		/*public var cameraWrapper:Sprite;
-		public var video:Video;
-		public var isVideoAttached:Boolean;*/
-		
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		public var currentDrawingOverlay:Sprite;
 		public var currentTool:ITool;
 		
-		//Color Options
-		private var _currentColor:uint = 0xFF000000;
 		public var currentColorBitmap:Bitmap;
 		
 		//Brush Options
@@ -31,8 +28,15 @@ package com.shaunhusain.fingerPainting.model
 		
 		public var isPressureSensitive:Boolean=true;
 		
-		private static var instance:PaintModel;
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
+		public function PaintModel(se:SingletonEnforcer){}
 		
+		//--------------------------------------------------------------------------------
+		//				Singleton
+		//--------------------------------------------------------------------------------
+		private static var instance:PaintModel;
 		public static function getInstance():PaintModel
 		{
 			if(!instance)
@@ -40,10 +44,10 @@ package com.shaunhusain.fingerPainting.model
 			return instance;
 		}
 		
-		public function PaintModel(se:SingletonEnforcer)
-		{
-		}
-		
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
+		private var _currentColor:uint = 0xFF000000;
 		public function set currentColor(value:Number):void
 		{
 			_currentColor = value;
@@ -57,6 +61,7 @@ package com.shaunhusain.fingerPainting.model
 		{
 			return _currentColor;
 		}
+		
 	}
 }
 

@@ -113,9 +113,5 @@ package com.shaunhusain.fingerPainting.view
 		[Embed(source="/images/secondaryButtonSelectedBackground.png")]
 		private static var _secondBackgroundSelectedImage:Class;
 		public static var _secondBackgroundSelectedBmp:Bitmap = new _secondBackgroundSelectedImage();
-		
-		public function BitmapReference()
-		{
-		}
 	}
 }

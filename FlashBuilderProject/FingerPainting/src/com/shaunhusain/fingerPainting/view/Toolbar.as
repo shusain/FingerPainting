@@ -160,6 +160,7 @@ package com.shaunhusain.fingerPainting.view
 					x = stage.fullScreenWidth - 270;
 			}
 		}
+		
 		private function handleTouchEnd(event:TouchEvent):void
 		{
 			event.stopImmediatePropagation();
@@ -213,7 +214,6 @@ package com.shaunhusain.fingerPainting.view
 			event.stopImmediatePropagation();
 		}
 		
-		
 		protected function instantaneousActionHandler(event:Event):void
 		{
 			var tempTool:ITool = event.target.data as ITool;
@@ -223,7 +223,6 @@ package com.shaunhusain.fingerPainting.view
 		//--------------------------------------------------------------------------------
 		//				Helper functions
 		//--------------------------------------------------------------------------------
-		
 		private function deselectAllOthers(event:Event):void
 		{
 			if(model.currentTool == event.target.data as ITool && model.currentTool is BrushTool)
@@ -248,6 +247,7 @@ package com.shaunhusain.fingerPainting.view
 					ab.isSelected = false;
 			}
 		}
+		
 		private function rotateTriangle(angleRadians:Number):void
 		{
 			_arrowRotation = angleRadians;

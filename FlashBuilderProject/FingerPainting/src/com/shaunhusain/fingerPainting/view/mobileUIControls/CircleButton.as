@@ -1,7 +1,6 @@
 package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
-	import com.shaunhusain.fingerPainting.model.PaintModel;
 	
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
@@ -16,6 +15,10 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class CircleButton extends Sprite
 	{
+		
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var buttonBackground:Sprite;
 		
 		private var textField:TextField;
@@ -26,41 +29,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		[Embed(source="/SourceCodePro-Bold.ttf", fontName = "myFont", mimeType = "application/x-font", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
 		
-		private var _text:String;
-		public function set text(value:String):void
-		{
-			if(value==_text)
-				return;
-			
-			_text = value;
-			
-			var numLines:int = value.split("\n").length;
-			
-			textField.text = _text;
-			textField.setTextFormat(textFormat);
-			var textLineMetrics:TextLineMetrics = textField.getLineMetrics(0);
-			var boundsRect:Rectangle = textField.getBounds(this);
-			textField.x = -textLineMetrics.width/2;
-			textField.y = -textLineMetrics.height/2*numLines;
-		}
-		
-		private var _selected:Boolean;
-		public function set selected(value:Boolean):void
-		{
-			_selected=value;
-			buttonBackground.graphics.clear();
-			if(value)
-				buttonBackground.graphics.beginFill(0x00FF00);
-			else
-				buttonBackground.graphics.beginFill(0xFF0000);
-			buttonBackground.graphics.drawCircle(90,90,90);
-			buttonBackground.graphics.endFill();
-		}
-		public function get selected():Boolean
-		{
-			return _selected;
-		}
-		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function CircleButton()
 		{
 			super();
@@ -97,13 +68,53 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 		}
 		
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
+		private var _text:String;
+		public function set text(value:String):void
+		{
+			if(value==_text)
+				return;
+			
+			_text = value;
+			
+			var numLines:int = value.split("\n").length;
+			
+			textField.text = _text;
+			textField.setTextFormat(textFormat);
+			var textLineMetrics:TextLineMetrics = textField.getLineMetrics(0);
+			var boundsRect:Rectangle = textField.getBounds(this);
+			textField.x = -textLineMetrics.width/2;
+			textField.y = -textLineMetrics.height/2*numLines;
+		}
+		
+		private var _selected:Boolean;
+		public function set selected(value:Boolean):void
+		{
+			_selected=value;
+			buttonBackground.graphics.clear();
+			if(value)
+				buttonBackground.graphics.beginFill(0x00FF00);
+			else
+				buttonBackground.graphics.beginFill(0xFF0000);
+			buttonBackground.graphics.drawCircle(90,90,90);
+			buttonBackground.graphics.endFill();
+		}
+		public function get selected():Boolean
+		{
+			return _selected;
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		private function handleButtonTapped(event:TouchEvent):void
 		{
 			selected = !selected;
 			event.stopImmediatePropagation();
 			dispatchEvent(new Event("circleButtonClicked"));
 		}
-		
 		private function handleAccelerometerChange(event:AccelerometerEvent):void
 		{
 			if(Math.abs(event.accelerationZ)<.9)

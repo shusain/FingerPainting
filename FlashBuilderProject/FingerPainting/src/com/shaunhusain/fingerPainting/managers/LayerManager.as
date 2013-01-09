@@ -29,6 +29,16 @@ package com.shaunhusain.fingerPainting.managers
 		}
 		
 		//--------------------------------------------------------------------------------
+		//				Singleton
+		//--------------------------------------------------------------------------------
+		private static var instance:LayerManager;
+		public static function getIntance():LayerManager
+		{
+			if( instance == null ) instance = new LayerManager( new SingletonEnforcer() );
+			return instance;
+		}
+		
+		//--------------------------------------------------------------------------------
 		//				Properties
 		//--------------------------------------------------------------------------------
 		private var _currentLayerIndex:int = 0;
@@ -69,16 +79,6 @@ package com.shaunhusain.fingerPainting.managers
 		public function get currentLayerBitmap():BitmapData
 		{
 			return layers[_currentLayerIndex].bitmapData;
-		}
-		
-		//--------------------------------------------------------------------------------
-		//				Singleton
-		//--------------------------------------------------------------------------------
-		private static var instance:LayerManager;
-		public static function getIntance():LayerManager
-		{
-			if( instance == null ) instance = new LayerManager( new SingletonEnforcer() );
-			return instance;
 		}
 		
 		//--------------------------------------------------------------------------------

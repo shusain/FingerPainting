@@ -10,6 +10,9 @@ package com.shaunhusain.fingerPainting.view
 
 	public class SecondaryBrushOptions extends Sprite
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var model:PaintModel = PaintModel.getInstance();
 		private var backgroundSprite:Sprite;
 		private var pressureButton:CircleButton;
@@ -18,10 +21,24 @@ package com.shaunhusain.fingerPainting.view
 		private var brushSizeExample:Sprite;
 		private var registeredEventListeners:Boolean;
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function SecondaryBrushOptions()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		private function addedToStageHandler(event:Event):void
 		{
 			if(!backgroundSprite)
@@ -105,7 +122,15 @@ package com.shaunhusain.fingerPainting.view
 			redrawBrush();
 		}
 		
-		public function updateValues():void
+		private function blockEvent(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
+		private function updateValues():void
 		{
 			if(!pressureButton)
 				return;
@@ -124,9 +149,5 @@ package com.shaunhusain.fingerPainting.view
 			brushSizeExample.graphics.endFill();
 		}
 		
-		private function blockEvent(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
-		}
 	}
 }

@@ -3,7 +3,6 @@ package com.shaunhusain.fingerPainting.managers
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
-	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
@@ -11,9 +10,20 @@ package com.shaunhusain.fingerPainting.managers
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
+	/**
+	 * Used to deal with calls to undo, redo, making new history elements and
+	 * generally managing the history stack.
+	 */
 	public class UndoManager
 	{
-		private static var instance:UndoManager;
+		//--------------------------------------------------------------------------------
+		//				Constants
+		//--------------------------------------------------------------------------------
+		private const SAVE_TIMER_DELAY:Number = 500;
+		
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var historyStack:Array;
 		private var currentIndex:int = -1;
 		private var redoCallback:Function;
@@ -32,15 +42,12 @@ package com.shaunhusain.fingerPainting.managers
 		
 		private var currentlySaving:Boolean;
 		
-		public static function getIntance():UndoManager
-		{
-			if( instance == null ) instance = new UndoManager( new SingletonEnforcer() );
-			return instance;
-		}
-		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		/**
-		 * Used to deal with calls to undo, redo, making new history elements and
-		 * generally managing the history stack.
+		 * Initializes the history stack and loaders for decompressing the PNG
+		 * data saved by the encoder.
 		 * 
 		 * @param se Blocks creation of new managers instead use static method getInstance
 		 */
@@ -53,8 +60,34 @@ package com.shaunhusain.fingerPainting.managers
 			redoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, redoLoaderHandler);
 			PNGEncoder2.level = CompressionLevel.NORMAL;
 			
-			saveDelayTimer = new Timer(500,1);
+			saveDelayTimer = new Timer(SAVE_TIMER_DELAY,1);
 			saveDelayTimer.addEventListener(TimerEvent.TIMER_COMPLETE, actuallySave);
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Singleton
+		//--------------------------------------------------------------------------------
+		private static var instance:UndoManager;
+		public static function getIntance():UndoManager
+		{
+			if( instance == null ) instance = new UndoManager( new SingletonEnforcer() );
+			return instance;
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
+		public function addHistoryElement(bd:BitmapData):void
+		{
+			tempBD = bd;
+			
+			if(saveDelayTimer.running)
+			{
+				saveDelayTimer.stop();
+				saveDelayTimer.reset();
+			}
+			saveDelayTimer.start();
+			
 		}
 		
 		public function extendTimer():void
@@ -62,6 +95,49 @@ package com.shaunhusain.fingerPainting.managers
 			saveDelayTimer.stop();
 			saveDelayTimer.reset();
 			saveDelayTimer.start();
+		}
+		
+		public function undo(callback:Function):void
+		{
+			if(loading)
+				return;
+			undoCallback = callback;
+			loading=true;
+			currentIndex--;
+			if(currentIndex<0)
+				currentIndex=0;
+			
+			undoLoader.loadBytes(historyStack[currentIndex]);
+		}
+		
+		public function redo(callback:Function):void
+		{
+			if(loading)
+				return;
+			loading=true;
+			redoCallback = callback;
+			currentIndex++;
+			if(currentIndex>historyStack.length-1)
+				currentIndex = historyStack.length-1;
+			
+			redoLoader.loadBytes(historyStack[currentIndex]);
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
+		private function redoLoaderHandler(event:Event):void
+		{
+			redoCallback(Bitmap(event.target.content).bitmapData);
+			loading = false;
+			System.gc();
+		}
+		
+		private function undoLoaderHandler(event:Event):void
+		{
+			undoCallback(Bitmap(event.target.content).bitmapData);
+			loading = false;
+			System.gc();
 		}
 		
 		private function actuallySave(event:TimerEvent):void
@@ -101,58 +177,6 @@ package com.shaunhusain.fingerPainting.managers
 			
 		}
 		
-		public function undo(callback:Function):void
-		{
-			if(loading)
-				return;
-			undoCallback = callback;
-			loading=true;
-			currentIndex--;
-			if(currentIndex<0)
-				currentIndex=0;
-			
-			undoLoader.loadBytes(historyStack[currentIndex]);
-		}
-		public function redo(callback:Function):void
-		{
-			if(loading)
-				return;
-			loading=true;
-			redoCallback = callback;
-			currentIndex++;
-			if(currentIndex>historyStack.length-1)
-				currentIndex = historyStack.length-1;
-			
-			redoLoader.loadBytes(historyStack[currentIndex]);
-		}
-		
-		private function redoLoaderHandler(event:Event):void
-		{
-			redoCallback(Bitmap(event.target.content).bitmapData);
-			loading = false;
-			System.gc();
-		}
-		
-		private function undoLoaderHandler(event:Event):void
-		{
-			undoCallback(Bitmap(event.target.content).bitmapData);
-			loading = false;
-			System.gc();
-		}
-		
-		
-		public function addHistoryElement(bd:BitmapData):void
-		{
-			tempBD = bd;
-			
-			if(saveDelayTimer.running)
-			{
-				saveDelayTimer.stop();
-				saveDelayTimer.reset();
-			}
-			saveDelayTimer.start();
-			
-		}
 	}
 }
 

@@ -33,6 +33,16 @@ package com.shaunhusain.fingerPainting.managers
 		}
 		
 		//--------------------------------------------------------------------------------
+		//				Singleton
+		//--------------------------------------------------------------------------------
+		private static var instance:AccelerometerManager;
+		public static function getIntance():AccelerometerManager
+		{
+			if( instance == null ) instance = new AccelerometerManager( new SingletonEnforcer() );
+			return instance;
+		}
+		
+		//--------------------------------------------------------------------------------
 		//				Properties
 		//--------------------------------------------------------------------------------
 		
@@ -49,16 +59,6 @@ package com.shaunhusain.fingerPainting.managers
 				acc.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
 			else
 				acc.removeEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
-		}
-		
-		//--------------------------------------------------------------------------------
-		//				Singleton
-		//--------------------------------------------------------------------------------
-		private static var instance:AccelerometerManager;
-		public static function getIntance():AccelerometerManager
-		{
-			if( instance == null ) instance = new AccelerometerManager( new SingletonEnforcer() );
-			return instance;
 		}
 		
 		//--------------------------------------------------------------------------------

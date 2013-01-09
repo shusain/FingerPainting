@@ -16,6 +16,9 @@ package com.shaunhusain.fingerPainting.view
 
 	public class SecondaryColorOptions extends Sprite
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var backgroundSprite:Sprite;
 		
 		private var hueBarSprite:Sprite;
@@ -38,10 +41,17 @@ package com.shaunhusain.fingerPainting.view
 		
 		protected var eventHandlersRegistered:Boolean;
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function SecondaryColorOptions()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		private function addedToStageHandler(event:Event):void
 		{
 			if(!eventHandlersRegistered)
@@ -136,7 +146,6 @@ package com.shaunhusain.fingerPainting.view
 			
 			requiresUpdate=true;
 		}
-		
 		protected function lightAndSatGradientTouchEndHandler(event:TouchEvent):void
 		{
 			removeEventListener(TouchEvent.TOUCH_MOVE, lightAndSatGradientTouchMoveHandler);
@@ -198,7 +207,9 @@ package com.shaunhusain.fingerPainting.view
 		{
 			event.stopImmediatePropagation();
 		}
-		
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
 		private function drawLightAndSatGradient():void
 		{
 			//trace("drawingLightAndSatGradient");
@@ -252,15 +263,6 @@ package com.shaunhusain.fingerPainting.view
 			if(hue<4) return (Math.round(a*255)<<24)+(m<<16)+(X<<8)+C;
 			if(hue<5) return (Math.round(a*255)<<24)+(X<<16)+(m<<8)+C;
 			return (Math.round(a*255)<<24)+(C<<16)+(m<<8)+X;
-		}
-		
-		public function setConnectionYPosition(value:Number):void
-		{
-			backgroundSprite.graphics.clear();
-			backgroundSprite.graphics.beginFill(0xeeeeee);
-			backgroundSprite.graphics.drawRoundRect(0,0,638,stage.fullScreenHeight-200,100,100);
-			backgroundSprite.graphics.drawRect(638,value,300,130);
-			backgroundSprite.graphics.endFill();
 		}
 	}
 }

@@ -10,11 +10,17 @@ package com.shaunhusain.fingerPainting.model
 	 */
 	public class Layer
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		public var bitmap:Bitmap;
 		public var bitmapData:BitmapData;
 		public var thumbnailBitmap:Bitmap;
 		public var thumbnailBitmapData:BitmapData;
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function Layer(bitmapData:BitmapData,bitmap:Bitmap)
 		{
 			this.bitmapData = bitmapData;
@@ -22,6 +28,10 @@ package com.shaunhusain.fingerPainting.model
 			thumbnailBitmapData = new BitmapData(bitmapData.width/5,bitmapData.height/5,true,0x00000000);
 			thumbnailBitmap = new Bitmap(thumbnailBitmapData);
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
 		public function updateThumbnail():void
 		{
 			var matrix:Matrix = new Matrix();
@@ -29,5 +39,8 @@ package com.shaunhusain.fingerPainting.model
 			thumbnailBitmapData.fillRect(new Rectangle(0,0,thumbnailBitmapData.width,thumbnailBitmapData.height),0x00000000);
 			thumbnailBitmapData.draw(bitmapData,matrix);
 		}
+		
+		
+		
 	}
 }

@@ -15,36 +15,14 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class RotatingIconButton extends Sprite
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var model:PaintModel = PaintModel.getInstance();
 		//Sprites for layering the background and the icon
 		private var backgroundSprite:Sprite;
 		private var iconSprite:Sprite;
 		private var allowsRotation:Boolean;
-		
-		private var _backgroundBitmap:Bitmap;
-		public function get backgroundBitmap():Bitmap
-		{
-			return _backgroundBitmap;
-		}
-
-		public function set backgroundBitmap(value:Bitmap):void
-		{
-			_backgroundBitmap = value;
-		}
-
-		private var _backgroundSelectedBitmap:Bitmap;
-
-		public function get backgroundSelectedBitmap():Bitmap
-		{
-			return _backgroundSelectedBitmap;
-		}
-
-		public function set backgroundSelectedBitmap(value:Bitmap):void
-		{
-			_backgroundSelectedBitmap = value;
-		}
-
-		
 		[Embed(source="/images/brushIcon.png")]
 		private var _iconImage:Class;
 		private var _iconBmp:Bitmap = new _iconImage();
@@ -53,60 +31,14 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		
 		private var instantaneous:Boolean;
 		
-		private var _data:Object;
-		public function get data():Object
-		{
-			return _data;
-		}
-
-		public function set data(value:Object):void
-		{
-			_data = value;
-		}
-
 		
-		private var _isSelected:Boolean;
-		public function get isSelected():Boolean
-		{
-			return _isSelected;
-		}
 		
-		public function set isSelected(value:Boolean):void
-		{
-			_isSelected = value;
-			showAppropriateBackground();
-		}
-		
-		private function handleTapped(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
-			
-			if(model.menuMoving)
-				return;
-			
-			isSelected = true;
-			
-			if(instantaneous)
-			{
-				dispatchEvent(new Event("instantaneousButtonClicked",true));
-				setTimeout(resetBackground,250);
-			}
-			else
-			{
-				dispatchEvent(new Event("buttonClicked",true));
-			}
-		}
-		
-		private function resetBackground():void
-		{
-			isSelected = false;
-			showAppropriateBackground();
-		}
-		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function RotatingIconButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, allowsRotation:Boolean = true, backgroundBitmap:Bitmap=null, backgroundSelectedBitmap:Bitmap = null)
 		{
 			super();
-			
 			
 			if(iconBmp)
 				_iconBmp = iconBmp;
@@ -143,27 +75,53 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 		}
 		
-		private function showAppropriateBackground():void
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
+		private var _backgroundBitmap:Bitmap;
+		public function get backgroundBitmap():Bitmap
 		{
-			if(!backgroundSprite)
-				return;
-			backgroundSprite.graphics.clear();
-			if(isSelected)
-			{
-				backgroundSprite.graphics.beginBitmapFill(backgroundSelectedBitmap.bitmapData);
-				backgroundSprite.graphics.drawRect(0,0,backgroundSelectedBitmap.width,backgroundSelectedBitmap.height);
-			}
-			else
-			{
-				backgroundSprite.graphics.beginBitmapFill(backgroundBitmap.bitmapData);
-				backgroundSprite.graphics.drawRect(0,0,backgroundBitmap.width,backgroundBitmap.height);
-			}
-			backgroundSprite.graphics.endFill();
+			return _backgroundBitmap;
 		}
 		
-		private function handleAccelerometerChange(event:AccEventExtra):void
+		public function set backgroundBitmap(value:Bitmap):void
 		{
-			rotateAroundCenter = event.linearRotation;
+			_backgroundBitmap = value;
+		}
+		
+		private var _backgroundSelectedBitmap:Bitmap;
+		
+		public function get backgroundSelectedBitmap():Bitmap
+		{
+			return _backgroundSelectedBitmap;
+		}
+		
+		public function set backgroundSelectedBitmap(value:Bitmap):void
+		{
+			_backgroundSelectedBitmap = value;
+		}
+		private var _data:Object;
+		public function get data():Object
+		{
+			return _data;
+		}
+		
+		public function set data(value:Object):void
+		{
+			_data = value;
+		}
+		
+		
+		private var _isSelected:Boolean;
+		public function get isSelected():Boolean
+		{
+			return _isSelected;
+		}
+		
+		public function set isSelected(value:Boolean):void
+		{
+			_isSelected = value;
+			showAppropriateBackground();
 		}
 		
 		private var _rotateAroundCenter:Number = NaN;
@@ -187,5 +145,67 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			return _rotateAroundCenter;
 		}
+
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
+		private function handleTapped(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+			
+			if(model.menuMoving)
+				return;
+			
+			isSelected = true;
+			
+			if(instantaneous)
+			{
+				dispatchEvent(new Event("instantaneousButtonClicked",true));
+				setTimeout(resetBackground,250);
+			}
+			else
+			{
+				dispatchEvent(new Event("buttonClicked",true));
+			}
+		}
+		
+		private function handleAccelerometerChange(event:AccEventExtra):void
+		{
+			rotateAroundCenter = event.linearRotation;
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
+		private function resetBackground():void
+		{
+			isSelected = false;
+			showAppropriateBackground();
+		}
+		
+		private function showAppropriateBackground():void
+		{
+			if(!backgroundSprite)
+				return;
+			backgroundSprite.graphics.clear();
+			if(isSelected)
+			{
+				backgroundSprite.graphics.beginBitmapFill(backgroundSelectedBitmap.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,backgroundSelectedBitmap.width,backgroundSelectedBitmap.height);
+			}
+			else
+			{
+				backgroundSprite.graphics.beginBitmapFill(backgroundBitmap.bitmapData);
+				backgroundSprite.graphics.drawRect(0,0,backgroundBitmap.width,backgroundBitmap.height);
+			}
+			backgroundSprite.graphics.endFill();
+		}
+		
+		
+		
 	}
 }

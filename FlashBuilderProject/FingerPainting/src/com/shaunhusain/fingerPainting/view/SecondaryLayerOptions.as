@@ -3,7 +3,6 @@ package com.shaunhusain.fingerPainting.view
 	import com.shaunhusain.fingerPainting.managers.LayerManager;
 	import com.shaunhusain.fingerPainting.model.Layer;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.fingerPainting.tools.BlankTool;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.ButtonScroller;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
@@ -15,8 +14,11 @@ package com.shaunhusain.fingerPainting.view
 
 	public class SecondaryLayerOptions extends Sprite
 	{
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var backgroundSprite:Sprite;
-						
+		
 		private var model:PaintModel = PaintModel.getInstance();
 		private var layerManager:LayerManager = LayerManager.getIntance();
 		private var layersDisplay:ButtonScroller;
@@ -31,11 +33,26 @@ package com.shaunhusain.fingerPainting.view
 		private var layerBackground:Bitmap
 		private var selectedLayerBackground:Bitmap
 		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function SecondaryLayerOptions()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			
 		}
+		
+		//--------------------------------------------------------------------------------
+		//				Properties
+		//--------------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
 		private function addedToStageHandler(event:Event):void
 		{
 			if(!eventHandlersRegistered)
@@ -141,8 +158,15 @@ package com.shaunhusain.fingerPainting.view
 			layerManager.addLayer();
 			beingShown();
 		}
+		private function blockEvent(event:TouchEvent):void
+		{
+			event.stopImmediatePropagation();
+		}
 		
-		public function beingShown():void
+		//--------------------------------------------------------------------------------
+		//				Helper functions
+		//--------------------------------------------------------------------------------
+		private function beingShown():void
 		{
 			var tempArray:Array = [];
 			var curIndex:int = 0;
@@ -153,11 +177,6 @@ package com.shaunhusain.fingerPainting.view
 				tempArray.unshift(new RotatingIconButton(layer.thumbnailBitmap,layer,false,selected,false,layerBackground,selectedLayerBackground));
 			}
 			layersDisplay.menuButtons = tempArray;
-		}
-		
-		private function blockEvent(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
 		}
 	}
 }

@@ -8,7 +8,15 @@ package com.shaunhusain.fingerPainting.tools
 	public class ColorSpectrumTool extends ToolBase implements ITool
 	{
 		public static var NAME:String = "colorSpectrumTool";
+		
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
 		private var secondaryColorOptions:SecondaryColorOptions;
+		
+		//--------------------------------------------------------------------------------
+		//				Constructor
+		//--------------------------------------------------------------------------------
 		public function ColorSpectrumTool(stage:Stage)
 		{
 			super(stage);
@@ -17,11 +25,10 @@ package com.shaunhusain.fingerPainting.tools
 			secondaryColorOptions.x = 100;
 			secondaryColorOptions.y = 100;
 		}
-		public function takeAction(event:TouchEvent=null):void
-		{
-			toggleSecondaryOptions();
-		}
 		
+		//--------------------------------------------------------------------------------
+		//				Public Methods
+		//--------------------------------------------------------------------------------
 		public function toggleSecondaryOptions():void
 		{
 			if(secondaryPanelManager.currentlyShowing == secondaryColorOptions)
@@ -30,6 +37,14 @@ package com.shaunhusain.fingerPainting.tools
 			{
 				secondaryPanelManager.showPanel(secondaryColorOptions);
 			}
+		}
+		
+		//--------------------------------------------------------------------------------
+		//				Handlers
+		//--------------------------------------------------------------------------------
+		public function takeAction(event:TouchEvent=null):void
+		{
+			toggleSecondaryOptions();
 		}
 	}
 }
