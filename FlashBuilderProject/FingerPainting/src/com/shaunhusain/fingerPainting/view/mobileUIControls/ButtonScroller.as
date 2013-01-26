@@ -1,10 +1,11 @@
 package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
 	import com.eclecticdesignstudio.motion.Actuate;
-	import com.shaunhusain.fingerPainting.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.view.BitmapReference;
+	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
 	
+	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.GradientType;
 	import flash.display.Graphics;
@@ -19,6 +20,10 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class ButtonScroller extends Sprite
 	{
+		[Embed(source="/images/grippy.png")]
+		private static var _grippyClass:Class;
+		public static var _grippyBmp:Bitmap = new _grippyClass();
+		
 		private var yChange:Number;
 		private var menuButtonSprite:Sprite;
 		private var menuButtonMask:Sprite;
@@ -40,6 +45,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			super();
 			addEventListener(TouchEvent.TOUCH_ROLL_OUT, blockEvent);
+			addEventListener(TouchEvent.TOUCH_TAP, blockEvent);
 			addEventListener(Event.ADDED_TO_STAGE, addedHandler);
 			addEventListener(Event.ADDED,addedHandler);
 			
@@ -62,7 +68,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			{
 				menuButtonSprite = new Sprite();
 				menuButtonSprite.y = _glowHeight;
-				menuButtonSprite.cacheAsBitmap = true;
+				menuButtonSprite.cacheAsBitmap = false;
 				addChild(menuButtonSprite);
 			}
 			
@@ -88,7 +94,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		/**
 		 * gap
 		 */
-		private var _gap:Number = 10;
+		private var _gap:Number = 0;
 
 		public function get gap():Number
 		{
@@ -165,15 +171,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				menuButtonSprite.addChild(ab);
 			}
 			
-			var sabg:Graphics = scrollAreaBackground.graphics;
-			var bounds:Rectangle = getFullBounds(menuButtonSprite);
-			sabg.clear();
-			var matrix:Matrix = new Matrix();
-			matrix.createGradientBox(buttonMaskWidth,bounds.height,Math.PI/2);
-			sabg.beginGradientFill(GradientType.LINEAR,[0x000000,0x000088,0x000000],[1,1,1],[0,128,255],matrix);
-			sabg.drawRect(0,0,buttonMaskWidth,bounds.height);
-			sabg.endFill();
-			scrollAreaBackground.cacheAsBitmap = true;
 		}
 		public function get menuButtons():Array
 		{
@@ -193,8 +190,23 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			removeEventListener(TouchEvent.TOUCH_BEGIN, blockEvent);
 			removeEventListener(TouchEvent.TOUCH_MOVE, blockEvent);
 			removeEventListener(TouchEvent.TOUCH_END, blockEvent);
-			if(getFullBounds(menuButtonSprite).height>menuButtonSprite.scrollRect.height)
+			
+			var menuButtonBounds:Rectangle = getFullBounds(menuButtonSprite);
+			
+			var sabg:Graphics = scrollAreaBackground.graphics;
+			sabg.clear();
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox(buttonMaskWidth,menuButtonBounds.height,Math.PI/2);
+			sabg.beginGradientFill(GradientType.LINEAR,[0x000000,0x000131,0x000000],[1,1,1],[0,128,255],matrix);
+			sabg.drawRect(0,0,buttonMaskWidth,menuButtonBounds.height);
+			sabg.endFill();
+			
+			if(menuButtonBounds.height>menuButtonSprite.scrollRect.height)
 			{
+				sabg.beginBitmapFill(_grippyBmp.bitmapData,null,true);
+				sabg.drawRect(0,0,_grippyBmp.width,menuButtonBounds.height);
+				sabg.endFill();
+				
 				addEventListener(TouchEvent.TOUCH_BEGIN, beganTouchingMenu);
 				addEventListener(TouchEvent.TOUCH_MOVE, moveTouchingMenu);
 				addEventListener(TouchEvent.TOUCH_END, endTouchingMenu);
@@ -222,15 +234,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			yChange = menuButtonsTouchStartPoint.y - event.stageY;
 			
-			if(yChange>0)
-			{
-				trace("ychange is positive",yChange);
-			}
-			else
-			{
-				trace("ychange is negative",yChange);
-			}
-			
 			if(menuMoved||yChange > 10||yChange<-10)
 			{
 				model.menuMoving = menuMoved = true;
@@ -247,7 +250,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 					menuButtonsTouchStartPoint.y = event.stageY;
 					menuMoved = false;
 					model.menuMoving=true;
-					Actuate.tween(glowDown,1,{alpha:1}).onComplete(function():void{Actuate.tween(glowDown,.5,{alpha:0})});
+					Actuate.tween(glowDown,.5,{alpha:1}).onComplete(function():void{Actuate.tween(glowDown,.5,{alpha:0})});
 				}
 				else if(yChange<0 && menuButtonSprite.scrollRect.y<0)
 				{
@@ -258,7 +261,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 					menuButtonsTouchStartPoint.y = event.stageY;
 					menuMoved = false;
 					model.menuMoving=true;
-					Actuate.tween(glowUp,1,{alpha:1}).onComplete(function():void{Actuate.tween(glowUp,.5,{alpha:0})});
+					Actuate.tween(glowUp,.5,{alpha:1}).onComplete(function():void{Actuate.tween(glowUp,.5,{alpha:0})});
 				}
 				
 				/*if(yChange>0 && y+height<=stage.fullScreenHeight-40)

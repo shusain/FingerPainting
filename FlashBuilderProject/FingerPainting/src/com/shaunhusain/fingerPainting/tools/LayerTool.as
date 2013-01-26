@@ -1,8 +1,9 @@
 package com.shaunhusain.fingerPainting.tools 
 {
-	import com.shaunhusain.fingerPainting.view.SecondaryLayerOptions;
+	import com.shaunhusain.fingerPainting.view.optionPanels.LayerOptionsPanel;
 	
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.TouchEvent;
 	import flash.geom.Matrix;
@@ -14,7 +15,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
-		private var secondaryLayerOptions:SecondaryLayerOptions;
+		private var secondaryLayerOptions:LayerOptionsPanel;
 		
 		private var pointsTracked:Number = 0;
 		private var ptsTracked:Object;
@@ -27,6 +28,8 @@ package com.shaunhusain.fingerPainting.tools
 		private var currentRotation:Number;
 		private var currentScale:Number;
 		
+		private var visibleDrawingRect:Rectangle;
+		
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -34,7 +37,7 @@ package com.shaunhusain.fingerPainting.tools
 		public function LayerTool(stage:Stage)
 		{
 			super(stage);
-			secondaryLayerOptions = new SecondaryLayerOptions();
+			secondaryLayerOptions = new LayerOptionsPanel();
 			
 			secondaryLayerOptions.x = 100;
 			secondaryLayerOptions.y = 100;
@@ -46,57 +49,48 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			
-			if(event.type == TouchEvent.TOUCH_BEGIN)
+			switch(event.type)
 			{
-				ptsTracked[event.touchPointID] =  new Point(event.stageX, event.stageY);
-				pointsTracked++;
-			}
-			if(event.type == TouchEvent.TOUCH_MOVE)
-			{
-				switch(pointsTracked)
-				{
-					case 1:
-						moveBitmap(event);
-						break;
-					case 2:
-						scaleRotateBitmap(event);
-						break;
-					
-				}
-				ptsTracked[event.touchPointID] =  new Point(event.stageX, event.stageY);
-			}
-			if(event.type == TouchEvent.TOUCH_END)
-			{
-				switch(pointsTracked)
-				{
-					case 2:
-						endScaleRotateBitmap(event);
+				case TouchEvent.TOUCH_BEGIN:
+					ptsTracked[event.touchPointID] =  new Point(event.stageX, event.stageY);
+					pointsTracked++;
+					if(pointsTracked>1)
+						completeMovement();
 					break;
-				}
 				
+				case TouchEvent.TOUCH_MOVE:
+					switch(pointsTracked)
+					{
+						case 1:
+							moveBitmap(event);
+							break;
+						case 2:
+							scaleRotateBitmap(event);
+							break;
+						
+					}
+					ptsTracked[event.touchPointID] =  new Point(event.stageX, event.stageY);
+					break;
 				
-				ptsTracked[event.touchPointID] = null;
-				pointsTracked--;
-				
-				/*if(pointsTracked<2)
-					initialAngle = initialScale = NaN;*/
-				
-				/*var clbd:BitmapData = layerManager.currentLayerBitmap;
-				var matrix:Matrix = new Matrix();
-				matrix.tx = layerManager.currentLayer.bitmap.x;
-				matrix.ty = layerManager.currentLayer.bitmap.y;
-				var temp:BitmapData = new BitmapData(clbd.width,clbd.height,true,0x00000000);
-				temp.draw(clbd,matrix);
-				layerManager.currentLayer.bitmapData = temp;
-				layerManager.currentLayer.bitmap.bitmapData = temp;
-				
-				layerManager.currentLayer.bitmap.x = layerManager.currentLayer.bitmap.y = 0;*/
+				case TouchEvent.TOUCH_END:
+				case TouchEvent.TOUCH_ROLL_OUT:
+					switch(pointsTracked)
+					{
+						case 1:
+							completeMovement();
+							break;
+						case 2:
+							completeRotateScale();
+							break;
+					}
+					
+					
+					ptsTracked[event.touchPointID] = null;
+					pointsTracked--;
+					if(pointsTracked<0)
+						pointsTracked = 0;
+					break;
 			}
-		}
-		
-		private function endScaleRotateBitmap(event:TouchEvent):void
-		{
 		}
 		private function moveBitmap(event:TouchEvent):void
 		{
@@ -116,7 +110,44 @@ package com.shaunhusain.fingerPainting.tools
 			else
 				secondaryPanelManager.showPanel(secondaryLayerOptions);
 		}
+		public function completeMovement():void
+		{
+			var clbd:BitmapData = layerManager.currentLayerBitmap;
+			var matrix:Matrix = new Matrix();
+			matrix.tx = layerManager.currentLayer.bitmap.x;
+			matrix.ty = layerManager.currentLayer.bitmap.y;
+			var temp:BitmapData = new BitmapData(clbd.width,clbd.height,true,0x00000000);
+			temp.draw(clbd,matrix,null,null,null,true);
+			layerManager.currentLayer.bitmapData = temp;
+			layerManager.currentLayer.bitmap.bitmapData = temp;
+			
+			layerManager.currentLayer.bitmap.x = layerManager.currentLayer.bitmap.y = 0;
+			layerManager.currentLayer.updateThumbnail();
+			
+			undoManager.addHistoryElement(layerManager.currentLayerBitmap);
+		}
 		
+		public function completeRotateScale():void
+		{
+			var clbd:BitmapData = layerManager.currentLayerBitmap;
+			
+			var temp:BitmapData = new BitmapData(clbd.width,clbd.height,true,0x00000000);
+			temp.draw(clbd,floatingLayerMatrix,null,null,null,true);
+			layerManager.currentLayer.bitmapData = temp;
+			layerManager.currentLayer.bitmap.bitmapData = temp;
+			
+			layerManager.currentLayer.bitmap.x = layerManager.currentLayer.bitmap.y = 0;
+			
+			initialAngle = initialScale = NaN;
+			layerManager.currentLayer.updateThumbnail();
+			
+			undoManager.addHistoryElement(layerManager.currentLayerBitmap);
+		}
+		
+		public function toString():String
+		{
+			return "Layer";
+		}
 		
 		//--------------------------------------------------------------------------------
 		//				Helper functions
@@ -125,27 +156,26 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			if(isNaN(initialScale)||isNaN(initialAngle))
 			{
+				visibleDrawingRect = getVisibleBounds(layerManager.currentLayer.bitmap);
 				initialScale = Point.distance(ptsTracked[0],ptsTracked[1]);
 				initialAngle = Math.atan2(ptsTracked[0].y - ptsTracked[1].y,	ptsTracked[0].x - ptsTracked[1].x);
 				floatingLayer = layerManager.currentLayer.bitmapData.clone();
 				floatingLayerMatrix = new Matrix();
 				layerManager.currentLayer.bitmap.bitmapData = floatingLayer;
-				trace("initial",initialScale,initialAngle);
 			}
 			else
 			{
 				var angle2:Number = Math.atan2(ptsTracked[0].y - ptsTracked[1].y,	ptsTracked[0].x - ptsTracked[1].x);
 				var newScale:Number = Point.distance(ptsTracked[0],ptsTracked[1]);
-				trace("after initial ",newScale,angle2);
 				
-				floatingLayerMatrix.tx -= layerManager.currentLayer.bitmapData.width/2;
-				floatingLayerMatrix.ty -= layerManager.currentLayer.bitmapData.height/2;
+				floatingLayerMatrix.tx -= visibleDrawingRect.x + visibleDrawingRect.width/2;
+				floatingLayerMatrix.ty -= visibleDrawingRect.y + visibleDrawingRect.height/2;
 				
 				floatingLayerMatrix.rotate(angle2-initialAngle);
 				floatingLayerMatrix.scale(newScale/initialScale,newScale/initialScale);
 				
-				floatingLayerMatrix.tx += layerManager.currentLayer.bitmapData.width/2;
-				floatingLayerMatrix.ty += layerManager.currentLayer.bitmapData.height/2;
+				floatingLayerMatrix.tx += visibleDrawingRect.x + visibleDrawingRect.width/2;
+				floatingLayerMatrix.ty += visibleDrawingRect.y + visibleDrawingRect.height/2;
 				
 				floatingLayer.fillRect(new Rectangle(0,0,floatingLayer.width,floatingLayer.height),0x00000000);
 				floatingLayer.draw(layerManager.currentLayer.bitmapData,floatingLayerMatrix);
@@ -160,6 +190,20 @@ package com.shaunhusain.fingerPainting.tools
 			var angle1:Number = Math.atan2(line1a.y - line1b.y,	line1a.x - line1b.x);
 			var angle2:Number = Math.atan2(line2a.y - line2b.y,	line2b.x - line2b.x);
 			return angle1-angle2;
+		}
+		
+		//sourced from: http://plasticsturgeon.com/2010/09/as3-get-visible-bounds-of-transparent-display-object/
+		public function getVisibleBounds(source:DisplayObject):Rectangle
+		{
+			var matrix:Matrix = new Matrix()
+			matrix.tx = -source.getBounds(null).x;
+			matrix.ty = -source.getBounds(null).y;
+			
+			var data:BitmapData = new BitmapData(source.width, source.height, true, 0x00000000);
+			data.draw(source, matrix);
+			var bounds : Rectangle = data.getColorBoundsRect(0xFFFFFFFF, 0x000000, false);
+			data.dispose();
+			return bounds;
 		}
 	}
 }

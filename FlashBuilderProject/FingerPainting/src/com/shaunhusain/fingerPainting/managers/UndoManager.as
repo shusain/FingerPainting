@@ -1,5 +1,7 @@
 package com.shaunhusain.fingerPainting.managers
 {
+	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -19,7 +21,7 @@ package com.shaunhusain.fingerPainting.managers
 		//--------------------------------------------------------------------------------
 		//				Constants
 		//--------------------------------------------------------------------------------
-		private const SAVE_TIMER_DELAY:Number = 500;
+		private const SAVE_TIMER_DELAY:Number = 1000;
 		
 		//--------------------------------------------------------------------------------
 		//				Variables
@@ -79,7 +81,7 @@ package com.shaunhusain.fingerPainting.managers
 		//--------------------------------------------------------------------------------
 		public function addHistoryElement(bd:BitmapData):void
 		{
-			tempBD = bd;
+			tempBD = bd.clone();
 			
 			if(saveDelayTimer.running)
 			{
@@ -101,11 +103,15 @@ package com.shaunhusain.fingerPainting.managers
 		{
 			if(loading)
 				return;
+			
 			undoCallback = callback;
 			loading=true;
 			currentIndex--;
 			if(currentIndex<0)
 				currentIndex=0;
+			
+			if(historyStack.length==0)
+				return;
 			
 			undoLoader.loadBytes(historyStack[currentIndex]);
 		}

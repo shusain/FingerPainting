@@ -90,6 +90,11 @@ package com.shaunhusain.fingerPainting.tools
 			}
 		}
 		
+		public function toString():String
+		{
+			return "Camera";
+		}
+		
 		private function browseCanceled( event:Event ):void
 		{
 			log( "Image browse canceled." );

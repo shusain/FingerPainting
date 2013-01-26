@@ -6,59 +6,6 @@ package com.shaunhusain.fingerPainting.view
 
 	public class BitmapReference
 	{
-		/** Main menu items **/
-		[Embed(source="/images/saveIcon.png")]
-		private static var _saveIcon:Class;
-		public static var _saveIconBmp:Bitmap = new _saveIcon();
-		
-		[Embed(source="/images/brushIcon.png")]
-		private static var _brushIcon:Class;
-		public static var _brushIconBmp:Bitmap = new _brushIcon();
-		
-		[Embed(source="/images/eraserIcon.png")]
-		private static var _eraserIcon:Class;
-		public static var _eraserIconBmp:Bitmap = new _eraserIcon();
-		
-		[Embed(source="/images/bucketIcon.png")]
-		private static var _bucketIcon:Class;
-		public static var _bucketIconBmp:Bitmap = new _bucketIcon();
-		
-		[Embed(source="/images/undoIcon.png")]
-		private static var _undoIcon:Class;
-		public static var _undoIconBmp:Bitmap = new _undoIcon();
-		
-		[Embed(source="/images/redoIcon.png")]
-		private static var _redoIcon:Class;
-		public static var _redoIconBmp:Bitmap = new _redoIcon();
-		
-		[Embed(source="/images/shapesIcon.png")]
-		private static var _shapesIcon:Class;
-		public static var _shapesIconBmp:Bitmap = new _shapesIcon();
-		
-		[Embed(source="/images/pipetIcon.png")]
-		private static var _pipetIcon:Class;
-		public static var _pipetIconBmp:Bitmap = new _pipetIcon();
-		
-		[Embed(source="/images/colorSpectrumIcon.png")]
-		private static var _colorSpectrumIcon:Class;
-		public static var _colorSpectrumBmp:Bitmap = new _colorSpectrumIcon();
-		
-		[Embed(source="/images/blankDocIcon.png")]
-		private static var _blankDocIcon:Class;
-		public static var _blankDocBmp:Bitmap = new _blankDocIcon();
-		
-		[Embed(source="/images/cameraIconClipped.png")]
-		private static var _cameraIcon:Class;
-		public static var _cameraBmp:Bitmap = new _cameraIcon();
-		
-		[Embed(source="/images/layersIcon.png")]
-		private static var _layersIcon:Class;
-		public static var _layersBmp:Bitmap = new _layersIcon();
-		
-		[Embed(source="/images/shareIcon.png")]
-		private static var _shareIcon:Class;
-		public static var _shareBmp:Bitmap = new _shareIcon();
-		
 		/** Layer option buttons **/
 		[Embed(source="/images/add.png")]
 		private static var _addIcon:Class;
@@ -75,6 +22,19 @@ package com.shaunhusain.fingerPainting.view
 		[Embed(source="/images/moveDown.png")]
 		private static var _moveDownIcon:Class;
 		public static var _moveDownBmp:Bitmap = new _moveDownIcon();
+		
+		[Embed(source="/images/merge.png")]
+		private static var _mergeIcon:Class;
+		public static var _mergeBmp:Bitmap = new _mergeIcon();
+		
+		[Embed(source="/images/duplicate.png")]
+		private static var _dupIcon:Class;
+		public static var _dupBmp:Bitmap = new _dupIcon();
+		
+		[Embed(source="/images/mirror.png")]
+		private static var _mirrorIcon:Class;
+		public static var _mirrorBmp:Bitmap = new _mirrorIcon();
+		
 		
 		/** Toolbar Images **/
 		[Embed(source="/images/triangleIcon.png")]

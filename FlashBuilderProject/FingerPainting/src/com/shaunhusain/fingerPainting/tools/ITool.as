@@ -5,5 +5,6 @@ package com.shaunhusain.fingerPainting.tools
 	public interface ITool
 	{
 		function takeAction(event:TouchEvent=null):void;
+		function toString():String;
 	}
 }

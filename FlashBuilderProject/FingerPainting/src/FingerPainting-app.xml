@@ -18,16 +18,16 @@
 	<id>com.shaunhusain.FingerPainting</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>FingerPainting</filename>
+	<filename>Digital Doodler</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
 	May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>FingerPainting</name>
+	<name>Digital Doodler</name>
 	
 	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
 	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
 	An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5 . -->
-	<versionNumber>1.0.0</versionNumber>
+	<versionNumber>1.0.1</versionNumber>
 		         
 	<!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
 	<!-- <versionLabel></versionLabel> -->
@@ -126,16 +126,16 @@
 
 	<!-- The icon the system uses for the application. For at least one resolution,
 	specify the path to a PNG file included in the AIR package. Optional. -->
-	<!-- <icon>
-		<image16x16></image16x16>
-		<image32x32></image32x32>
-		<image36x36></image36x36>
-		<image48x48></image48x48>
-		<image57x57></image57x57>
-		<image72x72></image72x72>
-		<image114x114></image114x114>
-		<image128x128></image128x128>
-	</icon> -->
+	<icon>
+<!-- 		<image16x16></image16x16> -->
+<!-- 		<image32x32></image32x32> -->
+<!-- 		<image36x36></image36x36> -->
+<!-- 		<image48x48></image48x48> -->
+<!-- 		<image57x57></image57x57> -->
+<!-- 		<image72x72></image72x72> -->
+<!-- 		<image114x114></image114x114> -->
+		<image128x128>images/128x128.png</image128x128>
+	</icon>
 
 	<!-- Whether the application handles the update when a user double-clicks an update version
 	of the AIR file (true), or the default AIR application installer handles the update (false).
@@ -236,15 +236,15 @@
 			    <!--See the Adobe AIR documentation for more information about setting Google Android permissions-->
 			    <!--Removing the permission android.permission.INTERNET will have the side effect
 		of preventing you from debugging your application on your device-->
-			    <uses-permission android:name="android.permission.INTERNET"/>
+				<uses-permission android:name="android.permission.INTERNET"/>
 			    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 			    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
 			    <!--The DISABLE_KEYGUARD and WAKE_LOCK permissions should be toggled together
 		in order to access AIR's SystemIdleMode APIs-->
-			    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-			    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-			    <uses-permission android:name="android.permission.CAMERA"/>
+<!-- 			    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/> -->
+<!-- 			    <uses-permission android:name="android.permission.WAKE_LOCK"/> -->
+<!-- 			    <uses-permission android:name="android.permission.CAMERA"/> -->
 			    <!--<uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
 			    <!--The ACCESS_NETWORK_STATE and ACCESS_WIFI_STATE permissions should be toggled
 		together in order to use AIR's NetworkInfo APIs-->

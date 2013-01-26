@@ -1,6 +1,6 @@
 package com.shaunhusain.fingerPainting.tools 
 {
-	import com.shaunhusain.fingerPainting.view.SecondaryColorOptions;
+	import com.shaunhusain.fingerPainting.view.optionPanels.ColorOptionsPanel;
 	
 	import flash.display.Stage;
 	import flash.events.TouchEvent;
@@ -12,7 +12,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
-		private var secondaryColorOptions:SecondaryColorOptions;
+		private var secondaryColorOptions:ColorOptionsPanel;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -21,7 +21,7 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			super(stage);
 			
-			secondaryColorOptions = new SecondaryColorOptions();
+			secondaryColorOptions = new ColorOptionsPanel();
 			secondaryColorOptions.x = 100;
 			secondaryColorOptions.y = 100;
 		}
@@ -37,6 +37,10 @@ package com.shaunhusain.fingerPainting.tools
 			{
 				secondaryPanelManager.showPanel(secondaryColorOptions);
 			}
+		}
+		public function toString():String
+		{
+			return "Color Chooser";
 		}
 		
 		//--------------------------------------------------------------------------------

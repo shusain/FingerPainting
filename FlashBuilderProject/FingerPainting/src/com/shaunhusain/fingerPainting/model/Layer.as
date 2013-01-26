@@ -25,7 +25,7 @@ package com.shaunhusain.fingerPainting.model
 		{
 			this.bitmapData = bitmapData;
 			this.bitmap = bitmap;
-			thumbnailBitmapData = new BitmapData(bitmapData.width/5,bitmapData.height/5,true,0x00000000);
+			thumbnailBitmapData = new BitmapData(bitmapData.width/10,bitmapData.height/10,true,0x00000000);
 			thumbnailBitmap = new Bitmap(thumbnailBitmapData);
 		}
 		
@@ -35,7 +35,7 @@ package com.shaunhusain.fingerPainting.model
 		public function updateThumbnail():void
 		{
 			var matrix:Matrix = new Matrix();
-			matrix.scale(.2,.2);
+			matrix.scale(.1,.1);
 			thumbnailBitmapData.fillRect(new Rectangle(0,0,thumbnailBitmapData.width,thumbnailBitmapData.height),0x00000000);
 			thumbnailBitmapData.draw(bitmapData,matrix);
 		}

@@ -28,5 +28,10 @@ package com.shaunhusain.fingerPainting.tools
 			layerManager.currentLayer.updateThumbnail();
 		}
 		
+		public function toString():String
+		{
+			return "Clear";
+		}
+		
 	}
 }

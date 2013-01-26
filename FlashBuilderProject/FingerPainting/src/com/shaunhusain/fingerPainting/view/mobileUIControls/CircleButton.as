@@ -1,13 +1,16 @@
 package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
+	import com.eclecticdesignstudio.motion.Actuate;
+	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
 	import flash.events.TouchEvent;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -19,50 +22,78 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
-		private var buttonBackground:Sprite;
+		private var buttonBackground:Bitmap;
 		
 		private var textField:TextField;
-		private var textFormat:TextFormat;
 		private var textContainer:Sprite;
 		
 		// to embed a system font
-		[Embed(source="/SourceCodePro-Bold.ttf", fontName = "myFont", mimeType = "application/x-font", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="false")]
+		[Embed(source="/Roboto-Condensed.ttf", fontName = "myFont", mimeType = "application/x-font", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
 		//--------------------------------------------------------------------------------
-		public function CircleButton()
+		public function CircleButton(backgroundBitmap:BitmapData = null, backgroundBitmapSelected:BitmapData = null, textFormat:TextFormat = null)
 		{
 			super();
 			
-			buttonBackground = new Sprite();
+			if(backgroundBitmap)
+				this.backgroundBitmap = backgroundBitmap;
+			if(backgroundBitmapSelected)
+				this.backgroundBitmapSelected = backgroundBitmapSelected;
 			
-			buttonBackground.graphics.clear();
-			buttonBackground.graphics.beginFill(0xFF0000);
-			buttonBackground.graphics.drawCircle(90,90,90);
-			buttonBackground.graphics.endFill();
+			drawBackground();
+			
+			buttonBackground = new Bitmap();
+			buttonBackground.bitmapData = this.backgroundBitmap;
+			
 			addChild(buttonBackground);
 			
 			textContainer = new Sprite();
 			
-			textFormat = new TextFormat();
-			textFormat.size = 32;
-			textFormat.font = "myFont";
+			if(textFormat)
+			{
+				this.textFormat = textFormat;
+			}
+			else
+			{
+				this.textFormat = new TextFormat();
+				this.textFormat.size = 24;
+				this.textFormat.font = "myFont";
+			}
 			
 			textField = new TextField();
 			textField.blendMode = BlendMode.INVERT;
 			textField.autoSize = TextFieldAutoSize.CENTER;
+			textField.mouseEnabled = false;
 			textField.embedFonts = true;
 			textContainer.addChild(textField);
 			
-			textContainer.x = 90;
-			textContainer.y = 90;
+			textContainer.x = this.backgroundBitmap.width/2;
+			textContainer.y = this.backgroundBitmap.width/2;
 			addChild(textContainer);
-			textContainer.rotation=45;
 			
 			var accManager:AccelerometerManager = AccelerometerManager.getIntance();
 			accManager.addEventListener(AccelerometerEvent.UPDATE, handleAccelerometerChange);
+			
+			var locRot:Number;
+			switch(accManager.currentOrientation)
+			{
+				case AccelerometerManager.PORTRAIT_DEFAULT:
+					locRot = 0;
+					break;
+				case AccelerometerManager.PORTRAIT_FLIPPED:
+					locRot = 180;
+					break;
+				case AccelerometerManager.LANDSCAPE_LEFT:
+					locRot = 90;
+					break;
+				case AccelerometerManager.LANDSCAPE_RIGHT:
+					locRot = -90;
+					break;
+			}
+			textContainer.rotation = locRot;
 			
 			addEventListener(TouchEvent.TOUCH_TAP, handleButtonTapped);
 			
@@ -74,37 +105,96 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		private var _text:String;
 		public function set text(value:String):void
 		{
-			if(value==_text)
+			if(_text==value)
 				return;
 			
 			_text = value;
 			
-			var numLines:int = value.split("\n").length;
 			
 			textField.text = _text;
 			textField.setTextFormat(textFormat);
-			var textLineMetrics:TextLineMetrics = textField.getLineMetrics(0);
-			var boundsRect:Rectangle = textField.getBounds(this);
-			textField.x = -textLineMetrics.width/2;
-			textField.y = -textLineMetrics.height/2*numLines;
+			
+			var maxWidth:Number = 0;
+			for(var i:int = 0; i<textField.numLines; i++)
+			{
+				
+				var textLineMetrics:TextLineMetrics = textField.getLineMetrics(i);
+				maxWidth = Math.max(maxWidth, textLineMetrics.width);
+			}
+			
+			textField.x = -maxWidth/2;
+			textField.y = -textLineMetrics.height*textField.numLines/2;
 		}
 		
 		private var _selected:Boolean;
 		public function set selected(value:Boolean):void
 		{
+			if(_selected == value)
+				return;
 			_selected=value;
-			buttonBackground.graphics.clear();
-			if(value)
-				buttonBackground.graphics.beginFill(0x00FF00);
-			else
-				buttonBackground.graphics.beginFill(0xFF0000);
-			buttonBackground.graphics.drawCircle(90,90,90);
-			buttonBackground.graphics.endFill();
+			buttonBackground.bitmapData = selected?backgroundBitmapSelected:backgroundBitmap;
 		}
 		public function get selected():Boolean
 		{
 			return _selected;
 		}
+		
+		private var _circleRadius:Number = 55;
+
+		public function get circleRadius():Number
+		{
+			return _circleRadius;
+		}
+
+		public function set circleRadius(value:Number):void
+		{
+			if(_circleRadius == value)
+				return;
+			_circleRadius = value;
+			textContainer.x = textContainer.y = value;
+			backgroundBitmap.dispose();
+			backgroundBitmap = null;
+			backgroundBitmapSelected.dispose();
+			backgroundBitmapSelected = null;
+			drawBackground();
+		}
+		private var _backgroundBitmap:BitmapData;
+
+		public function get backgroundBitmap():BitmapData
+		{
+			return _backgroundBitmap;
+		}
+
+		public function set backgroundBitmap(value:BitmapData):void
+		{
+			_backgroundBitmap = value;
+		}
+
+		private var _backgroundBitmapSelected:BitmapData;
+
+		public function get backgroundBitmapSelected():BitmapData
+		{
+			return _backgroundBitmapSelected;
+		}
+
+		public function set backgroundBitmapSelected(value:BitmapData):void
+		{
+			_backgroundBitmapSelected = value;
+		}
+		
+		private var _textFormat:TextFormat;
+
+		public function get textFormat():TextFormat
+		{
+			return _textFormat;
+		}
+
+		public function set textFormat(value:TextFormat):void
+		{
+			_textFormat = value;
+		}
+		
+
 		
 		//--------------------------------------------------------------------------------
 		//				Handlers
@@ -115,14 +205,54 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			event.stopImmediatePropagation();
 			dispatchEvent(new Event("circleButtonClicked"));
 		}
-		private function handleAccelerometerChange(event:AccelerometerEvent):void
+		private function handleAccelerometerChange(event:AccBasedOrientationEvent):void
 		{
-			if(Math.abs(event.accelerationZ)<.9)
+			
+			var locRot:Number;
+			switch(event.newOrientation)
 			{
-				var angle:Number = Math.atan2(event.accelerationY, event.accelerationX);
-				angle-=Math.PI/2;
-				angle = -angle;
-				textContainer.rotation = angle*180/Math.PI;
+				case AccelerometerManager.PORTRAIT_DEFAULT:
+					locRot = 0;
+					break;
+				case AccelerometerManager.PORTRAIT_FLIPPED:
+					locRot = 180;
+					break;
+				case AccelerometerManager.LANDSCAPE_LEFT:
+					locRot = 90;
+					break;
+				case AccelerometerManager.LANDSCAPE_RIGHT:
+					locRot = -90;
+					break;
+			}
+			//textContainer.rotation = locRot;
+			
+			Actuate.tween(textContainer, 1, {rotation:locRot});
+		}
+		private function drawBackground():void
+		{
+			//Already has data to use for backgrounds
+			if(backgroundBitmap && backgroundBitmapSelected)
+				return;
+			
+			var tempSprite:Sprite = new Sprite();
+			if(!backgroundBitmap)
+			{
+				tempSprite.graphics.clear();
+				tempSprite.graphics.beginFill(0xFF0000);
+				tempSprite.graphics.drawCircle(circleRadius,circleRadius,circleRadius);
+				tempSprite.graphics.endFill();
+				backgroundBitmap = new BitmapData(circleRadius*2,circleRadius*2, true, 0x00000000);
+				backgroundBitmap.draw(tempSprite);
+			}
+			
+			if(!backgroundBitmapSelected)
+			{
+				tempSprite.graphics.clear();
+				tempSprite.graphics.beginFill(0x00FF00);
+				tempSprite.graphics.drawCircle(circleRadius,circleRadius,circleRadius);
+				tempSprite.graphics.endFill();
+				backgroundBitmapSelected = new BitmapData(circleRadius*2,circleRadius*2, true, 0x00000000);
+				backgroundBitmapSelected.draw(tempSprite);
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package com.shaunhusain.fingerPainting.tools
 {
-	import com.shaunhusain.fingerPainting.managers.LayerManager;
-	import com.shaunhusain.fingerPainting.managers.SecondaryPanelManager;
+	import com.shaunhusain.fingerPainting.view.managers.LayerManager;
+	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.managers.UndoManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	

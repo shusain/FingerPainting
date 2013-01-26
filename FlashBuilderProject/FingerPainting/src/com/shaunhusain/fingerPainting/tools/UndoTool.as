@@ -31,6 +31,10 @@ package com.shaunhusain.fingerPainting.tools
 			layerManager.currentLayerBitmap.draw(bd);
 			layerManager.currentLayer.updateThumbnail();
 		}
+		public function toString():String
+		{
+			return "Undo";
+		}
 		
 	}
 }

@@ -22,10 +22,17 @@ package com.shaunhusain.fingerPainting.tools
 		public function takeAction(event:TouchEvent=null):void
 		{
 			var bm:BitmapData = layerManager.currentLayerBitmap;
-			if(event && bm)
+			
+			var colorSansAlpha:uint = model.currentColor & 0x00FFFFFF;
+			
+			if(event && bm && event.type == TouchEvent.TOUCH_END)
 				bm.floodFill(event.stageX,event.stageY,model.currentColor);
 			layerManager.currentLayer.updateThumbnail();
 			undoManager.addHistoryElement(bm);
+		}
+		public function toString():String
+		{
+			return "Bucket Fill";
 		}
 	}
 }

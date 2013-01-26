@@ -21,5 +21,9 @@ package com.shaunhusain.fingerPainting.tools
 			//TODO: Implement
 			
 		}
+		public function toString():String
+		{
+			return "Shape";
+		}
 	}
 }

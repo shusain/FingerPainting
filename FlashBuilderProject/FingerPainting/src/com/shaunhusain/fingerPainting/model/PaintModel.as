@@ -1,6 +1,7 @@
 package com.shaunhusain.fingerPainting.model
 {
 	import com.shaunhusain.fingerPainting.tools.ITool;
+	import com.shaunhusain.fingerPainting.tools.extras.BrushTip;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -18,20 +19,15 @@ package com.shaunhusain.fingerPainting.model
 		
 		public var currentColorBitmap:Bitmap;
 		
-		//Brush Options
-		public var brushCurrentWidth:Number = 20;
-		public var brushObservePressure:Boolean;
-		public var brushOpacity:Number=1;
-		
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
-		
-		public var isPressureSensitive:Boolean=true;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
 		//--------------------------------------------------------------------------------
-		public function PaintModel(se:SingletonEnforcer){}
+		public function PaintModel(se:SingletonEnforcer)
+		{
+		}
 		
 		//--------------------------------------------------------------------------------
 		//				Singleton
@@ -48,8 +44,10 @@ package com.shaunhusain.fingerPainting.model
 		//				Properties
 		//--------------------------------------------------------------------------------
 		private var _currentColor:uint = 0xFF000000;
-		public function set currentColor(value:Number):void
+		public function set currentColor(value:uint):void
 		{
+			if(value == _currentColor)
+				return;
 			_currentColor = value;
 			if(currentColorBitmap)
 			{
@@ -57,7 +55,7 @@ package com.shaunhusain.fingerPainting.model
 			}
 			dispatchEvent(new Event("currentColorChanged"));
 		}
-		public function get currentColor():Number
+		public function get currentColor():uint
 		{
 			return _currentColor;
 		}
