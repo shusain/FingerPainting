@@ -181,7 +181,7 @@ package com.shaunhusain.fingerPainting.tools.extras
 				scaleMatrix.scale(width/150,width/150);
 				
 				brushBitmapData = new BitmapData(width,width,true,0x00000000);
-				brushBitmapData.draw(_stippleBrushBmp.bitmapData, scaleMatrix, new ColorTransform(1,1,1,alpha,rgbObj.red,rgbObj.green,rgbObj.blue));
+				brushBitmapData.draw(_scatterBrushBmp.bitmapData, scaleMatrix, new ColorTransform(1,1,1,alpha,rgbObj.red,rgbObj.green,rgbObj.blue));
 			}
 			else
 			{

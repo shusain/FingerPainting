@@ -2,6 +2,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 {
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.CircleButton;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -30,7 +31,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		
 		protected var backgroundSprite:Sprite;
 		protected var titleBackground:CircleButton;
-		protected var closeButton:CircleButton;
+		protected var closeButton:RotatingIconButton;
 		
 		public function PanelBase()
 		{
@@ -58,8 +59,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			}
 			if(!closeButton)
 			{
-				closeButton = new CircleButton(_closeButtonBmp.bitmapData,_closeButtonBmp.bitmapData, titleTextFormat);
-				closeButton.addEventListener("circleButtonClicked", closeButtonHandler);
+				closeButton = new RotatingIconButton(_closeButtonBmp,null,null,true);
+				closeButton.addEventListener("instantaneousButtonClicked", closeButtonHandler);
 				closeButton.x = 448;
 				closeButton.y = 12;
 				addChild(closeButton);

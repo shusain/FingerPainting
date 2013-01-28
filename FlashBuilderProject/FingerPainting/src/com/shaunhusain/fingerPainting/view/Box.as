@@ -55,6 +55,22 @@ package com.shaunhusain.fingerPainting.view
 			elementsModifiedHandler();
 		}
 		
+		private var _startPadding:Number = 0;
+
+		public function get startPadding():Number
+		{
+			return _startPadding;
+		}
+
+		public function set startPadding(value:Number):void
+		{
+			if(_startPadding==value)
+				return;
+			_startPadding = value;
+			elementsModifiedHandler();
+		}
+
+		
 		//--------------------------------------------------------------------------------
 		//				Handlers
 		//--------------------------------------------------------------------------------
@@ -70,7 +86,7 @@ package com.shaunhusain.fingerPainting.view
 				property2 = "width";
 			}
 			
-			var curOffset:Number = 0;
+			var curOffset:Number = startPadding;
 			for(var i:int = 0; i < numChildren; i++)
 			{
 				var curChild:DisplayObject = getChildAt(i);

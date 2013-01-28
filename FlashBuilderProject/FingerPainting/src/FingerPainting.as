@@ -91,12 +91,14 @@ package
 				new QueuedMessage(7000,"Select a tool by clicking the icon for it in the toolbar.")]
 			helpManager.showMessage(startupMessages);
 			
+			undoManager.addHistoryElement(layerManager.currentLayerBitmap);
+			
 			trace("stage size:",stage.fullScreenHeight, stage.fullScreenWidth);
 		}
 		
 		private function touchMoveHandler(event:TouchEvent):void
 		{
-			if(!model.menuMoving && !SecondaryPanelManager.getIntance().isShowingPanel)
+			if(!model.menuMoving /*&& !SecondaryPanelManager.getIntance().isShowingPanel*/)
 				model.currentTool.takeAction(event);
 		}
 	}

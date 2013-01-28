@@ -7,19 +7,19 @@ package com.shaunhusain.fingerPainting.view
 	public class BitmapReference
 	{
 		/** Layer option buttons **/
-		[Embed(source="/images/add.png")]
+		[Embed(source="/images/addIcon.png")]
 		private static var _addIcon:Class;
 		public static var _addBmp:Bitmap = new _addIcon();
 		
-		[Embed(source="/images/remove.png")]
+		[Embed(source="/images/removeIcon.png")]
 		private static var _removeIcon:Class;
 		public static var _removeBmp:Bitmap = new _removeIcon();
 		
-		[Embed(source="/images/moveUp.png")]
+		[Embed(source="/images/moveUpIcon.png")]
 		private static var _moveUpIcon:Class;
 		public static var _moveUpBmp:Bitmap = new _moveUpIcon();
 		
-		[Embed(source="/images/moveDown.png")]
+		[Embed(source="/images/moveDownIcon.png")]
 		private static var _moveDownIcon:Class;
 		public static var _moveDownBmp:Bitmap = new _moveDownIcon();
 		
@@ -34,6 +34,14 @@ package com.shaunhusain.fingerPainting.view
 		[Embed(source="/images/mirror.png")]
 		private static var _mirrorIcon:Class;
 		public static var _mirrorBmp:Bitmap = new _mirrorIcon();
+		
+		[Embed(source="/images/visibility.png")]
+		private static var _visiblityIcon:Class;
+		public static var _visibilityBmp:Bitmap = new _visiblityIcon();
+		
+		[Embed(source="/images/visibilitySelected.png")]
+		private static var _visiblitySelectedIcon:Class;
+		public static var _visibilitySelectedBmp:Bitmap = new _visiblitySelectedIcon();
 		
 		
 		/** Toolbar Images **/

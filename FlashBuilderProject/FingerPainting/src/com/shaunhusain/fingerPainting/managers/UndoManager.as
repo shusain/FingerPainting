@@ -1,15 +1,7 @@
 package com.shaunhusain.fingerPainting.managers
 {
-	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
-	
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.Loader;
-	import flash.events.Event;
-	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
-	import flash.system.System;
-	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	/**
@@ -31,11 +23,6 @@ package com.shaunhusain.fingerPainting.managers
 		private var redoCallback:Function;
 		private var undoCallback:Function;
 		
-		private var redoLoader:Loader;
-		private var undoLoader:Loader;
-		
-		private var loading:Boolean;
-		
 		private var encodingRect:Rectangle;
 		
 		private var saveDelayTimer:Timer;
@@ -56,15 +43,7 @@ package com.shaunhusain.fingerPainting.managers
 		public function UndoManager(se:SingletonEnforcer)
 		{
 			historyStack=[];
-			redoLoader = new Loader();
-			undoLoader = new Loader();
-			undoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, undoLoaderHandler);
-			redoLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, redoLoaderHandler);
-			PNGEncoder2.level = CompressionLevel.NORMAL;
-			
-			saveDelayTimer = new Timer(SAVE_TIMER_DELAY,1);
-			saveDelayTimer.addEventListener(TimerEvent.TIMER_COMPLETE, actuallySave);
-		}
+	}
 		
 		//--------------------------------------------------------------------------------
 		//				Singleton
@@ -81,31 +60,26 @@ package com.shaunhusain.fingerPainting.managers
 		//--------------------------------------------------------------------------------
 		public function addHistoryElement(bd:BitmapData):void
 		{
-			tempBD = bd.clone();
-			
-			if(saveDelayTimer.running)
+			if(historyStack.length-1>currentIndex && currentIndex+1 < historyStack.length)
 			{
-				saveDelayTimer.stop();
-				saveDelayTimer.reset();
+				historyStack.splice(currentIndex+1);
 			}
-			saveDelayTimer.start();
 			
-		}
-		
-		public function extendTimer():void
-		{
-			saveDelayTimer.stop();
-			saveDelayTimer.reset();
-			saveDelayTimer.start();
+			tempBD = bd.clone();
+			historyStack.push(tempBD);
+			
+			currentIndex++;
+			
+			if(historyStack.length>10)
+			{
+				historyStack.shift();
+				currentIndex--;
+			}
 		}
 		
 		public function undo(callback:Function):void
 		{
-			if(loading)
-				return;
-			
 			undoCallback = callback;
-			loading=true;
 			currentIndex--;
 			if(currentIndex<0)
 				currentIndex=0;
@@ -113,74 +87,17 @@ package com.shaunhusain.fingerPainting.managers
 			if(historyStack.length==0)
 				return;
 			
-			undoLoader.loadBytes(historyStack[currentIndex]);
+			undoCallback(historyStack[currentIndex]);
 		}
 		
 		public function redo(callback:Function):void
 		{
-			if(loading)
-				return;
-			loading=true;
 			redoCallback = callback;
 			currentIndex++;
 			if(currentIndex>historyStack.length-1)
 				currentIndex = historyStack.length-1;
 			
-			redoLoader.loadBytes(historyStack[currentIndex]);
-		}
-		
-		//--------------------------------------------------------------------------------
-		//				Handlers
-		//--------------------------------------------------------------------------------
-		private function redoLoaderHandler(event:Event):void
-		{
-			redoCallback(Bitmap(event.target.content).bitmapData);
-			loading = false;
-			System.gc();
-		}
-		
-		private function undoLoaderHandler(event:Event):void
-		{
-			undoCallback(Bitmap(event.target.content).bitmapData);
-			loading = false;
-			System.gc();
-		}
-		
-		private function actuallySave(event:TimerEvent):void
-		{
-			if(currentlySaving)
-			{
-				extendTimer();
-				return;
-			}
-			if(!tempBD)
-			{
-				return;
-			}
-			if(!encodingRect)
-				encodingRect = new Rectangle(0,0,tempBD.width,tempBD.height);
-			if(currentIndex<historyStack.length-1)
-				historyStack.splice(currentIndex+1);
-			
-			var byteArray:ByteArray = new ByteArray();
-			//bd.encode(encodingRect, encodingOptions, byteArray);
-			//byteArray = PNGEncoder2.encode(tempBD);
-			currentlySaving = true;
-			var pngEncoder:PNGEncoder2 = PNGEncoder2.encodeAsync(tempBD);
-			pngEncoder.targetFPS = 45;
-			pngEncoder.addEventListener(Event.COMPLETE, function(event:Event):void
-			{
-				currentlySaving = false;
-				byteArray = event.target.png;
-				historyStack.push(byteArray);
-				currentIndex++;
-				if(historyStack.length>50)
-				{
-					historyStack.shift();
-					currentIndex--;
-				}
-			});
-			
+			redoCallback(historyStack[currentIndex]);
 		}
 		
 	}

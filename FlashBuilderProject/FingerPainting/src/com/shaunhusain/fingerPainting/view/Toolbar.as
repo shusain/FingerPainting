@@ -18,7 +18,6 @@ package com.shaunhusain.fingerPainting.view
 	import com.shaunhusain.fingerPainting.tools.UndoTool;
 	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
-	import com.shaunhusain.fingerPainting.view.managers.helpComponents.SimpleHelpDisplay;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.ButtonScroller;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	
@@ -179,24 +178,27 @@ package com.shaunhusain.fingerPainting.view
 			menuButtonSprite.addEventListener("buttonClicked", deselectAllOthers);
 			
 			
+			var bg:Bitmap = BitmapReference._firstBackgroundBmp;
+			var bgs:Bitmap = BitmapReference._firstBackgroundSelectedBmp;
+			
 			var brushTool:BrushTool = new BrushTool(stage);
 			model.currentTool = brushTool;
 			menuButtonSprite.menuButtons = 
 				[
-					new RotatingIconButton(_colorSpectrumBmp, new ColorSpectrumTool(stage),true,false),
-					new RotatingIconButton(_brushIconBmp, brushTool, false, true),
-					new RotatingIconButton(_eraserIconBmp, new EraserTool(stage)),
-					new RotatingIconButton(_bucketIconBmp, new BucketTool(stage)),
-					new RotatingIconButton(_pipetIconBmp, new PipetTool(stage)),
-					new RotatingIconButton(_undoIconBmp, new UndoTool(stage), true),
-					new RotatingIconButton(_redoIconBmp, new RedoTool(stage), true),
-					new RotatingIconButton(_blankDocBmp, new BlankTool(stage), true),
-					new RotatingIconButton(_layersBmp, new LayerTool(stage)),
-					new RotatingIconButton(_cameraBmp, new CameraTool(stage), true),
-					new RotatingIconButton(_shareBmp, new ShareTool(stage), true),
-					new RotatingIconButton(_saveIconBmp, new SaveTool(stage), true)
+					new RotatingIconButton(_colorSpectrumBmp, null, new ColorSpectrumTool(stage), true, false, true,bg,bgs),
+					new RotatingIconButton(_brushIconBmp, null, brushTool, false, true, true, bg, bgs),
+					new RotatingIconButton(_eraserIconBmp, null, new EraserTool(stage), false, false, true, bg, bgs),
+					new RotatingIconButton(_bucketIconBmp, null, new BucketTool(stage), false, false, true, bg, bgs),
+					new RotatingIconButton(_pipetIconBmp, null, new PipetTool(stage), false, false, true, bg, bgs),
+					new RotatingIconButton(_undoIconBmp, null, new UndoTool(stage), true, false, true, bg, bgs),
+					new RotatingIconButton(_redoIconBmp, null, new RedoTool(stage), true, false, true, bg, bgs),
+					new RotatingIconButton(_blankDocBmp, null, new BlankTool(stage), true, false, true, bg, bgs),
+					new RotatingIconButton(_layersBmp, null, new LayerTool(stage), false, false, true, bg, bgs),
+					new RotatingIconButton(_cameraBmp, null, new CameraTool(stage), true, false, true, bg, bgs),
+					new RotatingIconButton(_shareBmp, null, new ShareTool(stage), true, false, true, bg, bgs),
+					new RotatingIconButton(_saveIconBmp, null, new SaveTool(stage), true, false, true, bg, bgs)
 				];
-			
+			trace("toolbar added to stage");
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -282,7 +284,7 @@ package com.shaunhusain.fingerPainting.view
 		protected function instantaneousActionHandler(event:Event):void
 		{
 			var tempTool:ITool = event.target.data as ITool;
-			HelpManager.getIntance().showMessage((event.target.data as ITool).toString(),750,false);
+			HelpManager.getIntance().showMessage((event.target.data as ITool).toString(),250,false);
 			tempTool.takeAction();
 		}
 		
@@ -291,6 +293,9 @@ package com.shaunhusain.fingerPainting.view
 		//--------------------------------------------------------------------------------
 		private function deselectAllOthers(event:Event):void
 		{
+			if(model.currentTool != event.target.data as ITool)
+				HelpManager.getIntance().showMessage((event.target.data as ITool).toString(),750,false);
+			
 			if(model.currentTool == event.target.data as ITool && model.currentTool is BrushTool)
 			{
 				var bt:BrushTool = model.currentTool as BrushTool;
@@ -307,7 +312,6 @@ package com.shaunhusain.fingerPainting.view
 			}
 			
 			model.currentTool = event.target.data as ITool;
-			HelpManager.getIntance().showMessage(model.currentTool.toString(),750,false);
 			
 			
 			for( var i:int = 0; i <menuButtonSprite.menuButtons.length; i++)

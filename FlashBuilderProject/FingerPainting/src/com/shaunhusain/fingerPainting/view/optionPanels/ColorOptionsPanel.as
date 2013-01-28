@@ -81,7 +81,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				hueBarSprite.addEventListener(TouchEvent.TOUCH_MOVE, hueBarTouchMoveHandler);
 				addChild(hueBarSprite);
 				hueBarSprite.x = 100;
-				hueBarSprite.y = 40;
+				hueBarSprite.y = 140;
 				hueBarSprite.cacheAsBitmap = true;
 				
 				hueBarSprite.addChild(hueBar);
@@ -100,7 +100,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				lightAndSatGradientSprite = new Sprite();
 				lightAndSatGradientSprite.addChild(lightAndSatGradient);
 				lightAndSatGradient.scaleX = lightAndSatGradient.scaleY = 4;
-				lightAndSatGradientSprite.y = 200;
+				lightAndSatGradientSprite.y = 300;
 				lightAndSatGradientSprite.x = 100;
 				addChild(lightAndSatGradientSprite);
 				lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_BEGIN, lightAndSatGradientTouchBeginHandler);

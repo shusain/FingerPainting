@@ -25,7 +25,7 @@ package com.shaunhusain.fingerPainting.model
 		{
 			this.bitmapData = bitmapData;
 			this.bitmap = bitmap;
-			thumbnailBitmapData = new BitmapData(bitmapData.width/10,bitmapData.height/10,true,0x00000000);
+			thumbnailBitmapData = new BitmapData(170,170*bitmapData.height/bitmapData.width,true,0x00000000);
 			thumbnailBitmap = new Bitmap(thumbnailBitmapData);
 		}
 		

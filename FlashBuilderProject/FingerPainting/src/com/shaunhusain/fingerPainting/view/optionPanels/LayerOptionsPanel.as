@@ -8,6 +8,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.ButtonScroller;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RelativeTouchSlider;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.StackedButtons;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.TouchSlider;
 	
 	import flash.display.Bitmap;
@@ -23,24 +24,28 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		//--------------------------------------------------------------------------------
 		protected var mainContainer:Box;
 		protected var controlContainer:Box;
-		protected var addButton:RotatingIconButton;
-		protected var removeButton:RotatingIconButton;
-		protected var upButton:RotatingIconButton;
-		protected var downButton:RotatingIconButton;
-		protected var mergeButton:RotatingIconButton;
-		protected var duplicateButton:RotatingIconButton;
+		protected var layerButtonsContainer:Box;
+		protected var mirrorDuplicateContainer:Box;
 		protected var mirrorButton:RotatingIconButton;
+		protected var duplicateButton:RotatingIconButton;
+		protected var visibilityMergeContainer:Box;
+		protected var visibilityButton:RotatingIconButton;
+		protected var mergeButton:RotatingIconButton;
 		protected var opacitySlider:RelativeTouchSlider;
+		protected var addRemoveButton:StackedButtons;
+		protected var moveUpDownButton:StackedButtons;
 		
 		private var layerBackground:Bitmap
 		private var selectedLayerBackground:Bitmap
+		
+		protected var layersDisplayContainer:Box;
+		protected var layersDisplay:ButtonScroller;
+		
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
-		
 		private var model:PaintModel = PaintModel.getInstance();
 		private var layerManager:LayerManager = LayerManager.getIntance();
-		private var layersDisplay:ButtonScroller;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -60,16 +65,16 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		private function addedToStageHandler(event:Event):void
 		{
 			if(!layerBackground)
-				layerBackground = new Bitmap(new BitmapData(stage.fullScreenWidth/10,stage.fullScreenHeight/10,false,0xFFFFFFFF));
+				layerBackground = new Bitmap(new BitmapData(170,170*stage.fullScreenHeight/stage.fullScreenWidth,false,0xFFFFFFFF));
 			if(!selectedLayerBackground)
-				selectedLayerBackground = new Bitmap(new BitmapData(stage.fullScreenWidth/10,stage.fullScreenHeight/10,false,0xFFDDDDFF));
+				selectedLayerBackground = new Bitmap(new BitmapData(170,170*stage.fullScreenHeight/stage.fullScreenWidth,false,0xFFDDDDFF));
 			
 			if(!mainContainer)
 			{
 				mainContainer = new Box();
-				mainContainer.y = 30;
-				mainContainer.x = 10;
-				mainContainer.gap = 10;
+				mainContainer.y = 40;
+				mainContainer.x = 30;
+				mainContainer.gap = 40;
 				mainContainer.direction = "horizontal";
 				addChild(mainContainer);
 			}
@@ -77,57 +82,70 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!controlContainer)
 			{
 				controlContainer = new Box();
+				controlContainer.gap = 40;
 				mainContainer.addChild(controlContainer);
 			}
 			
-			if(!addButton)
+			if(!addRemoveButton)
 			{
-				addButton = new RotatingIconButton(BitmapReference._addBmp,null,true);
-				addButton.addEventListener("instantaneousButtonClicked", addButtonClickHandler);
-				
-				controlContainer.addChild(addButton);
+				addRemoveButton = new StackedButtons(BitmapReference._addBmp,BitmapReference._removeBmp);
+				addRemoveButton.addEventListener("topButtonTapped", addButtonClickHandler);
+				addRemoveButton.addEventListener("bottomButtonTapped", removeButtonClickHandler);
+				controlContainer.addChild(addRemoveButton);
 			}
-			if(!removeButton)
+			if(!moveUpDownButton)
 			{
-				removeButton = new RotatingIconButton(BitmapReference._removeBmp,null,true);
-				removeButton.addEventListener("instantaneousButtonClicked", removeButtonClickHandler);
-				
-				controlContainer.addChild(removeButton);
+				moveUpDownButton = new StackedButtons(BitmapReference._moveUpBmp,BitmapReference._moveDownBmp);
+				moveUpDownButton.addEventListener("topButtonTapped", upButtonClickHandler);
+				moveUpDownButton.addEventListener("bottomButtonTapped", downButtonClickHandler);
+				controlContainer.addChild(moveUpDownButton);
+			}	
+			if(!layerButtonsContainer)
+			{
+				layerButtonsContainer = new Box();
+				controlContainer.addChild(layerButtonsContainer);
 			}
-			if(!upButton)
+			if(!mirrorDuplicateContainer)
 			{
-				upButton = new RotatingIconButton(BitmapReference._moveUpBmp,null,true);
-				upButton.addEventListener("instantaneousButtonClicked", upButtonClickHandler);
-				
-				controlContainer.addChild(upButton);
-			}
-			if(!downButton)
-			{
-				downButton = new RotatingIconButton(BitmapReference._moveDownBmp,null,true);
-				downButton.addEventListener("instantaneousButtonClicked", downButtonClickHandler);
-				
-				controlContainer.addChild(downButton);
-			}
-			if(!duplicateButton)
-			{
-				duplicateButton = new RotatingIconButton(BitmapReference._dupBmp,null,true);
-				duplicateButton.addEventListener("instantaneousButtonClicked", duplicateClickedHandler);
-				
-				controlContainer.addChild(duplicateButton);
-			}
-			if(!mergeButton)
-			{
-				mergeButton = new RotatingIconButton(BitmapReference._mergeBmp,null,true);
-				mergeButton.addEventListener("instantaneousButtonClicked", mergeClickedHandler);
-				
-				controlContainer.addChild(mergeButton);
+				mirrorDuplicateContainer = new Box();
+				mirrorDuplicateContainer.direction = "horizontal";
+				layerButtonsContainer.addChild(mirrorDuplicateContainer);
 			}
 			if(!mirrorButton)
 			{
-				mirrorButton = new RotatingIconButton(BitmapReference._mirrorBmp,null,true);
+				mirrorButton = new RotatingIconButton(BitmapReference._mirrorBmp,null,null,true);
 				mirrorButton.addEventListener("instantaneousButtonClicked", mirrorClickedHandler);
 				
-				controlContainer.addChild(mirrorButton);
+				mirrorDuplicateContainer.addChild(mirrorButton);
+			}
+			if(!duplicateButton)
+			{
+				duplicateButton = new RotatingIconButton(BitmapReference._dupBmp,null,null,true);
+				duplicateButton.addEventListener("instantaneousButtonClicked", duplicateClickedHandler);
+				
+				mirrorDuplicateContainer.addChild(duplicateButton);
+			}
+			
+			if(!visibilityMergeContainer)
+			{
+				visibilityMergeContainer = new Box();
+				visibilityMergeContainer.direction = "horizontal";
+				layerButtonsContainer.addChild(visibilityMergeContainer);
+			}
+			if(!visibilityButton)
+			{
+				visibilityButton = new RotatingIconButton(BitmapReference._visibilityBmp,BitmapReference._visibilitySelectedBmp,null,false,true);
+				visibilityButton.toggles = true;
+				visibilityButton.addEventListener("buttonClicked", visibilityClickedHandler);
+				
+				visibilityMergeContainer.addChild(visibilityButton);
+			}
+			if(!mergeButton)
+			{
+				mergeButton = new RotatingIconButton(BitmapReference._mergeBmp,null,null,true);
+				mergeButton.addEventListener("instantaneousButtonClicked", mergeClickedHandler);
+				
+				visibilityMergeContainer.addChild(mergeButton);
 			}
 			if(!opacitySlider)
 			{
@@ -140,20 +158,31 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				opacitySlider.liveScrolling = false;
 				controlContainer.addChild(opacitySlider);
 			}
-			
+		
+			if(!layersDisplayContainer)
+			{
+				layersDisplayContainer = new Box();
+				layersDisplayContainer.startPadding = 60;
+				mainContainer.addChild(layersDisplayContainer);
+			}
 			if(!layersDisplay)
 			{
 				layersDisplay = new ButtonScroller();
-				layersDisplay.buttonMaskHeight = backgroundSprite.height - 200;
-				layersDisplay.buttonMaskWidth = stage.fullScreenWidth/10;
-				mainContainer.addChild(layersDisplay);
-				
+				layersDisplay.gap = 20;
+				layersDisplay.buttonMaskHeight = backgroundSprite.height - 260;
+				layersDisplay.buttonMaskWidth = 170;
 				layersDisplay.addEventListener("buttonClicked",layerClickedHandler);
+				layersDisplayContainer.addChild(layersDisplay);
 			}
 			
 			opacitySlider.currentValue = layerManager.currentLayer.bitmap.alpha;
 			
 			beingShown();
+		}
+		
+		protected function visibilityClickedHandler(event:Event):void
+		{
+			layerManager.currentLayer.bitmap.visible = visibilityButton.isSelected;
 		}
 		
 		protected function mirrorClickedHandler(event:Event):void
@@ -243,7 +272,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			{
 				var selected:Boolean = (curIndex++==layerManager.currentLayerIndex);
 				
-				tempArray.unshift(new RotatingIconButton(layer.thumbnailBitmap,layer,false,selected,false,layerBackground,selectedLayerBackground));
+				tempArray.unshift(new RotatingIconButton(layer.thumbnailBitmap,null,layer,false,selected,false,layerBackground,selectedLayerBackground));
 			}
 			layersDisplay.menuButtons = tempArray;
 		}

@@ -1,5 +1,6 @@
 package com.shaunhusain.fingerPainting.view.managers
 {
+	import com.shaunhusain.fingerPainting.managers.UndoManager;
 	import com.shaunhusain.fingerPainting.model.Layer;
 	
 	import flash.display.Bitmap;
@@ -8,7 +9,7 @@ package com.shaunhusain.fingerPainting.view.managers
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Matrix;
-	import com.shaunhusain.fingerPainting.managers.UndoManager;
+	import flash.system.System;
 	
 
 	public class LayerManager extends Sprite
@@ -113,13 +114,16 @@ package com.shaunhusain.fingerPainting.view.managers
 			
 			layers.push(layer);
 			currentLayerIndex = layers.length-1;
+			trace(layers.length);
 		}
 		public function removeLayer():void
 		{
 			if(currentLayerIndex>=layers.length||currentLayerIndex<0)
 				return;
 			layers.splice(currentLayerIndex,1);
-			removeChildAt(currentLayerIndex);
+			
+			var removedLayer:Bitmap = removeChildAt(currentLayerIndex) as Bitmap;
+			
 			if(currentLayerIndex>layers.length-1)
 				currentLayerIndex--;
 			
@@ -127,6 +131,10 @@ package com.shaunhusain.fingerPainting.view.managers
 			{
 				addLayer();
 			}
+			
+			removedLayer.bitmapData.dispose();
+			removedLayer = null;
+			System.gc();
 		}
 		public function moveLayerUp():void
 		{

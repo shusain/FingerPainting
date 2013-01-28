@@ -4,6 +4,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import com.eclecticdesignstudio.motion.actuators.GenericActuator;
 	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
+	import com.shaunhusain.fingerPainting.model.PaintModel;
 	
 	import flash.display.Bitmap;
 	import flash.display.Graphics;
@@ -395,6 +396,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			stage.removeEventListener(TouchEvent.TOUCH_MOVE, handleSliding);
 			stage.removeEventListener(TouchEvent.TOUCH_END, touchEndHandler);
 			updateValueTimer.stop();
+			PaintModel.getInstance().menuMoving = false;
 			
 			if(!liveScrolling)
 				dispatchEvent(new Event("valueChanged"));
@@ -407,6 +409,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			if(updateValueTimer.running)
 				return;
+			
+			PaintModel.getInstance().menuMoving = true;
+			
 			stage.addEventListener(TouchEvent.TOUCH_MOVE, handleSliding);
 			stage.addEventListener(TouchEvent.TOUCH_END, touchEndHandler);
 			

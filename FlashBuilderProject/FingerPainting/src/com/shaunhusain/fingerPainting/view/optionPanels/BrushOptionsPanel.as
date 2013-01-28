@@ -51,6 +51,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		protected var brushSizeExample:Bitmap;
 		protected var brushSizeExampleData:BitmapData;
 		protected var registeredEventListeners:Boolean;
+		protected var lowerLeftAreaContainer:Box;
 		protected var exampleContainer:Box;
 		protected var toggleButtonsContainer:Box;
 		protected var outerContainer:Box;
@@ -102,7 +103,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			if(!xMirrorButton)
 			{
-				xMirrorButton = new RotatingIconButton(_xMirrorBmp, null, false, true, true, _circleBackgroundBmp, _circleBackgroundSelectedBmp);
+				xMirrorButton = new RotatingIconButton(_xMirrorBmp, null, null, false, true, true, _circleBackgroundBmp, _circleBackgroundSelectedBmp);
 				xMirrorButton.toggles = true;
 				xMirrorButton.addEventListener("buttonClicked", xMirrorButtonHandler);
 				toggleButtonsContainer.addChild(xMirrorButton);
@@ -110,7 +111,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			if(!yMirrorButton)
 			{
-				yMirrorButton = new RotatingIconButton(_yMirrorBmp, null, false, true, true, _circleBackgroundBmp, _circleBackgroundSelectedBmp);
+				yMirrorButton = new RotatingIconButton(_yMirrorBmp, null, null, false, true, true, _circleBackgroundBmp, _circleBackgroundSelectedBmp);
 				yMirrorButton.toggles = true;
 				yMirrorButton.addEventListener("buttonClicked", yMirrorButtonHandler);
 				toggleButtonsContainer.addChild(yMirrorButton);
@@ -118,25 +119,26 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			if(!pressureButton)
 			{
-				pressureButton = new RotatingIconButton(_pressureSensitiveBmp, null, false, true, true, _circleBackgroundBmp, _circleBackgroundSelectedBmp);
+				pressureButton = new RotatingIconButton(_pressureSensitiveBmp, null, null, false, true, true, _circleBackgroundBmp, _circleBackgroundSelectedBmp);
 				pressureButton.toggles = true;
 				pressureButton.addEventListener("buttonClicked", pressureButtonHandler);
 				toggleButtonsContainer.addChild(pressureButton);
 			}
 			
-			if(!exampleContainer)
+			if(!lowerLeftAreaContainer)
 			{
-				exampleContainer = new Box();
-				exampleContainer.gap = 80;
-				exampleContainer.direction = "horizontal"
-				outerContainer.addChild(exampleContainer);
+				lowerLeftAreaContainer = new Box();
+				lowerLeftAreaContainer.gap = 40;
+				lowerLeftAreaContainer.direction = "horizontal"
+				outerContainer.addChild(lowerLeftAreaContainer);
 			}
 			
 			if(!controlContainer)
 			{
 				controlContainer = new Box();
-				controlContainer.gap = 20;
-				exampleContainer.addChild(controlContainer);
+				controlContainer.startPadding = 40;
+				controlContainer.gap = 40;
+				lowerLeftAreaContainer.addChild(controlContainer);
 			}
 			
 			if(!brushSizeSlider)
@@ -170,6 +172,13 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				brushHardnessSlider.dispAsPercent = true;
 				brushHardnessSlider.titleLabelText = "Hardness";
 				controlContainer.addChild(brushHardnessSlider);
+			}
+			
+			if(!exampleContainer)
+			{
+				exampleContainer = new Box();
+				exampleContainer.startPadding = 80;
+				lowerLeftAreaContainer.addChild(exampleContainer);
 			}
 			
 			if(!brushSizeExample)

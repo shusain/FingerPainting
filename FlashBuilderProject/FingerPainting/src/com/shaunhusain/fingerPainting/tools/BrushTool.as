@@ -71,7 +71,6 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			if(event.touchPointID!=0)
 				return;
-			undoManager.extendTimer();
 			
 			switch(event.type)
 			{
@@ -84,10 +83,9 @@ package com.shaunhusain.fingerPainting.tools
 				case TouchEvent.TOUCH_END:
 					leftoverFromPrevious = 0;
 					previousPoint.x = previousPoint.y = NaN;
-					/*layerManager.currentLayer.updateThumbnail();
-					undoManager.addHistoryElement(layerManager.currentLayerBitmap);*/
 					layerManager.currentLayer.updateThumbnail();
 					undoManager.addHistoryElement(layerManager.currentLayerBitmap);
+					break;
 				case TouchEvent.TOUCH_TAP:
 					//happens after touch_move/touch_end even with long swipes
 					/*if(brushTip.isPressureSensitive)

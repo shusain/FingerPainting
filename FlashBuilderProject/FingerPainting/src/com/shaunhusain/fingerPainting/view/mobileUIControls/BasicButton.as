@@ -1,7 +1,6 @@
 package com.shaunhusain.fingerPainting.view.mobileUIControls
 {
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -25,6 +24,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		protected var iconSprite:Sprite;
 		
 		protected var _iconBmp:Bitmap;
+		protected var _iconSelectedBmp:Bitmap;
 		
 		protected var iconMatrix:Matrix;
 		
@@ -33,23 +33,18 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//--------------------------------------------------------------------------------
 		//				Constructor
 		//--------------------------------------------------------------------------------
-		public function BasicButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, backgroundBitmap:Bitmap=null, backgroundSelectedBitmap:Bitmap = null)
+		public function BasicButton(iconBmp:Bitmap = null, iconSelectedBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, backgroundBitmap:Bitmap=null, backgroundSelectedBitmap:Bitmap = null)
 		{
 			super();
 			
 			iconMatrix = new Matrix();
 			
 			this._iconBmp = iconBmp;
+			this._iconSelectedBmp = iconSelectedBmp;
 			this.backgroundSelectedBitmap = backgroundSelectedBitmap;
 			this.backgroundBitmap = backgroundBitmap;
-			this.isSelected = isSelected;
 			this.data = data;
 			this.instantaneous = instantaneous;
-			
-			if(!backgroundBitmap)
-				this.backgroundBitmap = BitmapReference._firstBackgroundBmp;
-			if(!backgroundSelectedBitmap)
-				this.backgroundSelectedBitmap = BitmapReference._firstBackgroundSelectedBmp;
 			
 			backgroundSprite = new Sprite();
 			addChild(backgroundSprite);
@@ -57,8 +52,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			iconSprite = new Sprite();
 			addChild(iconSprite);
 			
-			showAppropriateBackground();
-			centerIcon();
+			this.isSelected = isSelected;
 			
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
 		}
@@ -123,6 +117,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			_isSelected = value;
 			showAppropriateBackground();
+			drawIcon();
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -156,21 +151,25 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//				Helper functions
 		//--------------------------------------------------------------------------------
 		
-		public function centerIcon():void
+		public function drawIcon():void
 		{
+			var bmpToUse:Bitmap = isSelected&&_iconSelectedBmp?_iconSelectedBmp:_iconBmp;
+			
+			var widthToCenter:Number = backgroundBitmap?backgroundBitmap.width/2:bmpToUse.width/2;
+			var heightToCenter:Number = backgroundBitmap?backgroundBitmap.height/2:bmpToUse.height/2;
+			
 			iconMatrix.identity();
-			iconMatrix.translate(-_iconBmp.width/2, -_iconBmp.height/2);
-			iconMatrix.translate(backgroundBitmap.width/2, backgroundBitmap.height/2);
+			iconMatrix.translate(-bmpToUse.width/2, -bmpToUse.height/2);
+			iconMatrix.translate(widthToCenter, heightToCenter);
 			
 			iconSprite.graphics.clear();
 			iconSprite.graphics.beginBitmapFill(_iconBmp.bitmapData, iconMatrix, false, true);
-			iconSprite.graphics.drawRect(0,0, backgroundBitmap.width,backgroundBitmap.height);
+			iconSprite.graphics.drawRect(0,0, bmpToUse.width,bmpToUse.height);
 			iconSprite.graphics.endFill();
 		}
 		private function resetBackground():void
 		{
 			isSelected = false;
-			showAppropriateBackground();
 		}
 		
 		private function showAppropriateBackground():void
@@ -178,12 +177,12 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			if(!backgroundSprite)
 				return;
 			backgroundSprite.graphics.clear();
-			if(isSelected)
+			if(isSelected && backgroundSelectedBitmap)
 			{
 				backgroundSprite.graphics.beginBitmapFill(backgroundSelectedBitmap.bitmapData);
 				backgroundSprite.graphics.drawRect(0,0,backgroundSelectedBitmap.width,backgroundSelectedBitmap.height);
 			}
-			else
+			else if(backgroundBitmap)
 			{
 				backgroundSprite.graphics.beginBitmapFill(backgroundBitmap.bitmapData);
 				backgroundSprite.graphics.drawRect(0,0,backgroundBitmap.width,backgroundBitmap.height);

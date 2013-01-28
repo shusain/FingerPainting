@@ -15,17 +15,12 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//--------------------------------------------------------------------------------
 		private var allowsRotation:Boolean;
 		
-		
-		private var instantaneous:Boolean;
-		
-		
-		
 		//--------------------------------------------------------------------------------
 		//				Constructor
 		//--------------------------------------------------------------------------------
-		public function RotatingIconButton(iconBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, allowsRotation:Boolean = true, backgroundBitmap:Bitmap=null, backgroundSelectedBitmap:Bitmap = null)
+		public function RotatingIconButton(iconBmp:Bitmap = null, iconSelectedBmp:Bitmap = null, data:Object=null, instantaneous:Boolean = false, isSelected:Boolean=false, allowsRotation:Boolean = true, backgroundBitmap:Bitmap=null, backgroundSelectedBitmap:Bitmap = null)
 		{
-			super(iconBmp,data,instantaneous,isSelected,backgroundBitmap,backgroundSelectedBitmap);
+			super(iconBmp,iconSelectedBmp,data,instantaneous,isSelected,backgroundBitmap,backgroundSelectedBitmap);
 			
 			this.allowsRotation = allowsRotation;
 			
@@ -57,21 +52,32 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			}
 		}
 		
+		override public function drawIcon():void
+		{
+			rotateAroundCenter = rotateAroundCenter;
+		}
+		
 		//--------------------------------------------------------------------------------
 		//				Properties
 		//--------------------------------------------------------------------------------
 		private var _rotateAroundCenter:Number = NaN;
 		public function set rotateAroundCenter (angleRadians:Number):void
 		{
+			var bmpToUse:Bitmap = isSelected&&_iconSelectedBmp?_iconSelectedBmp:_iconBmp;
+			
+			var widthToCenter:Number = backgroundBitmap?backgroundBitmap.width/2:bmpToUse.width/2;
+			var heightToCenter:Number = backgroundBitmap?backgroundBitmap.height/2:bmpToUse.height/2;
+			var iconSize:Number = Math.max(bmpToUse.width,bmpToUse.height);
+			
 			_rotateAroundCenter = angleRadians;
 			iconMatrix.identity();
-			iconMatrix.translate(-_iconBmp.width/2, -_iconBmp.height/2);
+			iconMatrix.translate(-bmpToUse.width/2, -bmpToUse.height/2);
 			iconMatrix.rotate (angleRadians);
-			iconMatrix.translate(backgroundBitmap.width/2, backgroundBitmap.height/2);
+			iconMatrix.translate(widthToCenter, heightToCenter);
 			
 			iconSprite.graphics.clear();
-			iconSprite.graphics.beginBitmapFill(_iconBmp.bitmapData, iconMatrix, false, true);
-			iconSprite.graphics.drawRect(0,0, backgroundBitmap.width,backgroundBitmap.height);
+			iconSprite.graphics.beginBitmapFill(bmpToUse.bitmapData, iconMatrix, false);
+			iconSprite.graphics.drawRect(0, 0, widthToCenter+iconSize/2, heightToCenter+iconSize/2);
 			iconSprite.graphics.endFill();
 		}
 		public function get rotateAroundCenter():Number
