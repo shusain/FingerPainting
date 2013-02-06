@@ -136,7 +136,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				titleLabel.mouseEnabled = false;
 				titleLabel.embedFonts = true;
 				titleLabel.autoSize = TextFieldAutoSize.CENTER;
-				titleLabel.setTextFormat(titleTextFormat);
+				titleLabel.defaultTextFormat = titleTextFormat;
 				titleLabel.x = 155;
 				rotateContentContainer.addChild(titleLabel);
 			}
@@ -147,7 +147,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				valueLabel.mouseEnabled = false;
 				valueLabel.embedFonts = true;
 				valueLabel.autoSize = TextFieldAutoSize.LEFT;
-				valueLabel.setTextFormat(valueTextFormat);
+				valueLabel.defaultTextFormat = valueTextFormat;
 				valueLabel.y = 112;
 				valueLabel.x = 9;
 				rotateContentContainer.addChild(valueLabel);
@@ -188,29 +188,8 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			}
 			
 			var ge:GenericActuator = Actuate.tween(this, 1, {rotateAroundCenter:locRot});
-			
-			//setTimeout(fixRotation,200);
 		}
-		/*private function fixRotation():void
-		{
-			var locRot:Number;
-			switch(AccelerometerManager.getIntance().currentOrientation)
-			{
-				case AccelerometerManager.PORTRAIT_DEFAULT:
-					locRot = 0;
-					break;
-				case AccelerometerManager.PORTRAIT_FLIPPED:
-					locRot = Math.PI;
-					break;
-				case AccelerometerManager.LANDSCAPE_LEFT:
-					locRot = Math.PI/2;
-					break;
-				case AccelerometerManager.LANDSCAPE_RIGHT:
-					locRot = -Math.PI/2;
-					break;
-			}
-			rotateAroundCenter = locRot;
-		}*/
+		
 		//--------------------------------------------------------------------------------
 		//				Properties
 		//--------------------------------------------------------------------------------
@@ -263,7 +242,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			if(_titleLabelText==value)
 				return;
 			titleLabel.text = _titleLabelText = value;
-			titleLabel.setTextFormat(titleTextFormat);
 		}
 		public function get titleLabelText():String
 		{
@@ -450,7 +428,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				valueLabel.text = _currentValue.toFixed(decimalsToShow);
 			if(units)
 				valueLabel.text += units;
-			valueLabel.setTextFormat(valueTextFormat);
 		}
 		
 		protected function drawGraphics():void

@@ -65,6 +65,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			textField = new TextField();
 			textField.blendMode = BlendMode.INVERT;
+			textField.defaultTextFormat = this.textFormat;
 			textField.autoSize = TextFieldAutoSize.CENTER;
 			textField.mouseEnabled = false;
 			textField.embedFonts = true;
@@ -112,7 +113,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			
 			textField.text = _text;
-			textField.setTextFormat(textFormat);
 			
 			var maxWidth:Number = 0;
 			for(var i:int = 0; i<textField.numLines; i++)

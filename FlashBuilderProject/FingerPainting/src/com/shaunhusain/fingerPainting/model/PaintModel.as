@@ -1,7 +1,6 @@
 package com.shaunhusain.fingerPainting.model
 {
 	import com.shaunhusain.fingerPainting.tools.ITool;
-	import com.shaunhusain.fingerPainting.tools.extras.BrushTip;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -43,7 +42,7 @@ package com.shaunhusain.fingerPainting.model
 		//--------------------------------------------------------------------------------
 		//				Properties
 		//--------------------------------------------------------------------------------
-		private var _currentColor:uint = 0xFF000000;
+		private var _currentColor:uint = 0xFF00DDFF;
 		public function set currentColor(value:uint):void
 		{
 			if(value == _currentColor)

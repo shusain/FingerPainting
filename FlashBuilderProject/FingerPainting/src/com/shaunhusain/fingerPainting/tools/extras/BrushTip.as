@@ -87,7 +87,7 @@ package com.shaunhusain.fingerPainting.tools.extras
 		}
 
 		
-		private var _color:uint;
+		private var _color:uint = 0x00DDFF;
 		
 		public function get color():uint
 		{

@@ -95,17 +95,10 @@ package com.shaunhusain.fingerPainting.view.managers
 			{
 				if(drawable.height>stage.fullScreenHeight || drawable.width > stage.fullScreenWidth)
 				{
-					scaleMatrix.tx -= drawable.width/2;
-					scaleMatrix.ty -= drawable.height/2
-					scaleMatrix.rotate(Math.PI/2);
-					scaleMatrix.tx += drawable.width/2;
-					scaleMatrix.ty += drawable.height/2;
-					if(drawable.height/drawable.width>stage.fullScreenHeight/stage.fullScreenWidth)
+					if(drawable.height/drawable.width > stage.fullScreenHeight/stage.fullScreenWidth)
 						scaleMatrix.scale(stage.fullScreenHeight/drawable.height,stage.fullScreenHeight/drawable.height);
 					else
 						scaleMatrix.scale(stage.fullScreenWidth/drawable.width,stage.fullScreenWidth/drawable.width);
-					scaleMatrix.ty += stage.fullScreenWidth/drawable.width*drawable.height/2;
-					
 				}
 				bitmapData.draw(drawable,scaleMatrix);
 			}

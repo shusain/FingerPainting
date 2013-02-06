@@ -53,6 +53,7 @@ package com.shaunhusain.fingerPainting.view.managers.helpComponents
 			if(!container)
 			{
 				container = new Box();
+				container.direction = "horizontal";
 				container.x = 50;
 				container.y = 10
 				addChild(container);
@@ -61,16 +62,17 @@ package com.shaunhusain.fingerPainting.view.managers.helpComponents
 			
 			if(!textField)
 			{
+				trace("font size:",36*Capabilities.screenDPI/320);
+				textFormat = new TextFormat("myFont", 36*Capabilities.screenDPI/320);
+				
 				textField = new TextField();
+				textField.defaultTextFormat = textFormat;
 				textField.autoSize = TextFieldAutoSize.LEFT;
 				textField.wordWrap = true;
 				textField.text = _helpText;
 				textField.width = stage.fullScreenWidth-200;
 				
 				container.addChild(textField);
-				
-				textFormat = new TextFormat(null, 36*Capabilities.screenDPI/320);
-				textField.setTextFormat(textFormat);
 				
 			}
 			
@@ -103,7 +105,6 @@ package com.shaunhusain.fingerPainting.view.managers.helpComponents
 			if(textField)
 			{
 				textField.text = value;
-				textField.setTextFormat(textFormat);
 				drawBackground();
 			}
 		}

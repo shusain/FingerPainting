@@ -69,7 +69,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			if(event.touchPointID!=0)
+			if(event.touchPointID!=0 || event.target!=stage)
 				return;
 			
 			switch(event.type)

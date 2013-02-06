@@ -82,7 +82,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				titleLabel = new TextField();
 				titleLabel.mouseEnabled = false;
 				titleLabel.autoSize = TextFieldAutoSize.LEFT;
-				titleLabel.setTextFormat(titleTextFormat);
+				titleLabel.defaultTextFormat = titleTextFormat;
 				addChild(titleLabel);
 			}
 			
@@ -91,7 +91,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				valueLabel = new TextField();
 				valueLabel.mouseEnabled = false;
 				valueLabel.autoSize = TextFieldAutoSize.CENTER;
-				valueLabel.setTextFormat(valueTextFormat);
+				valueLabel.defaultTextFormat = valueTextFormat;
 				valueLabel.y = BAR_TOP_OFFSET - 30;
 				addChild(valueLabel);
 			}
@@ -145,7 +145,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			if(_titleLabelText==value)
 				return;
 			titleLabel.text = _titleLabelText = value;
-			titleLabel.setTextFormat(titleTextFormat);
 		}
 		public function get titleLabelText():String
 		{
@@ -236,7 +235,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				valueLabel.text = Math.floor(_currentValue*100) + "%";
 			else	
 				valueLabel.text = _currentValue.toFixed(decimalsToShow);
-			valueLabel.setTextFormat(valueTextFormat);
 		}
 		protected function drawGraphics():void
 		{

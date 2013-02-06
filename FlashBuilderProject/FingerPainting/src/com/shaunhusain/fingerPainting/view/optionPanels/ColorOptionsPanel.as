@@ -1,6 +1,9 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
 	import com.shaunhusain.fingerPainting.model.PaintModel;
+	import com.shaunhusain.fingerPainting.model.color.ARGB;
+	import com.shaunhusain.fingerPainting.model.color.HSV;
+	import com.shaunhusain.fingerPainting.view.mobileUIControls.ColorValueDisplay;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -10,35 +13,39 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 
 	public class ColorOptionsPanel extends PanelBase
 	{
 		//--------------------------------------------------------------------------------
-		//				Variables
+		//				UI Components
 		//--------------------------------------------------------------------------------
-		
+		/**
+		 * Sprite for interaction on the hue bar
+		 */
 		private var hueBarSprite:Sprite;
-		private var hueBar:Bitmap;
 		private var hueText:TextField;
 		
 		private var lightAndSatGradientSprite:Sprite;
 		private var lightAndSatGradient:Bitmap;
-		
-		private var model:PaintModel = PaintModel.getInstance();
 		private var selectedHueBar:Bitmap;
 		
 		private var selectedColorHBar:Bitmap;
 		private var selectedColorVBar:Bitmap;
+		private var colorValueDisplay:ColorValueDisplay;
+		//--------------------------------------------------------------------------------
+		//				Variables
+		//--------------------------------------------------------------------------------
+		private var model:PaintModel = PaintModel.getInstance();
+		private var eventHandlersRegistered:Boolean;
+		private var currentHSV:HSV;
 		
-		private var colorSample:Bitmap;
+		private var colorSampleRequiresUpdate:Boolean;
+		private var lightSatRequiresUpdate:Boolean;
 		
-		private var requiresUpdate:Boolean;
 		private var updateHSVTimer:Timer;
 		
-		protected var eventHandlersRegistered:Boolean;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -65,33 +72,27 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				eventHandlersRegistered=true;
 			}
 			
-			if(!hueBar)
-			{
-				hueBar = new Bitmap(new BitmapData(360,100));
-				hueBar.bitmapData.lock();
-				var huesRect:Rectangle = new Rectangle(0,0,1,100); 
+			if(!hueBarSprite)
+			{ 
+				hueBarSprite = new Sprite();
+				hueBarSprite.graphics.clear();
 				for(var hue:int = 0,xPos:int = 0; hue <= 360; hue++,xPos+=1)
 				{
-					huesRect.x = xPos;
-					hueBar.bitmapData.fillRect(huesRect,HSLtoRGB(1,hue,1,.5));
+					hueBarSprite.graphics.beginFill(ColorConversionFunctions.AHSVtoARGB(1,hue,1,1));
+					hueBarSprite.graphics.drawRect(xPos,0,1,100);
+					hueBarSprite.graphics.endFill();
 				}
 				
-				hueBar.bitmapData.unlock();
-				hueBarSprite = new Sprite();
 				hueBarSprite.addEventListener(TouchEvent.TOUCH_MOVE, hueBarTouchMoveHandler);
 				addChild(hueBarSprite);
 				hueBarSprite.x = 100;
 				hueBarSprite.y = 140;
 				hueBarSprite.cacheAsBitmap = true;
 				
-				hueBarSprite.addChild(hueBar);
 				selectedHueBar = new Bitmap(new BitmapData(2,100,false,0xff000000));
 				selectedHueBar.blendMode = BlendMode.INVERT;
 				hueBarSprite.addChild(selectedHueBar);
 			}
-			
-			
-			
 			
 			if(!lightAndSatGradient)
 			{
@@ -116,26 +117,26 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				lightAndSatGradientSprite.addChild(selectedColorVBar);
 			}
 			
-			
-			if(!colorSample)
+			if(!colorValueDisplay)
 			{
-				colorSample = new Bitmap(new BitmapData(200,100,false,model.currentColor));
-				colorSample.y = 660;
-				colorSample.x = 100;
-				addChild(colorSample);
+				colorValueDisplay = new ColorValueDisplay();
+				colorValueDisplay.x = 75;
+				colorValueDisplay.y = 880;
+				addChild(colorValueDisplay);
 			}
 			
-			/*hueText = new TextField();
-			addChild(hueText)
-			hueText.autoSize = TextFieldAutoSize.LEFT;
-			hueText.y = 140;
-			hueText.text = "testing";*/
+			if(!updateHSVTimer)
+			{
+				updateHSVTimer = new Timer(100);
+				updateHSVTimer.addEventListener(TimerEvent.TIMER, timerHandler);
+				updateHSVTimer.start();
+			}
 			
-			updateHSVTimer = new Timer(50);
-			updateHSVTimer.addEventListener(TimerEvent.TIMER, timerHandler);
-			updateHSVTimer.start();
+			var curARGB:ARGB = ColorConversionFunctions.parseARGBuint(model.currentColor);
+			currentHSV = ColorConversionFunctions.RGBtoHSV(curARGB);
+			updateSelectionPositions();
 			
-			requiresUpdate=true;
+			lightSatRequiresUpdate = colorSampleRequiresUpdate = true;
 		}
 		protected function lightAndSatGradientTouchEndHandler(event:TouchEvent):void
 		{
@@ -149,10 +150,15 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		
 		private function timerHandler(event:Event):void
 		{
-			if(requiresUpdate)
+			if(lightSatRequiresUpdate)
 			{
 				drawLightAndSatGradient();
-				requiresUpdate = false;
+				lightSatRequiresUpdate = false;
+			}
+			if(colorSampleRequiresUpdate)
+			{
+				updateColorSample();
+				colorSampleRequiresUpdate = false;
 			}
 		}
 		
@@ -161,7 +167,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			//hueText.text = allPossibleColors.bitmapData.getPixel32(event.localX,event.localY).toString();
 			selectedHueBar.x = event.localX;
 			event.stopImmediatePropagation();
-			requiresUpdate=true;
+			lightSatRequiresUpdate = colorSampleRequiresUpdate = true;
 		}
 		private function lightAndSatGradientTouchMoveHandler(event:TouchEvent):void
 		{
@@ -192,7 +198,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			selectedColorHBar.y = pointToUse.y;
 			
 			event.stopImmediatePropagation();
-			requiresUpdate=true;
+			colorSampleRequiresUpdate=true;
 		}
 		private function blockEvent(event:TouchEvent):void
 		{
@@ -207,53 +213,21 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			lightAndSatGradient.bitmapData.lock();
 			for(var i:Number = 90; i >= 0; i--)
 				for(var j:Number= 90; j >= 0; j--)
-					lightAndSatGradient.bitmapData.setPixel32(i,90-j,HSVtoRGB(1,selectedHueBar.x,i/90,j/90));
+					lightAndSatGradient.bitmapData.setPixel32(i,90-j,ColorConversionFunctions.AHSVtoARGB(1,selectedHueBar.x,i/90,j/90));
 			lightAndSatGradient.bitmapData.unlock();
-			model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x/4,selectedColorHBar.y/4);
-			colorSample.bitmapData.floodFill(0,0,model.currentColor);
 		}
 		
-		private function HSLtoRGB(a:Number=1,hue:Number=0,saturation:Number=0.5,lightness:Number=1):uint{
-			a = Math.max(0,Math.min(1,a));
-			saturation = Math.max(0,Math.min(1,saturation));
-			lightness = Math.max(0,Math.min(1,lightness));
-			hue = hue%360;
-			if(hue<0)hue+=360;
-			hue/=60;
-			var C:Number = (1-Math.abs(2*lightness-1))*saturation;
-			var X:Number = C*(1-Math.abs((hue%2)-1));
-			var m:Number = lightness-0.5*C;
-			C=(C+m)*255;
-			X=(X+m)*255;
-			m*=255;
-			if(hue<1) return (Math.round(a*255)<<24)+(C<<16)+(X<<8)+m;
-			if(hue<2) return (Math.round(a*255)<<24)+(X<<16)+(C<<8)+m;
-			if(hue<3) return (Math.round(a*255)<<24)+(m<<16)+(C<<8)+X;
-			if(hue<4) return (Math.round(a*255)<<24)+(m<<16)+(X<<8)+C;
-			if(hue<5) return (Math.round(a*255)<<24)+(X<<16)+(m<<8)+C;
-			return (Math.round(a*255)<<24)+(C<<16)+(m<<8)+X;
-		}
-		
-		private function HSVtoRGB(a:Number=1,hue:Number=0,saturation:Number=.5, value:Number = 1):uint
+		private function updateColorSample():void
 		{
-			a = Math.max(0,Math.min(1,a));
-			saturation = Math.max(0,Math.min(1,saturation));
-			value = Math.max(0,Math.min(1,value));
-			hue = hue%360;
-			if(hue<0)hue+=360;
-			hue/=60;
-			var C:Number = value*saturation;
-			var X:Number = C*(1-Math.abs((hue%2)-1));
-			var m:Number = value-C;
-			C=(C+m)*255;
-			X=(X+m)*255;
-			m*=255;
-			if(hue<1) return (Math.round(a*255)<<24)+(C<<16)+(X<<8)+m;
-			if(hue<2) return (Math.round(a*255)<<24)+(X<<16)+(C<<8)+m;
-			if(hue<3) return (Math.round(a*255)<<24)+(m<<16)+(C<<8)+X;
-			if(hue<4) return (Math.round(a*255)<<24)+(m<<16)+(X<<8)+C;
-			if(hue<5) return (Math.round(a*255)<<24)+(X<<16)+(m<<8)+C;
-			return (Math.round(a*255)<<24)+(C<<16)+(m<<8)+X;
+			colorValueDisplay.color = model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x/4,selectedColorHBar.y/4);
 		}
+		
+		private function updateSelectionPositions():void
+		{
+			selectedHueBar.x = currentHSV.hue;
+			selectedColorHBar.y = (1-currentHSV.value) * 360-1;
+			selectedColorVBar.x = currentHSV.saturation * 360-1;
+		}
+		
 	}
 }

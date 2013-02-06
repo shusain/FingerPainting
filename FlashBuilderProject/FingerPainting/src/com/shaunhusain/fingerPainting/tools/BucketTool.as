@@ -23,14 +23,13 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			var bm:BitmapData = layerManager.currentLayerBitmap;
 			
-			var colorSansAlpha:uint = model.currentColor & 0x00FFFFFF;
-			
-			if(event && bm && event.type == TouchEvent.TOUCH_END)
+			if(event && event.target == stage && bm && event.type == TouchEvent.TOUCH_END)
+			{
 				bm.floodFill(event.stageX,event.stageY,model.currentColor);
-				//bucketFillTake2(event);
-			//bucketFillWithThreshold(event);
-			layerManager.currentLayer.updateThumbnail();
-			undoManager.addHistoryElement(bm);
+				
+				layerManager.currentLayer.updateThumbnail();
+				undoManager.addHistoryElement(bm);
+			}
 		}
 		public function toString():String
 		{

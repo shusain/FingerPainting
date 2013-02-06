@@ -1,5 +1,6 @@
 package com.shaunhusain.fingerPainting.tools 
 {
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.TouchEvent;
@@ -7,6 +8,7 @@ package com.shaunhusain.fingerPainting.tools
 	public class PipetTool extends ToolBase implements ITool
 	{
 		protected var pipetSprite:Sprite;
+		private var flattenedData:BitmapData;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -17,6 +19,8 @@ package com.shaunhusain.fingerPainting.tools
 			if(!pipetSprite)
 			{
 				pipetSprite = new Sprite();
+				pipetSprite.mouseEnabled = false;
+				pipetSprite.mouseChildren = false;
 				stage.addChild(pipetSprite);
 			}
 		}
@@ -26,9 +30,12 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
+			if(event.target != stage)
+				return;
 			switch(event.type)
 			{
 				case TouchEvent.TOUCH_BEGIN:
+					flattenedData = layerManager.getFlattenedBitmapData();
 					pipetSprite.visible = true;
 					break
 				case TouchEvent.TOUCH_MOVE:
@@ -37,14 +44,14 @@ package com.shaunhusain.fingerPainting.tools
 					pipetSprite.visible = false;
 					break
 			}
-			model.currentColor = layerManager.currentLayerBitmap.getPixel32(event.stageX,event.stageY);
+			model.currentColor = flattenedData.getPixel32(event.stageX,event.stageY);
 			pipetSprite.x = event.stageX;
 			pipetSprite.y = event.stageY;
 			updatePipetSprite();
 		}
 		public function toString():String
 		{
-			return "Pipet";
+			return "Pipet (Canvas Color Picker)";
 		}
 		
 		private function updatePipetSprite():void
