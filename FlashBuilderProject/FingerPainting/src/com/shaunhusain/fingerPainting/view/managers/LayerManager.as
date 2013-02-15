@@ -43,7 +43,7 @@ package com.shaunhusain.fingerPainting.view.managers
 		//--------------------------------------------------------------------------------
 		//				Properties
 		//--------------------------------------------------------------------------------
-		private var _currentLayerIndex:int = 0;
+		private var _currentLayerIndex:int = 1;
 		/**
 		 * The index of the currently selected layer.
 		 */
@@ -156,7 +156,8 @@ package com.shaunhusain.fingerPainting.view.managers
 			var temp:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight);
 			for each(var layer:Layer in layers)
 			{
-				temp.draw(layer.bitmapData);
+				if(layer.bitmap.visible)
+					temp.draw(layer.bitmapData);
 			}
 			return temp;
 		}
@@ -166,8 +167,13 @@ package com.shaunhusain.fingerPainting.view.managers
 		//--------------------------------------------------------------------------------
 		public function addedToStageHandler(event:Event):void
 		{
-			var bitmapData:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0x0000000);
+			var bitmapData:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0xFFFFFFFF);
 			var bitmapCanvas:Bitmap = new Bitmap(bitmapData);
+			addChild(bitmapCanvas);
+			layers.push(new Layer(bitmapData,bitmapCanvas));
+			
+			bitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0x00000000);
+			bitmapCanvas = new Bitmap(bitmapData);
 			addChild(bitmapCanvas);
 			layers.push(new Layer(bitmapData,bitmapCanvas));
 			

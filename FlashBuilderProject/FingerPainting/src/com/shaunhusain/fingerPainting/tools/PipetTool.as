@@ -35,7 +35,7 @@ package com.shaunhusain.fingerPainting.tools
 			switch(event.type)
 			{
 				case TouchEvent.TOUCH_BEGIN:
-					flattenedData = layerManager.getFlattenedBitmapData();
+					flattenedData = layerM.getFlattenedBitmapData();
 					pipetSprite.visible = true;
 					break
 				case TouchEvent.TOUCH_MOVE:
@@ -44,7 +44,11 @@ package com.shaunhusain.fingerPainting.tools
 					pipetSprite.visible = false;
 					break
 			}
-			model.currentColor = flattenedData.getPixel32(event.stageX,event.stageY);
+			var curScale:Number = layerM.scaleX;
+			var adjustedX:Number = event.stageX/curScale - layerM.x/curScale;
+			var adjustedY:Number = event.stageY/curScale - layerM.y/curScale;
+			
+			model.currentColor = flattenedData.getPixel32(adjustedX,adjustedY);
 			pipetSprite.x = event.stageX;
 			pipetSprite.y = event.stageY;
 			updatePipetSprite();

@@ -1,7 +1,6 @@
 package com.shaunhusain.fingerPainting.tools.extras
 {
 	import flash.display.BitmapData;
-	import flash.display.BitmapDataChannel;
 	import flash.display.GradientType;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
@@ -12,7 +11,7 @@ package com.shaunhusain.fingerPainting.tools.extras
 	{
 		public function EraserTip()
 		{
-			
+			isPressureSensitive = false;
 		}
 		
 		override public function generateBrush():void

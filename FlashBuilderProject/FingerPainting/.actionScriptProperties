@@ -81,17 +81,17 @@
       <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.android.platform" reducedSizePackaging="false" version="2"/>
       <airSettings airCertificatePath="C:/Users/Shaun/Documents/selfsign.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes>
-          <pathEntry path="Roboto-Medium.ttf"/>
-          <pathEntry path="hires_stats.png"/>
-          <pathEntry path="images/squareBackground.png"/>
-          <pathEntry path="images/buttonBackground.png"/>
-          <pathEntry path="net"/>
           <pathEntry path="images/glowUp.png"/>
+          <pathEntry path="net"/>
           <pathEntry path="Thumbs.db"/>
           <pathEntry path="images/buttonBackgroundSelected.png"/>
+          <pathEntry path="Roboto-Medium.ttf"/>
           <pathEntry path="SourceCodePro-Bold.ttf"/>
-          <pathEntry path="images/cameraIconClipped.png"/>
+          <pathEntry path="images/squareBackground.png"/>
+          <pathEntry path="hires_stats.png"/>
+          <pathEntry path="images/buttonBackground.png"/>
           <pathEntry path="images/glowDown.png"/>
+          <pathEntry path="images/cameraIconClipped.png"/>
         </airExcludes>
         <anePaths>
           <anePathEntry path="C:/Users/Shaun/Downloads/AndroidShareANE-master/AndroidShareANE-master/extension/ShareANE.ane"/>

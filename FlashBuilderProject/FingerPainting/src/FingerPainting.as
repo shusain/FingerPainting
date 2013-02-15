@@ -54,11 +54,18 @@ package
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
 			trace("dpi",Capabilities.screenDPI);
-			
 			//Setup an overlay for temporary drawing of vector data.
 			//Used to create lines between touch point data
 			model.currentDrawingOverlay = new Sprite();
 			model.currentDrawingOverlay.mouseChildren = model.currentDrawingOverlay.mouseEnabled = false;
+			
+			var backgroundSprite:Sprite = new Sprite();
+			backgroundSprite.mouseChildren = backgroundSprite.mouseEnabled = false;
+			backgroundSprite.graphics.beginFill(0x888888);
+			backgroundSprite.graphics.drawRect(0,0,stage.fullScreenWidth,stage.fullScreenHeight);
+			backgroundSprite.graphics.endFill();
+			backgroundSprite.cacheAsBitmap = true;
+			addChild(backgroundSprite);
 			
 			//Adding the layerManager first as it contains all the layers of
 			//the canvas.

@@ -9,8 +9,10 @@ package com.shaunhusain.fingerPainting.view
 	import com.shaunhusain.fingerPainting.tools.CameraTool;
 	import com.shaunhusain.fingerPainting.tools.ColorSpectrumTool;
 	import com.shaunhusain.fingerPainting.tools.EraserTool;
+	import com.shaunhusain.fingerPainting.tools.GalleryTool;
 	import com.shaunhusain.fingerPainting.tools.ITool;
 	import com.shaunhusain.fingerPainting.tools.LayerTool;
+	import com.shaunhusain.fingerPainting.tools.NavigationTool;
 	import com.shaunhusain.fingerPainting.tools.PipetTool;
 	import com.shaunhusain.fingerPainting.tools.RedoTool;
 	import com.shaunhusain.fingerPainting.tools.SaveTool;
@@ -82,6 +84,10 @@ package com.shaunhusain.fingerPainting.view
 		private static var _cameraIcon:Class;
 		public static var _cameraBmp:Bitmap = new _cameraIcon();
 		
+		[Embed(source="/images/galleryIcon.png")]
+		private static var _galleryIcon:Class;
+		public static var _galleryBmp:Bitmap = new _galleryIcon();
+		
 		[Embed(source="/images/layersIcon.png")]
 		private static var _layersIcon:Class;
 		public static var _layersBmp:Bitmap = new _layersIcon();
@@ -89,6 +95,10 @@ package com.shaunhusain.fingerPainting.view
 		[Embed(source="/images/shareIcon.png")]
 		private static var _shareIcon:Class;
 		public static var _shareBmp:Bitmap = new _shareIcon();
+		
+		[Embed(source="/images/navigationIcon.png")]
+		private static var _navigationIcon:Class;
+		public static var _navigationBmp:Bitmap = new _navigationIcon();
 		
 		private var model:PaintModel = PaintModel.getInstance();
 		
@@ -189,12 +199,14 @@ package com.shaunhusain.fingerPainting.view
 					new RotatingIconButton(_brushIconBmp, null, brushTool, false, true, true, bg, bgs),
 					new RotatingIconButton(_eraserIconBmp, null, new EraserTool(stage), false, false, true, bg, bgs),
 					new RotatingIconButton(_bucketIconBmp, null, new BucketTool(stage), false, false, true, bg, bgs),
+					new RotatingIconButton(_navigationBmp, null, new NavigationTool(stage), false, false, true, bg, bgs),
 					new RotatingIconButton(_pipetIconBmp, null, new PipetTool(stage), false, false, true, bg, bgs),
 					new RotatingIconButton(_undoIconBmp, null, new UndoTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(_redoIconBmp, null, new RedoTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(_blankDocBmp, null, new BlankTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(_layersBmp, null, new LayerTool(stage), false, false, true, bg, bgs),
 					new RotatingIconButton(_cameraBmp, null, new CameraTool(stage), true, false, true, bg, bgs),
+					new RotatingIconButton(_galleryBmp, null, new GalleryTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(_shareBmp, null, new ShareTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(_saveIconBmp, null, new SaveTool(stage), true, false, true, bg, bgs)
 				];

@@ -21,13 +21,17 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			var bm:BitmapData = layerManager.currentLayerBitmap;
+			var bm:BitmapData = layerM.currentLayerBitmap;
 			
 			if(event && event.target == stage && bm && event.type == TouchEvent.TOUCH_END)
 			{
-				bm.floodFill(event.stageX,event.stageY,model.currentColor);
+				var curScale:Number = layerM.scaleX;
+				var adjustedX:Number = event.stageX/curScale - layerM.x/curScale;
+				var adjustedY:Number = event.stageY/curScale - layerM.y/curScale;
 				
-				layerManager.currentLayer.updateThumbnail();
+				bm.floodFill(adjustedX,adjustedY,model.currentColor);
+				
+				layerM.currentLayer.updateThumbnail();
 				undoManager.addHistoryElement(bm);
 			}
 		}
@@ -42,7 +46,7 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			var x:Number = event.stageX;
 			var y:Number = event.stageY;
-			var b:BitmapData = layerManager.currentLayerBitmap;
+			var b:BitmapData = layerM.currentLayerBitmap;
 			
 			//take upper bound threshold, produce a new bitmapData with the pixels
 			//below the threshold colored grey 0xaa (intialized black)
@@ -61,7 +65,7 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			var x:Number = event.stageX;
 			var y:Number = event.stageY;
-			var b:BitmapData = layerManager.currentLayerBitmap;
+			var b:BitmapData = layerM.currentLayerBitmap;
 			b.lock();
 			
 			var from:uint = b.getPixel(x,y);

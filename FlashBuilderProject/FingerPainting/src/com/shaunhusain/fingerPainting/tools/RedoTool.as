@@ -20,7 +20,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			layerManager.currentLayerBitmap.fillRect(new Rectangle(0,0,layerManager.currentLayerBitmap.width,layerManager.currentLayerBitmap.height),0x00FFFFFF);
+			layerM.currentLayerBitmap.fillRect(new Rectangle(0,0,layerM.currentLayerBitmap.width,layerM.currentLayerBitmap.height),0x00FFFFFF);
 			undoManager.redo(redoCallback)
 		}
 		
@@ -29,8 +29,8 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		private function redoCallback(bd:BitmapData):void
 		{
-			layerManager.currentLayerBitmap.draw(bd);
-			layerManager.currentLayer.updateThumbnail();
+			layerM.currentLayerBitmap.draw(bd);
+			layerM.currentLayer.updateThumbnail();
 		}
 		public function toString():String
 		{

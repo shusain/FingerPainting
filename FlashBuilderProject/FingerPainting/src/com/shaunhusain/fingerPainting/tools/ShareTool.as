@@ -39,7 +39,7 @@ package com.shaunhusain.fingerPainting.tools
 		private function getFile():void
 		{
 			//find a file to share
-			var bytearray:ByteArray = PNGEncoder2.encode(layerManager.getFlattenedBitmapData());
+			var bytearray:ByteArray = PNGEncoder2.encode(layerM.getFlattenedBitmapData());
 			file = File.documentsDirectory.resolvePath("temp.png");
 			
 			var fs:FileStream = new FileStream();

@@ -1,20 +1,24 @@
 package com.shaunhusain.fingerPainting.tools 
 {
+	import flash.desktop.NativeApplication;
 	import flash.display.Loader;
 	import flash.display.Stage;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.MediaEvent;
 	import flash.events.TouchEvent;
 	import flash.media.CameraRoll;
+	import flash.media.CameraUI;
 	import flash.media.MediaPromise;
+	import flash.media.MediaType;
 	
 	public class CameraTool extends ToolBase implements ITool
 	{
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
-		private var mediaSource:CameraRoll = new CameraRoll();
+		private var deviceCameraApp:CameraUI = new CameraUI();
 		private var imageLoader:Loader; 
 		
 		//--------------------------------------------------------------------------------
@@ -23,6 +27,18 @@ package com.shaunhusain.fingerPainting.tools
 		public function CameraTool(stage:Stage) {
 			super(stage);
 			
+			if( CameraUI.isSupported )
+			{
+				trace( "Initializing camera..." );
+				
+				deviceCameraApp.addEventListener( MediaEvent.COMPLETE, imageCaptured );
+				deviceCameraApp.addEventListener( Event.CANCEL, captureCanceled );
+				deviceCameraApp.addEventListener( ErrorEvent.ERROR, cameraError );
+			}
+			else
+			{
+				trace( "Camera interface is not supported.");
+			}
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -30,91 +46,61 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			if( CameraRoll.supportsBrowseForImage )
-			{
-				log( "Browsing for image..." );
-				mediaSource.addEventListener( MediaEvent.SELECT, imageSelected );
-				mediaSource.addEventListener( Event.CANCEL, browseCanceled );
-				
-				mediaSource.browseForImage();
-			}
-			else
-			{
-				log( "Browsing in camera roll is not supported.");
-			}
-			/*if(!frontCamera)
-			{
-			trace(Camera.names);
-			backCamera = Camera.getCamera("0");
-			backCamera.setMode(640,360,5);
-			frontCamera = Camera.getCamera("1");
-			frontCamera.setMode(640,360,5);
-			video = new Video(stage.fullScreenHeight,stage.fullScreenWidth);
-			video.x = -stage.fullScreenHeight/2;
-			video.y = -stage.fullScreenWidth/2;
-			video.attachCamera(frontCamera);
-			video.visible = false;
-			model.cameraWrapper.addChild(video);
-			model.cameraWrapper.scaleX = -1;
-			model.cameraWrapper.rotation = -90;
-			model.video = video;
-			
-			showingFrontCamera = true;
-			}
-			video.visible = !video.visible;*/
-			
+			deviceCameraApp.launch( MediaType.IMAGE );
 		}
 		
 		//--------------------------------------------------------------------------------
-		//				Helper functions
+		//				Camera UI functions
 		//--------------------------------------------------------------------------------
-		private function imageSelected( event:MediaEvent ):void
+		
+		private function imageCaptured( event:MediaEvent ):void
 		{
-			log( "Image selected..." );
+			trace( "Media captured..." );
 			
 			var imagePromise:MediaPromise = event.data;
 			
-			imageLoader = new Loader();
 			if( imagePromise.isAsync )
 			{
-				log( "Asynchronous media promise." );
-				imageLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, imageLoaded );
-				imageLoader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, imageLoadFailed );
+				trace( "Asynchronous media promise." );
+				imageLoader = new Loader();
+				imageLoader.contentLoaderInfo.addEventListener( Event.COMPLETE, asyncImageLoaded );
+				imageLoader.addEventListener( IOErrorEvent.IO_ERROR, cameraError );
+				
 				imageLoader.loadFilePromise( imagePromise );
 			}
 			else
 			{
-				log( "Synchronous media promise." );
+				trace( "Synchronous media promise." );
 				imageLoader.loadFilePromise( imagePromise );
-				layerManager.addLayer( imageLoader );
+				showMedia( imageLoader );
 			}
+		}
+		
+		private function captureCanceled( event:Event ):void
+		{
+			trace( "Media capture canceled." );
+		}
+		
+		private function asyncImageLoaded( event:Event ):void
+		{
+			trace( "Media loaded in memory." );
+			showMedia( imageLoader );    
+		}
+		
+		private function showMedia( loader:Loader ):void
+		{
+			loader.scaleX=-1;
+			layerM.addLayer( loader );
+		}
+		
+		private function cameraError( error:ErrorEvent ):void
+		{
+			trace( "Error:" + error.text );
 		}
 		
 		public function toString():String
 		{
 			return "Camera";
-		}
-		
-		private function browseCanceled( event:Event ):void
-		{
-			log( "Image browse canceled." );
-		}
-		
-		private function imageLoaded( event:Event ):void
-		{
-			log( "Image loaded asynchronously." );
-			layerManager.addLayer( imageLoader );
-			layerManager.currentLayer.updateThumbnail();
-		}
-		
-		private function imageLoadFailed( event:Event ):void
-		{
-			log( "Image load failed." );
-		}
-		
-		private function log( text:String ):void
-		{
-			trace( text );
 		}
 		
 	}

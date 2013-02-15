@@ -23,9 +23,9 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			var bm:BitmapData = layerManager.currentLayerBitmap;
+			var bm:BitmapData = layerM.currentLayerBitmap;
 			bm.fillRect(new Rectangle(0,0,bm.width,bm.height),0x00000000);
-			layerManager.currentLayer.updateThumbnail();
+			layerM.currentLayer.updateThumbnail();
 		}
 		
 		public function toString():String
