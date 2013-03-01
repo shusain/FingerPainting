@@ -1,6 +1,7 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
 	import com.shaunhusain.fingerPainting.tools.extras.BrushTip;
+	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	import com.shaunhusain.fingerPainting.view.Box;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RelativeTouchSlider;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
@@ -17,27 +18,14 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 
 	public class BrushOptionsPanel extends PanelBase
 	{
-		//--------------------------------------------------------------------------------
-		//				Embeds
-		//--------------------------------------------------------------------------------
-		[Embed(source="/images/transparencyFill.png")]
-		private static var _transparencyFillClass:Class;
-		public static var _transparencyFillBmp:Bitmap = new _transparencyFillClass();
-		[Embed(source="/images/circleBackground.png")]
-		private static var _circleBackgroundClass:Class;
-		public static var _circleBackgroundBmp:Bitmap = new _circleBackgroundClass();
-		[Embed(source="/images/circleBackgroundSelected.png")]
-		private static var _circleBackgroundSelectedClass:Class;
-		public static var _circleBackgroundSelectedBmp:Bitmap = new _circleBackgroundSelectedClass();
-		[Embed(source="/images/pressureSensitive.png")]
-		private static var _pressureSensitiveClass:Class;
-		public static var _pressureSensitiveBmp:Bitmap = new _pressureSensitiveClass();
-		[Embed(source="/images/xMirror.png")]
-		private static var _xMirrorClass:Class;
-		public static var _xMirrorBmp:Bitmap = new _xMirrorClass();
-		[Embed(source="/images/yMirror.png")]
-		private static var _yMirrorClass:Class;
-		public static var _yMirrorBmp:Bitmap = new _yMirrorClass();
+		private var br:BitmapReference = BitmapReference.getInstance();
+		
+		public var _transparencyFillBmp:Bitmap = br.getBitmapByName("transparencyFill.png");
+		public var _circleBackgroundBmp:Bitmap = br.getBitmapByName("circleBackground.png");
+		public var _circleBackgroundSelectedBmp:Bitmap = br.getBitmapByName("circleBackgroundSelected.png");
+		public var _pressureSensitiveBmp:Bitmap = br.getBitmapByName("pressureSensitive.png");
+		public var _xMirrorBmp:Bitmap = br.getBitmapByName("xMirror.png");
+		public var _yMirrorBmp:Bitmap = br.getBitmapByName("yMirror.png");
 		
 		//--------------------------------------------------------------------------------
 		//				Variables
@@ -86,7 +74,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!outerContainer)
 			{
 				outerContainer = new Box();
-				outerContainer.gap = 10;
+				outerContainer.gap = 10 * model.dpiScale;
 				outerContainer.x = 50;
 				outerContainer.y = 50;
 				addChild(outerContainer);
@@ -95,7 +83,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!toggleButtonsContainer)
 			{
 				toggleButtonsContainer = new Box();
-				toggleButtonsContainer.gap = 10;
+				toggleButtonsContainer.gap = 10 * model.dpiScale;
 				toggleButtonsContainer.direction = "horizontal"
 				outerContainer.addChild(toggleButtonsContainer);
 			}
@@ -128,7 +116,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!lowerLeftAreaContainer)
 			{
 				lowerLeftAreaContainer = new Box();
-				lowerLeftAreaContainer.gap = 40;
+				lowerLeftAreaContainer.gap = 40 * model.dpiScale;
 				lowerLeftAreaContainer.direction = "horizontal"
 				outerContainer.addChild(lowerLeftAreaContainer);
 			}
@@ -136,8 +124,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!controlContainer)
 			{
 				controlContainer = new Box();
-				controlContainer.startPadding = 40;
-				controlContainer.gap = 40;
+				controlContainer.startPadding = 40 * model.dpiScale;
+				controlContainer.gap = 40 * model.dpiScale;
 				lowerLeftAreaContainer.addChild(controlContainer);
 			}
 			
@@ -177,13 +165,13 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!exampleContainer)
 			{
 				exampleContainer = new Box();
-				exampleContainer.startPadding = 80;
+				exampleContainer.startPadding = 80 * model.dpiScale;
 				lowerLeftAreaContainer.addChild(exampleContainer);
 			}
 			
 			if(!brushSizeExample)
 			{
-				brushSizeExampleData = new BitmapData(150,400);
+				brushSizeExampleData = new BitmapData(150 * model.dpiScale,400 * model.dpiScale);
 				brushSizeExample = new Bitmap(brushSizeExampleData);
 				
 				exampleContainer.addChild(brushSizeExample);

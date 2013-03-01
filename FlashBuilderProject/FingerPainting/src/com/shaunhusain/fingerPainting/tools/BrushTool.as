@@ -61,7 +61,7 @@ package com.shaunhusain.fingerPainting.tools
 		}
 		public function toString():String
 		{
-			return "Brush";
+			return "Brush: Touch again to toggle options";
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -117,10 +117,8 @@ package com.shaunhusain.fingerPainting.tools
 				xCoord = touchSamples.readFloat();
 				yCoord = touchSamples.readFloat();
 				pressure = touchSamples.readFloat();
-				trace(xCoord,yCoord,pressure);
 				currentPoint.x = xCoord/curScale-layerM.x/curScale;
 				currentPoint.y = yCoord/curScale-layerM.y/curScale;
-				trace(currentPoint);
 				
 				if(!isNaN(previousPoint.x))
 				{

@@ -26,7 +26,7 @@ package com.shaunhusain.fingerPainting.tools
 		
 		override public function toString():String
 		{
-			return "Navigation";
+			return "Navigation: One finger to pan, two fingers to zoom, touch navigation again to reset pan/zoom.";
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -67,5 +67,11 @@ package com.shaunhusain.fingerPainting.tools
 			initialDistance = NaN;
 		}
 		
+		
+		public function resetZoomAndPosition():void
+		{
+			var matrix:Matrix = new Matrix();
+			layerM.transform.matrix = matrix;
+		}
 	}
 }

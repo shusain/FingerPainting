@@ -20,10 +20,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class ButtonScroller extends Sprite
 	{
-		[Embed(source="/images/grippy.png")]
-		private static var _grippyClass:Class;
-		public static var _grippyBmp:Bitmap = new _grippyClass();
-		
+		private var br:BitmapReference = BitmapReference.getInstance();	
 		private var yChange:Number;
 		private var menuButtonSprite:Sprite;
 		private var menuButtonMask:Sprite;
@@ -203,8 +200,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			if(menuButtonBounds.height>menuButtonSprite.scrollRect.height)
 			{
-				sabg.beginBitmapFill(_grippyBmp.bitmapData,null,true);
-				sabg.drawRect(0,0,_grippyBmp.width,menuButtonBounds.height);
+				var grippyBmp:Bitmap = BitmapReference.getInstance().getBitmapByName("grippy.png");
+				sabg.beginBitmapFill(grippyBmp.bitmapData,null,true);
+				sabg.drawRect(0,0,grippyBmp.width,menuButtonBounds.height);
 				sabg.endFill();
 				
 				addEventListener(TouchEvent.TOUCH_BEGIN, beganTouchingMenu);
@@ -303,12 +301,12 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		private function drawGlows(widthValue:Number):void
 		{
 			glowDown.graphics.clear();
-			glowDown.graphics.beginBitmapFill(BitmapReference._glowDownSliceBmp.bitmapData);
+			glowDown.graphics.beginBitmapFill(br.getBitmapByName("glowDownSlice.png").bitmapData);
 			glowDown.graphics.drawRect(glowXOffset,0,widthValue-glowXOffset*2,31);
 			glowDown.graphics.endFill();
 			
 			glowUp.graphics.clear();
-			glowUp.graphics.beginBitmapFill(BitmapReference._glowUpSliceBmp.bitmapData);
+			glowUp.graphics.beginBitmapFill(br.getBitmapByName("glowUpSlice.png").bitmapData);
 			glowUp.graphics.drawRect(glowXOffset,0,widthValue-glowXOffset*2,31);
 			glowUp.graphics.endFill();
 		}

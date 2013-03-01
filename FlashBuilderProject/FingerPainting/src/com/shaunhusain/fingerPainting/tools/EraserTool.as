@@ -31,7 +31,7 @@ package com.shaunhusain.fingerPainting.tools
 		
 		override public function toString():String
 		{
-			return "Eraser";
+			return "Eraser: Touch again to toggle eraser options";
 		}
 	}
 }

@@ -103,7 +103,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		override public function toString():String
 		{
-			return "Layer";
+			return "Layer: One finger to pan, two for scale/rotation (touch again to toggle options)";
 		}
 		override protected function secondFingerDown():void
 		{

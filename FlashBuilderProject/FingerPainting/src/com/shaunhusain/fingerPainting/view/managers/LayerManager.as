@@ -107,7 +107,6 @@ package com.shaunhusain.fingerPainting.view.managers
 			
 			layers.push(layer);
 			currentLayerIndex = layers.length-1;
-			trace(layers.length);
 		}
 		public function removeLayer():void
 		{

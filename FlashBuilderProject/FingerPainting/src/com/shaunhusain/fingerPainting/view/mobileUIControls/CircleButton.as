@@ -3,6 +3,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import com.eclecticdesignstudio.motion.Actuate;
 	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
+	import com.shaunhusain.fingerPainting.model.PaintModel;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -18,10 +19,10 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class CircleButton extends Sprite
 	{
-		
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
+		private var model:PaintModel = PaintModel.getInstance();
 		private var buttonBackground:Bitmap;
 		
 		private var textField:TextField;
@@ -59,7 +60,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			else
 			{
 				this.textFormat = new TextFormat();
-				this.textFormat.size = 24;
+				this.textFormat.size = 24 * model.dpiScale;
 				this.textFormat.font = "myFont";
 			}
 			
@@ -139,7 +140,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			return _selected;
 		}
 		
-		private var _circleRadius:Number = 55;
+		private var _circleRadius:Number = 55 * model.dpiScale;
 
 		public function get circleRadius():Number
 		{

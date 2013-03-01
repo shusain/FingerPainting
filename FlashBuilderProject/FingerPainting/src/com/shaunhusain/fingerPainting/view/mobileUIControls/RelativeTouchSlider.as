@@ -5,6 +5,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
+	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	
 	import flash.display.Bitmap;
 	import flash.display.Graphics;
@@ -22,6 +23,11 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	public class RelativeTouchSlider extends Sprite
 	{
+		private var br:BitmapReference = BitmapReference.getInstance();
+		private var model:PaintModel = PaintModel.getInstance();
+		//--------------------------------------------------------------------------------
+		//				Embeds
+		//--------------------------------------------------------------------------------
 		[Embed(source="/Roboto-Condensed.ttf", fontName = "myFont", mimeType = "application/x-font", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="true")]
 		private var myEmbeddedFont:Class;
 		
@@ -31,18 +37,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		public static const VALUE_CHANGED:String="valueChanged";
 		private const BAR_TOP_OFFSET:Number = 35;
 		
-		//--------------------------------------------------------------------------------
-		//				Embeds
-		//--------------------------------------------------------------------------------
-		[Embed(source="/images/relativeSliderThumb.png")]
-		private static var _thumbClass:Class;
-		public static var _thumbBmp:Bitmap = new _thumbClass();
-		[Embed(source="/images/relativeSliderTrack.png")]
-		private static var _trackClass:Class;
-		public static var _trackBmp:Bitmap = new _trackClass();
-		[Embed(source="/images/sliderBackground.png")]
-		private static var _sliderBackgroundClass:Class;
-		public static var _sliderBackgroundBmp:Bitmap = new _sliderBackgroundClass();
+		public var _thumbBmp:Bitmap = br.getBitmapByName("relativeSliderThumb.png");
+		public var _trackBmp:Bitmap = br.getBitmapByName("relativeSliderTrack.png");
+		public var _sliderBackgroundBmp:Bitmap = br.getBitmapByName("sliderBackground.png");
 		
 		//--------------------------------------------------------------------------------
 		//				UI Elements
@@ -87,8 +84,8 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			{
 				track = new Bitmap();
 				track.bitmapData = _trackBmp.bitmapData;
-				track.y = BAR_TOP_OFFSET;
-				track.x = 112;
+				track.y = BAR_TOP_OFFSET*model.dpiScale;
+				track.x = 112*model.dpiScale;
 				rotateContentContainer.addChild(track);
 			}
 			
@@ -96,8 +93,8 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			{
 				thumb = new Bitmap();
 				thumb.bitmapData = _thumbBmp.bitmapData;
-				thumb.x = 112;
-				thumb.y = BAR_TOP_OFFSET + _trackBmp.height/2 - _thumbBmp.height/2;
+				thumb.x = 112*model.dpiScale;
+				thumb.y = BAR_TOP_OFFSET*model.dpiScale + _trackBmp.height/2 - _thumbBmp.height/2;
 				rotateContentContainer.addChild(thumb);
 			}
 			
@@ -106,8 +103,8 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				hitAreaSprite = new Sprite();
 				hitAreaSprite.visible = false;
 				//hitAreaSprite.alpha = .5;
-				hitAreaSprite.x = 112;
-				hitAreaSprite.y = BAR_TOP_OFFSET;
+				hitAreaSprite.x = 112 * model.dpiScale;
+				hitAreaSprite.y = BAR_TOP_OFFSET * model.dpiScale;
 				hitAreaSprite.mouseEnabled = false;
 				rotateContentContainer.addChild(hitAreaSprite);
 				this.hitArea = hitAreaSprite;
@@ -118,7 +115,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				titleTextFormat = new TextFormat();
 				titleTextFormat.font = "myFont";
 				titleTextFormat.color = 0xFFFFFF;
-				titleTextFormat.size = 34;
+				titleTextFormat.size = 34 * model.dpiScale;
 			}
 			
 			if(!valueTextFormat)
@@ -126,7 +123,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				valueTextFormat = new TextFormat();
 				valueTextFormat.font = "myFont";
 				valueTextFormat.color = 0xFFFFFF;
-				valueTextFormat.size = 42;
+				valueTextFormat.size = 42 * model.dpiScale;
 			}
 			
 			if(!titleLabel)
@@ -137,7 +134,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				titleLabel.embedFonts = true;
 				titleLabel.autoSize = TextFieldAutoSize.CENTER;
 				titleLabel.defaultTextFormat = titleTextFormat;
-				titleLabel.x = 155;
+				titleLabel.x = 155*model.dpiScale;
 				rotateContentContainer.addChild(titleLabel);
 			}
 			
@@ -148,8 +145,8 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				valueLabel.embedFonts = true;
 				valueLabel.autoSize = TextFieldAutoSize.LEFT;
 				valueLabel.defaultTextFormat = valueTextFormat;
-				valueLabel.y = 112;
-				valueLabel.x = 9;
+				valueLabel.y = 112*model.dpiScale;
+				valueLabel.x = 9*model.dpiScale;
 				rotateContentContainer.addChild(valueLabel);
 			}
 			
@@ -302,11 +299,11 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			var thisMatrix:Matrix = rotateContentContainer.transform.matrix.clone();
 			thisMatrix.identity();
-			thisMatrix.tx -= 122;
-			thisMatrix.ty -= 122;
+			thisMatrix.tx -= 122*model.dpiScale;
+			thisMatrix.ty -= 122*model.dpiScale;
 			thisMatrix.rotate (angleRadians);
-			thisMatrix.tx += 122;
-			thisMatrix.ty += 122;
+			thisMatrix.tx += 122*model.dpiScale;
+			thisMatrix.ty += 122*model.dpiScale;
 			
 			rotateContentContainer.transform.matrix = thisMatrix;
 		}

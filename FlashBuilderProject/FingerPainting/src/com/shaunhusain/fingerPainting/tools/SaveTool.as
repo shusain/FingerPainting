@@ -37,7 +37,7 @@ package com.shaunhusain.fingerPainting.tools
 		}
 		public function toString():String
 		{
-			return "Save";
+			return "Save: Saves flattened layers as PNG to a file for on device storage";
 		}
 	}
 }

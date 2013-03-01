@@ -3,23 +3,23 @@ package com.shaunhusain.fingerPainting.model
 	import com.shaunhusain.fingerPainting.tools.ITool;
 	
 	import flash.display.Bitmap;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
 
 	public class PaintModel extends EventDispatcher
 	{
 		//--------------------------------------------------------------------------------
 		//				Variables
 		//--------------------------------------------------------------------------------
-		public var currentDrawingOverlay:Sprite;
 		public var currentTool:ITool;
 		
 		public var currentColorBitmap:Bitmap;
 		
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
+		public var dpiScale:Number = Capabilities.screenDPI/320;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -50,7 +50,7 @@ package com.shaunhusain.fingerPainting.model
 			_currentColor = value;
 			if(currentColorBitmap)
 			{
-				currentColorBitmap.bitmapData.fillRect(new Rectangle(20,20,42,42),_currentColor);
+				currentColorBitmap.bitmapData.fillRect(new Rectangle(20*dpiScale,20*dpiScale,42*dpiScale,42*dpiScale),_currentColor);
 			}
 			dispatchEvent(new Event("currentColorChanged"));
 		}

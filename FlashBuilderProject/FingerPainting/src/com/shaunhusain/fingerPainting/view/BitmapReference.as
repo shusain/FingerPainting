@@ -1,85 +1,102 @@
 package com.shaunhusain.fingerPainting.view
 {
 	import flash.display.Bitmap;
-	
-	import org.bytearray.ScaleBitmap;
+	import flash.display.Loader;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.filesystem.File;
+	import flash.system.Capabilities;
+	import flash.text.TextField;
 
 	public class BitmapReference
 	{
-		/** Layer option buttons **/
-		[Embed(source="/images/addIcon.png")]
-		private static var _addIcon:Class;
-		public static var _addBmp:Bitmap = new _addIcon();
+		private static var instance:BitmapReference;
 		
-		[Embed(source="/images/removeIcon.png")]
-		private static var _removeIcon:Class;
-		public static var _removeBmp:Bitmap = new _removeIcon();
+		private var brLookup:Object;
+		private var loadingCompleteCallback:Function;
 		
-		[Embed(source="/images/moveUpIcon.png")]
-		private static var _moveUpIcon:Class;
-		public static var _moveUpBmp:Bitmap = new _moveUpIcon();
+		private var filesToLoad:Array;
+		private var currentlyLoading:String;
 		
-		[Embed(source="/images/moveDownIcon.png")]
-		private static var _moveDownIcon:Class;
-		public static var _moveDownBmp:Bitmap = new _moveDownIcon();
+		private var debugTextField:TextField;
 		
-		[Embed(source="/images/merge.png")]
-		private static var _mergeIcon:Class;
-		public static var _mergeBmp:Bitmap = new _mergeIcon();
+		public static function getInstance():BitmapReference
+		{
+			if(!instance)
+				instance = new BitmapReference(new SingletonEnforcer());
+			return instance;
+		}
 		
-		[Embed(source="/images/duplicate.png")]
-		private static var _dupIcon:Class;
-		public static var _dupBmp:Bitmap = new _dupIcon();
+		public function BitmapReference(se:SingletonEnforcer)
+		{
+			brLookup = {};
+		}
 		
-		[Embed(source="/images/mirror.png")]
-		private static var _mirrorIcon:Class;
-		public static var _mirrorBmp:Bitmap = new _mirrorIcon();
+		public function loadBitmaps(callback:Function, debugTextField:TextField):void
+		{
+			var curDPI:String = Capabilities.screenDPI.toString();
+			var folderName:String = "images" + curDPI + "/";
+			
+			this.debugTextField = debugTextField;
+			
+			loadingCompleteCallback = callback;
+			loadFolderOfBitmaps(folderName);
+		}
 		
-		[Embed(source="/images/visibility.png")]
-		private static var _visiblityIcon:Class;
-		public static var _visibilityBmp:Bitmap = new _visiblityIcon();
+		private function loadFolderOfBitmaps(folderName:String):void
+		{
+			var file:File = File.applicationDirectory.resolvePath(folderName);
+			debugTextField.text = "Loading UI" + folderName;
+			
+			filesToLoad = file.getDirectoryListing();
+			iterativeLoading();
+		}
 		
-		[Embed(source="/images/visibilitySelected.png")]
-		private static var _visiblitySelectedIcon:Class;
-		public static var _visibilitySelectedBmp:Bitmap = new _visiblitySelectedIcon();
+		private function iterativeLoading():void
+		{
+			var fileInDir:File = filesToLoad.shift();
+			
+			if(fileInDir.name == "Thumbs.db")
+			{
+				iterativeLoading();
+				return;
+			}
+			debugTextField.text = "Loading UI: " + fileInDir.name;
+			
+			fileInDir.addEventListener(Event.COMPLETE, fileLoadCompleted);
+			fileInDir.addEventListener(IOErrorEvent.IO_ERROR, function(event:IOErrorEvent):void {trace ("IOError loading files." + event.type)});
+			fileInDir.load();
+		}
 		
+		public function getBitmapByName(value:String):Bitmap
+		{
+			if(brLookup[value])
+				return brLookup[value];
+			else
+				throw Error("Asset wasn't loaded in advance, be sure the name matches the file name in the images folder");
+		}
 		
-		/** Toolbar Images **/
-		[Embed(source="/images/triangleIcon.png")]
-		private static var _triangleIcon:Class;
-		public static var _triangleIconBmp:Bitmap = new _triangleIcon();
+		protected function fileLoadCompleted(event:Event):void
+		{
+			var loadedFile:File = event.target as File;
+			currentlyLoading = loadedFile.name;
+			
+			//debugTextField.text = "Finished loading: " + loadedFile.name;
+			var loader:Loader = brLookup[loadedFile.name] = new Loader();
+			
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loaderCompleted);
+			loader.loadBytes(loadedFile.data);
+		}	
 		
-		[Embed(source="/images/glowDownSlice.png")]
-		private static var _glowDownSliceIcon:Class;
-		public static var _glowDownSliceBmp:Bitmap = new _glowDownSliceIcon();
-		
-		[Embed(source="/images/glowUpSlice.png")]
-		private static var _glowUpSliceIcon:Class;
-		public static var _glowUpSliceBmp:Bitmap = new _glowUpSliceIcon();
-		
-		[Embed(source="/images/toolbarBackground.png")]
-		private static var toolbarBmpClass:Class;
-		public static var toolbarBmp:Bitmap = new toolbarBmpClass();
-		public static var scaledBitmap:ScaleBitmap = new ScaleBitmap(toolbarBmp.bitmapData);
-		
-		
-		/** Toolbar Button Images **/
-		//background image for button when deselected
-		[Embed(source="/images/buttonBackgroundTrans.png")]
-		private static var _firstBackgroundImage:Class;
-		public static var _firstBackgroundBmp:Bitmap = new _firstBackgroundImage();
-		
-		//background image for button when selected
-		[Embed(source="/images/buttonBackgroundSelectedYellow.png")]
-		private static var _firstBackgroundImageSelected:Class;
-		public static var _firstBackgroundSelectedBmp:Bitmap = new _firstBackgroundImageSelected();
-		
-		[Embed(source="/images/secondaryButtonBackground.png")]
-		private static var _secondBackgroundImage:Class;
-		public static var _secondBackgroundBmp:Bitmap = new _secondBackgroundImage();
-		
-		[Embed(source="/images/secondaryButtonSelectedBackground.png")]
-		private static var _secondBackgroundSelectedImage:Class;
-		public static var _secondBackgroundSelectedBmp:Bitmap = new _secondBackgroundSelectedImage();
+		protected function loaderCompleted(event:Event):void
+		{
+			brLookup[currentlyLoading] = event.target.content as Bitmap;
+			
+			if(filesToLoad.length>0)
+				iterativeLoading();
+			else
+				loadingCompleteCallback();
+		}
 	}
 }
+internal class SingletonEnforcer {}

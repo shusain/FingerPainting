@@ -27,7 +27,7 @@
 	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
 	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
 	An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5 . -->
-	<versionNumber>0.9.2</versionNumber>
+	<versionNumber>0.9.4</versionNumber>
 		         
 	<!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
 	<!-- <versionLabel></versionLabel> -->
@@ -134,7 +134,7 @@
 <!-- 		<image57x57></image57x57> -->
 <!-- 		<image72x72></image72x72> -->
 <!-- 		<image114x114></image114x114> -->
-		<image128x128>images/128x128.png</image128x128>
+		<image128x128>128x128.png</image128x128>
 	</icon>
 
 	<!-- Whether the application handles the update when a user double-clicks an update version
@@ -236,7 +236,7 @@
 			    <!--See the Adobe AIR documentation for more information about setting Google Android permissions-->
 			    <!--Removing the permission android.permission.INTERNET will have the side effect
 		of preventing you from debugging your application on your device-->
-<!--   				<uses-permission android:name="android.permission.INTERNET"/> -->
+<!-- 				<uses-permission android:name="android.permission.INTERNET"/> -->
 			    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 			    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->

@@ -93,12 +93,10 @@ package com.shaunhusain.fingerPainting.managers
 		//--------------------------------------------------------------------------------	
 		private function handleAccelerometerChange(event:AccelerometerEvent):void
 		{
-			//trace("z acc" + event.accelerationZ);
 			if(Math.abs(event.accelerationZ)<.75)
 			{
 				var angle:Number = Math.atan2(event.accelerationY, event.accelerationX);
 				var degrees:Number = angle*180/Math.PI+180;
-				//trace(degrees);
 				
 				if(Math.abs(degrees - previousAngle)<degreeAllowance)
 					return;
@@ -121,8 +119,6 @@ package com.shaunhusain.fingerPainting.managers
 				accEventExtra.oldOrientation = previousOrientation;
 				accEventExtra.newOrientation = currentOrientation;
 				accEventExtra.directionOfChange = determineDirectionOfChange(previousOrientation,currentOrientation);
-				
-				trace(accEventExtra.directionOfChange);
 				
 				previousOrientation = currentOrientation;
 				

@@ -62,7 +62,6 @@ package com.shaunhusain.fingerPainting.view.managers.helpComponents
 			
 			if(!textField)
 			{
-				trace("font size:",36*Capabilities.screenDPI/320);
 				textFormat = new TextFormat("myFont", 36*Capabilities.screenDPI/320);
 				
 				textField = new TextField();

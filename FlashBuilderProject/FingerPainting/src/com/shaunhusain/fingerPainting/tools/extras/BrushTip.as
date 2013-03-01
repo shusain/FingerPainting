@@ -1,6 +1,7 @@
 package com.shaunhusain.fingerPainting.tools.extras
 {
 	import com.shaunhusain.fingerPainting.model.PaintModel;
+	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -14,18 +15,15 @@ package com.shaunhusain.fingerPainting.tools.extras
 
 	public class BrushTip
 	{
+		private var br:BitmapReference = BitmapReference.getInstance();
 		private var model:PaintModel = PaintModel.getInstance();
 		
 		protected var brushBitmapData:BitmapData;
 		protected var brushPressureAdjustedBitmapData:BitmapData;
 		protected var pressureMatrix:Matrix;
 		
-		[Embed(source="/images/scatterBrush.png")]
-		private static var _scatterBrushClass:Class;
-		public static var _scatterBrushBmp:Bitmap = new _scatterBrushClass();
-		[Embed(source="/images/stippleBrush.png")]
-		private static var _stippleBrushClass:Class;
-		public static var _stippleBrushBmp:Bitmap = new _stippleBrushClass();
+		private var _scatterBrushBmp:Bitmap = br.getBitmapByName("scatterBrush.png");
+		private var _stippleBrushBmp:Bitmap = br.getBitmapByName("stippleBrush.png");
 		
 		public function BrushTip()
 		{
@@ -175,7 +173,6 @@ package com.shaunhusain.fingerPainting.tools.extras
 			if(usePreRenderedBitmapBrush)
 			{
 				var rgbObj:Object = hexToRGB(color);
-				trace(rgbObj.red,rgbObj.green,rgbObj.blue);
 				
 				var scaleMatrix:Matrix = new Matrix();
 				scaleMatrix.scale(width/150,width/150);

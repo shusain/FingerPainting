@@ -4,7 +4,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import com.eclecticdesignstudio.motion.actuators.GenericActuator;
 	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
-	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
+	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -19,9 +19,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	 */
 	public class StackedButtons extends Sprite
 	{
-		[Embed(source="/images/stackedBackground.png")]
-		private var _backgroundClass:Class;
-		private var _backgroundBmp:Bitmap = new _backgroundClass();
+		private var _backgroundBmp:Bitmap = new Bitmap(BitmapReference.getInstance().getBitmapByName("stackedBackground.png").bitmapData.clone());
 		
 		private var topButtonSprite:Sprite;
 		private var bottomButtonSprite:Sprite;

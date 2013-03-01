@@ -2,6 +2,7 @@ package com.shaunhusain.fingerPainting.view.managers
 {
 	import com.eclecticdesignstudio.motion.Actuate;
 	import com.eclecticdesignstudio.motion.actuators.GenericActuator;
+	import com.shaunhusain.fingerPainting.model.PaintModel;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -16,6 +17,7 @@ package com.shaunhusain.fingerPainting.view.managers
 		//				Variables
 		//--------------------------------------------------------------------------------
 		private var _lastShown:DisplayObject;
+		private var model:PaintModel = PaintModel.getInstance();
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -60,9 +62,9 @@ package com.shaunhusain.fingerPainting.view.managers
 			
 			displayObject.alpha = 0;
 			addChild(displayObject);
-			displayObject.x = 0;
-			displayObject.x = stage.fullScreenWidth-displayObject.width-(FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN-FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT)+20;
-			displayObject.y = 115;
+			
+			displayObject.x = stage.fullScreenWidth-displayObject.width-(FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale-FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale)+20;
+			displayObject.y = 115*model.dpiScale;
 			_currentlyShowing = displayObject;
 			isShowingPanel = true;
 			

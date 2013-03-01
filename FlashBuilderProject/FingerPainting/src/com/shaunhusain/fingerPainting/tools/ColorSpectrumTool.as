@@ -40,7 +40,7 @@ package com.shaunhusain.fingerPainting.tools
 		}
 		public function toString():String
 		{
-			return "Color Chooser";
+			return "Color Chooser: Touch again to toggle";
 		}
 		
 		//--------------------------------------------------------------------------------

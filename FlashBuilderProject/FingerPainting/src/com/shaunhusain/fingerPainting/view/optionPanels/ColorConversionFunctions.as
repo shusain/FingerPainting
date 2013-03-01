@@ -11,17 +11,12 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		
 		public static function parseARGBuint(color:uint):ARGB
 		{
-			trace("Parsing ARGB");
-			trace(color.toString(16));
 			var returnARGB:ARGB = new ARGB(color>>24 & 0xFF,color>>16 & 0xFF,color>>8 & 0xFF,color & 0xFF);
-			trace(returnARGB);
 			return returnARGB;
 		}
 		
 		public static function RGBtoHSV(argb:ARGB):HSV
 		{
-			trace("Converting ARGB to HSV");
-			trace("ARGB Original:", argb);
 			var returnHSV:HSV = new HSV();
 			var cMax:Number, cMin:Number;
 			
@@ -49,8 +44,6 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				returnHSV.saturation = (cMax - cMin)/cMax;
 				returnHSV.value = cMax;
 			}
-			
-			trace("HSV Converted: ", returnHSV);
 			
 			return returnHSV;
 		}
@@ -132,7 +125,6 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				saturation = 0;
 			else
 				saturation = delta/(1-Math.abs(2*lightness-1));
-			trace("hue: ",hue," saturation:",saturation," lightness:",lightness);
 		}
 	}
 }

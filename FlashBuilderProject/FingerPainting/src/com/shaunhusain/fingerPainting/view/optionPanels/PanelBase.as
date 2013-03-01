@@ -1,5 +1,7 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
+	import com.shaunhusain.fingerPainting.model.PaintModel;
+	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.CircleButton;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
@@ -15,15 +17,11 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	 */
 	public class PanelBase extends Sprite
 	{
-		[Embed(source="/images/panelBackground.png")]
-		private static var _panelBackgroundClass:Class;
-		public static var _panelBackgroundBmp:Bitmap = new _panelBackgroundClass();
-		[Embed(source="/images/titleBackground.png")]
-		private static var _titleBackgroundClass:Class;
-		public static var _titleBackgroundBmp:Bitmap = new _titleBackgroundClass();
-		[Embed(source="/images/closeButton.png")]
-		private static var _closeButtonClass:Class;
-		public static var _closeButtonBmp:Bitmap = new _closeButtonClass();
+		protected var br:BitmapReference = BitmapReference.getInstance();
+		
+		public var _panelBackgroundBmp:Bitmap = br.getBitmapByName("panelBackground.png");
+		public var _titleBackgroundBmp:Bitmap = br.getBitmapByName("titleBackground.png");
+		public var _closeButtonBmp:Bitmap = br.getBitmapByName("closeButton.png");
 		
 		[Embed(source="/Roboto-Black.ttf", fontName = "robotoBlack", mimeType = "application/x-font", fontStyle="normal", unicodeRange="U+0020-007E", advancedAntiAliasing="true", embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
@@ -32,6 +30,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		protected var backgroundSprite:Sprite;
 		protected var titleBackground:CircleButton;
 		protected var closeButton:RotatingIconButton;
+		protected var model:PaintModel = PaintModel.getInstance();
 		
 		public function PanelBase()
 		{
@@ -50,19 +49,19 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			{
 				var titleTextFormat:TextFormat;
 				titleTextFormat = new TextFormat();
-				titleTextFormat.size = 36;
+				titleTextFormat.size = 36 * model.dpiScale;
 				titleTextFormat.font = "robotoBlack";
 				titleBackground = new CircleButton(_titleBackgroundBmp.bitmapData,_titleBackgroundBmp.bitmapData, titleTextFormat);
-				titleBackground.x = 375;
-				titleBackground.y = 888;
+				titleBackground.x = 375*model.dpiScale;
+				titleBackground.y = _panelBackgroundBmp.height-titleBackground.height;
 				addChild(titleBackground);
 			}
 			if(!closeButton)
 			{
 				closeButton = new RotatingIconButton(_closeButtonBmp,null,null,true);
 				closeButton.addEventListener("instantaneousButtonClicked", closeButtonHandler);
-				closeButton.x = 448;
-				closeButton.y = 12;
+				closeButton.x = 448*model.dpiScale;
+				closeButton.y = 12*model.dpiScale;
 				addChild(closeButton);
 			}
 		}

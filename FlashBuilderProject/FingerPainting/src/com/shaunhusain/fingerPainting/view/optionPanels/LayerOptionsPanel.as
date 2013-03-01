@@ -65,16 +65,16 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		private function addedToStageHandler(event:Event):void
 		{
 			if(!layerBackground)
-				layerBackground = new Bitmap(new BitmapData(170,170*stage.fullScreenHeight/stage.fullScreenWidth,false,0xFFFFFFFF));
+				layerBackground = new Bitmap(new BitmapData(170*model.dpiScale,170*stage.fullScreenHeight/stage.fullScreenWidth*model.dpiScale,false,0xFFFFFFFF));
 			if(!selectedLayerBackground)
-				selectedLayerBackground = new Bitmap(new BitmapData(170,170*stage.fullScreenHeight/stage.fullScreenWidth,false,0xFFDDDDFF));
+				selectedLayerBackground = new Bitmap(new BitmapData(170*model.dpiScale,170*stage.fullScreenHeight/stage.fullScreenWidth*model.dpiScale,false,0xFFDDDDFF));
 			
 			if(!mainContainer)
 			{
 				mainContainer = new Box();
-				mainContainer.y = 40;
-				mainContainer.x = 30;
-				mainContainer.gap = 40;
+				mainContainer.y = 40 * model.dpiScale;
+				mainContainer.x = 30 * model.dpiScale;
+				mainContainer.gap = 40 * model.dpiScale;
 				mainContainer.direction = "horizontal";
 				addChild(mainContainer);
 			}
@@ -82,20 +82,20 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!controlContainer)
 			{
 				controlContainer = new Box();
-				controlContainer.gap = 40;
+				controlContainer.gap = 40 * model.dpiScale;
 				mainContainer.addChild(controlContainer);
 			}
 			
 			if(!addRemoveButton)
 			{
-				addRemoveButton = new StackedButtons(BitmapReference._addBmp,BitmapReference._removeBmp);
+				addRemoveButton = new StackedButtons(br.getBitmapByName("addIcon.png"),br.getBitmapByName("removeIcon.png"));
 				addRemoveButton.addEventListener("topButtonTapped", addButtonClickHandler);
 				addRemoveButton.addEventListener("bottomButtonTapped", removeButtonClickHandler);
 				controlContainer.addChild(addRemoveButton);
 			}
 			if(!moveUpDownButton)
 			{
-				moveUpDownButton = new StackedButtons(BitmapReference._moveUpBmp,BitmapReference._moveDownBmp);
+				moveUpDownButton = new StackedButtons(br.getBitmapByName("moveUpIcon.png"), br.getBitmapByName("moveDownIcon.png"));
 				moveUpDownButton.addEventListener("topButtonTapped", upButtonClickHandler);
 				moveUpDownButton.addEventListener("bottomButtonTapped", downButtonClickHandler);
 				controlContainer.addChild(moveUpDownButton);
@@ -113,14 +113,14 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			}
 			if(!mirrorButton)
 			{
-				mirrorButton = new RotatingIconButton(BitmapReference._mirrorBmp,null,null,true);
+				mirrorButton = new RotatingIconButton(br.getBitmapByName("mirror.png"),null,null,true);
 				mirrorButton.addEventListener("instantaneousButtonClicked", mirrorClickedHandler);
 				
 				mirrorDuplicateContainer.addChild(mirrorButton);
 			}
 			if(!duplicateButton)
 			{
-				duplicateButton = new RotatingIconButton(BitmapReference._dupBmp,null,null,true);
+				duplicateButton = new RotatingIconButton(br.getBitmapByName("duplicate.png"),null,null,true);
 				duplicateButton.addEventListener("instantaneousButtonClicked", duplicateClickedHandler);
 				
 				mirrorDuplicateContainer.addChild(duplicateButton);
@@ -134,7 +134,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			}
 			if(!visibilityButton)
 			{
-				visibilityButton = new RotatingIconButton(BitmapReference._visibilityBmp,BitmapReference._visibilitySelectedBmp,null,false,true);
+				visibilityButton = new RotatingIconButton(br.getBitmapByName("visibility.png"),br.getBitmapByName("visibilitySelected.png"),null,false,true);
 				visibilityButton.toggles = true;
 				visibilityButton.addEventListener("buttonClicked", visibilityClickedHandler);
 				
@@ -142,7 +142,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			}
 			if(!mergeButton)
 			{
-				mergeButton = new RotatingIconButton(BitmapReference._mergeBmp,null,null,true);
+				mergeButton = new RotatingIconButton(br.getBitmapByName("merge.png"),null,null,true);
 				mergeButton.addEventListener("instantaneousButtonClicked", mergeClickedHandler);
 				
 				visibilityMergeContainer.addChild(mergeButton);
@@ -162,15 +162,15 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!layersDisplayContainer)
 			{
 				layersDisplayContainer = new Box();
-				layersDisplayContainer.startPadding = 60;
+				layersDisplayContainer.startPadding = 60 * model.dpiScale;
 				mainContainer.addChild(layersDisplayContainer);
 			}
 			if(!layersDisplay)
 			{
 				layersDisplay = new ButtonScroller();
-				layersDisplay.gap = 20;
-				layersDisplay.buttonMaskHeight = backgroundSprite.height - 260;
-				layersDisplay.buttonMaskWidth = 170;
+				layersDisplay.gap = 20 * model.dpiScale;
+				layersDisplay.buttonMaskHeight = backgroundSprite.height - 260*model.dpiScale;
+				layersDisplay.buttonMaskWidth = 170*model.dpiScale;
 				layersDisplay.addEventListener("buttonClicked",layerClickedHandler);
 				layersDisplayContainer.addChild(layersDisplay);
 			}

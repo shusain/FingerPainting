@@ -92,7 +92,7 @@ package com.shaunhusain.fingerPainting.tools
 		
 		public function toString():String
 		{
-			return "Share";
+			return "Share: sending flattened PNG to Android system";
 		}
 	}
 }

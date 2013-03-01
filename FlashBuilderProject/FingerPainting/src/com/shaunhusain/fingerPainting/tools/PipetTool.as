@@ -55,7 +55,7 @@ package com.shaunhusain.fingerPainting.tools
 		}
 		public function toString():String
 		{
-			return "Pipet (Canvas Color Picker)";
+			return "Pipet: Touch in canvas to pick up color under finger for brush or fill";
 		}
 		
 		private function updatePipetSprite():void

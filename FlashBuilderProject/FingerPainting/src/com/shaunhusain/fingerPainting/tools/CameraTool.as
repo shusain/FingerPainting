@@ -100,7 +100,7 @@ package com.shaunhusain.fingerPainting.tools
 		
 		public function toString():String
 		{
-			return "Camera";
+			return "Loading CameraUI";
 		}
 		
 	}
