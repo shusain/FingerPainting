@@ -302,12 +302,12 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		{
 			glowDown.graphics.clear();
 			glowDown.graphics.beginBitmapFill(br.getBitmapByName("glowDownSlice.png").bitmapData);
-			glowDown.graphics.drawRect(glowXOffset,0,widthValue-glowXOffset*2,31);
+			glowDown.graphics.drawRect(glowXOffset*model.dpiScale,0,widthValue-glowXOffset*2,br.getBitmapByName("glowDownSlice.png").height);
 			glowDown.graphics.endFill();
 			
 			glowUp.graphics.clear();
 			glowUp.graphics.beginBitmapFill(br.getBitmapByName("glowUpSlice.png").bitmapData);
-			glowUp.graphics.drawRect(glowXOffset,0,widthValue-glowXOffset*2,31);
+			glowUp.graphics.drawRect(glowXOffset*model.dpiScale,0,widthValue-glowXOffset*2,br.getBitmapByName("glowUpSlice.png").height);
 			glowUp.graphics.endFill();
 		}
 

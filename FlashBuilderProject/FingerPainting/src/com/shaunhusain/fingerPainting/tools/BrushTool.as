@@ -69,7 +69,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
-			if(event.touchPointID!=0 || event.target!=stage)
+			if(event.target!=stage)
 				return;
 			
 			switch(event.type)
@@ -111,12 +111,12 @@ package com.shaunhusain.fingerPainting.tools
 			touchSamples.position = 0;     // rewind to beginning of array before reading
 			
 			var xCoord:Number,yCoord:Number,pressure:Number, curScale:Number;
-			while( touchSamples.bytesAvailable > 0 )
+			if(touchSamples.length == 0)
 			{
 				curScale = layerM.scaleX;
-				xCoord = touchSamples.readFloat();
-				yCoord = touchSamples.readFloat();
-				pressure = touchSamples.readFloat();
+				xCoord = event.stageX;
+				yCoord = event.stageY;
+				pressure = 1;
 				currentPoint.x = xCoord/curScale-layerM.x/curScale;
 				currentPoint.y = yCoord/curScale-layerM.y/curScale;
 				
@@ -128,6 +128,27 @@ package com.shaunhusain.fingerPainting.tools
 				previousPoint.x = xCoord/curScale-layerM.x/curScale;
 				previousPoint.y = yCoord/curScale-layerM.y/curScale;
 				
+			}
+			else
+			{
+				while( touchSamples.bytesAvailable > 0 )
+				{
+					curScale = layerM.scaleX;
+					xCoord = touchSamples.readFloat();
+					yCoord = touchSamples.readFloat();
+					pressure = touchSamples.readFloat();
+					currentPoint.x = xCoord/curScale-layerM.x/curScale;
+					currentPoint.y = yCoord/curScale-layerM.y/curScale;
+					
+					if(!isNaN(previousPoint.x))
+					{
+						leftoverFromPrevious = brushTip.stampMaskLine(previousPoint,currentPoint,leftoverFromPrevious,pressure,layerM.currentLayer.bitmapData);
+					}
+					
+					previousPoint.x = xCoord/curScale-layerM.x/curScale;
+					previousPoint.y = yCoord/curScale-layerM.y/curScale;
+					
+				}
 			}
 		}
 		//--------------------------------------------------------------------------------

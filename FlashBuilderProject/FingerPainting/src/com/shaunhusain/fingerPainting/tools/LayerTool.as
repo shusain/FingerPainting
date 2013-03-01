@@ -134,16 +134,16 @@ package com.shaunhusain.fingerPainting.tools
 			if(!floatingLayer)
 			{
 				visibleDrawingRect = getVisibleBounds(layerM.currentLayer.bitmap);
-				initialScale = Point.distance(ptsTracked[0],ptsTracked[1]);
-				initialAngle = Math.atan2(ptsTracked[0].y - ptsTracked[1].y,	ptsTracked[0].x - ptsTracked[1].x);
+				initialScale = Point.distance(ptsTracked[eventIds[0]],ptsTracked[eventIds[1]]);
+				initialAngle = Math.atan2(ptsTracked[eventIds[0]].y - ptsTracked[eventIds[1]].y,	ptsTracked[eventIds[0]].x - ptsTracked[eventIds[1]].x);
 				floatingLayer = layerM.currentLayer.bitmapData.clone();
 				floatingLayerMatrix = new Matrix();
 				layerM.currentLayer.bitmap.bitmapData = floatingLayer;
 			}
 			else
 			{
-				newAngle = Math.atan2(ptsTracked[0].y - ptsTracked[1].y,	ptsTracked[0].x - ptsTracked[1].x);
-				newScale = Point.distance(ptsTracked[0],ptsTracked[1]);
+				newAngle = Math.atan2(ptsTracked[eventIds[0]].y - ptsTracked[eventIds[1]].y,	ptsTracked[eventIds[0]].x - ptsTracked[eventIds[1]].x);
+				newScale = Point.distance(ptsTracked[eventIds[0]],ptsTracked[eventIds[1]]);
 				
 				//Doing rotation around the visible part in the layer
 				//initially moving back and up to get the center at the

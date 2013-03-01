@@ -42,12 +42,12 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			if(isNaN(initialDistance))
 			{
-				initialDistance = Point.distance(ptsTracked[0],ptsTracked[1]);
-				layerLocal = new Point((ptsTracked[0].x+ptsTracked[1].x)/2,(ptsTracked[0].y+ptsTracked[1].y)/2);
+				initialDistance = Point.distance(ptsTracked[eventIds[0]],ptsTracked[eventIds[1]]);
+				layerLocal = new Point((ptsTracked[eventIds[0]].x+ptsTracked[eventIds[1]].x)/2,(ptsTracked[eventIds[0]].y+ptsTracked[eventIds[1]].y)/2);
 			}
 			else
 			{
-				newDistance = Point.distance(ptsTracked[0],ptsTracked[1]);
+				newDistance = Point.distance(ptsTracked[eventIds[0]],ptsTracked[eventIds[1]]);
 				var scaleSize:Number = newDistance/initialDistance;
 				var matrix:Matrix = layerM.transform.concatenatedMatrix.clone();
 				

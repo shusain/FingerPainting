@@ -133,7 +133,7 @@
 <!-- 		<image48x48></image48x48> -->
 <!-- 		<image57x57></image57x57> -->
 <!-- 		<image72x72></image72x72> -->
-<!-- 		<image114x114></image114x114> -->
+		<image114x114>114x114.png</image114x114>
 		<image128x128>128x128.png</image128x128>
 	</icon>
 

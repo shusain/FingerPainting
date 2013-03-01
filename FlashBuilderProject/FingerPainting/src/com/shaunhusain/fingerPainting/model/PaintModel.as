@@ -19,7 +19,11 @@ package com.shaunhusain.fingerPainting.model
 		
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
-		public var dpiScale:Number = Capabilities.screenDPI/320;
+		
+		public function get dpiScale():Number
+		{
+			return Capabilities.screenDPI>320&&Capabilities.screenResolutionY<1000?.75:Capabilities.screenDPI/320;
+		}
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor

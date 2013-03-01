@@ -16,7 +16,6 @@ package com.shaunhusain.fingerPainting.view
 	import com.shaunhusain.fingerPainting.tools.PipetTool;
 	import com.shaunhusain.fingerPainting.tools.RedoTool;
 	import com.shaunhusain.fingerPainting.tools.SaveTool;
-	import com.shaunhusain.fingerPainting.tools.ShareTool;
 	import com.shaunhusain.fingerPainting.tools.UndoTool;
 	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
@@ -153,7 +152,7 @@ package com.shaunhusain.fingerPainting.view
 					new RotatingIconButton(br.getBitmapByName("layersIcon.png"), null, new LayerTool(stage), false, false, true, bg, bgs),
 					new RotatingIconButton(br.getBitmapByName("cameraIcon.png"), null, new CameraTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(br.getBitmapByName("galleryIcon.png"), null, new GalleryTool(stage), true, false, true, bg, bgs),
-					new RotatingIconButton(br.getBitmapByName("shareIcon.png"), null, new ShareTool(stage), true, false, true, bg, bgs),
+					/*new RotatingIconButton(br.getBitmapByName("shareIcon.png"), null, new ShareTool(stage), true, false, true, bg, bgs),*/
 					new RotatingIconButton(br.getBitmapByName("saveIcon.png"), null, new SaveTool(stage), true, false, true, bg, bgs)
 				];
 		}

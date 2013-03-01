@@ -34,7 +34,14 @@ package com.shaunhusain.fingerPainting.view
 		
 		public function loadBitmaps(callback:Function, debugTextField:TextField):void
 		{
-			var curDPI:String = Capabilities.screenDPI.toString();
+			var curDPI:String;
+			
+			if(Capabilities.screenDPI<=160)
+				curDPI = "160";
+			else if(Capabilities.screenDPI<=240 || Capabilities.screenResolutionY<1000)
+				curDPI = "240";
+			else
+				curDPI = "320";
 			var folderName:String = "images" + curDPI + "/";
 			
 			this.debugTextField = debugTextField;

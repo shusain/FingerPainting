@@ -8,9 +8,12 @@ package com.shaunhusain.fingerPainting.tools
 	{
 		protected var pointsTracked:Number = 0;
 		protected var ptsTracked:Object;
+		protected var eventIds:Array;
+		
 		public function MultiTouchTool(stage:Stage)
 		{
 			super(stage);
+			eventIds = [];
 			ptsTracked = {};
 		}
 		
@@ -19,6 +22,7 @@ package com.shaunhusain.fingerPainting.tools
 			switch(event.type)
 			{
 				case TouchEvent.TOUCH_BEGIN:
+					eventIds.unshift(event.touchPointID);
 					ptsTracked[event.touchPointID] =  new Point(event.stageX, event.stageY);
 					pointsTracked++;
 					if(pointsTracked>1)
