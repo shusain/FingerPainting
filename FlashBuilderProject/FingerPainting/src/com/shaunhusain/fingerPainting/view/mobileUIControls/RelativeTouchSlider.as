@@ -35,7 +35,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//				Constants
 		//--------------------------------------------------------------------------------
 		public static const VALUE_CHANGED:String="valueChanged";
-		private const BAR_TOP_OFFSET:Number = 35;
+		private const BAR_TOP_OFFSET:Number = 35*model.dpiScale;
 		
 		public var _thumbBmp:Bitmap = br.getBitmapByName("relativeSliderThumb.png");
 		public var _trackBmp:Bitmap = br.getBitmapByName("relativeSliderTrack.png");
@@ -84,7 +84,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			{
 				track = new Bitmap();
 				track.bitmapData = _trackBmp.bitmapData;
-				track.y = BAR_TOP_OFFSET*model.dpiScale;
+				track.y = BAR_TOP_OFFSET;
 				track.x = 112*model.dpiScale;
 				rotateContentContainer.addChild(track);
 			}
@@ -94,7 +94,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				thumb = new Bitmap();
 				thumb.bitmapData = _thumbBmp.bitmapData;
 				thumb.x = 112*model.dpiScale;
-				thumb.y = BAR_TOP_OFFSET*model.dpiScale + _trackBmp.height/2 - _thumbBmp.height/2;
+				thumb.y = BAR_TOP_OFFSET + _trackBmp.height/2 - _thumbBmp.height/2;
 				rotateContentContainer.addChild(thumb);
 			}
 			
@@ -104,7 +104,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				hitAreaSprite.visible = false;
 				//hitAreaSprite.alpha = .5;
 				hitAreaSprite.x = 112 * model.dpiScale;
-				hitAreaSprite.y = BAR_TOP_OFFSET * model.dpiScale;
+				hitAreaSprite.y = BAR_TOP_OFFSET;
 				hitAreaSprite.mouseEnabled = false;
 				rotateContentContainer.addChild(hitAreaSprite);
 				this.hitArea = hitAreaSprite;

@@ -22,7 +22,7 @@ package com.shaunhusain.fingerPainting.model
 		
 		public function get dpiScale():Number
 		{
-			return Capabilities.screenDPI>320&&Capabilities.screenResolutionY<1000?.75:Capabilities.screenDPI/320;
+			return Capabilities.screenDPI>320&&Capabilities.screenResolutionY<1000?1:Capabilities.screenDPI/320;
 		}
 		
 		//--------------------------------------------------------------------------------

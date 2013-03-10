@@ -16,6 +16,7 @@ package com.shaunhusain.fingerPainting.view
 	import com.shaunhusain.fingerPainting.tools.PipetTool;
 	import com.shaunhusain.fingerPainting.tools.RedoTool;
 	import com.shaunhusain.fingerPainting.tools.SaveTool;
+	import com.shaunhusain.fingerPainting.tools.ShareTool;
 	import com.shaunhusain.fingerPainting.tools.UndoTool;
 	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
@@ -30,7 +31,6 @@ package com.shaunhusain.fingerPainting.view
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
-	import flash.utils.setTimeout;
 	
 	import org.bytearray.ScaleBitmap;
 	
@@ -56,6 +56,7 @@ package com.shaunhusain.fingerPainting.view
 		//Used to hold all the buttons in case they
 		//need to be scrolled
 		private var menuButtonSprite:ButtonScroller;
+		private var menuButtonSpriteBackground:ScaleBitmap;
 		
 		private var mainToolbarStartPoint:Point;
 		private var toolbarMoved:Boolean;
@@ -69,12 +70,7 @@ package com.shaunhusain.fingerPainting.view
 			//waiting for added to stage to add the rest of children so
 			//the full screen size can be accounted for
 			addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-			
-			addEventListener(TouchEvent.TOUCH_BEGIN, handleTouchBegin);
-			addEventListener(TouchEvent.TOUCH_END, handleTouchEnd);
 			addEventListener(TouchEvent.TOUCH_TAP, handleTapped);
-			addEventListener(TouchEvent.TOUCH_MOVE, touchMoveHandler);
-			addEventListener(TouchEvent.TOUCH_ROLL_OUT, handleRollout);
 			
 			model.currentColorBitmap = br.getBitmapByName("colorSpectrumIcon.png");
 		}
@@ -99,11 +95,19 @@ package com.shaunhusain.fingerPainting.view
 			var dpi:Number = Capabilities.screenDPI;
 			var dpiScale:Number = model.dpiScale;
 			//Setting up the background scale9Grid and scaling
-			var scaledBitmap:ScaleBitmap = new ScaleBitmap(BitmapReference.getInstance().getBitmapByName("toolbarBackground.png").bitmapData);
-			scaledBitmap.scale9Grid = new Rectangle(107 * dpiScale, 102*dpiScale, 188*dpiScale, 2325*dpiScale);
-			scaledBitmap.height = stage.fullScreenHeight - y - 20;
+			menuButtonSpriteBackground = new ScaleBitmap(BitmapReference.getInstance().getBitmapByName("mainToolsBackground.png").bitmapData.clone());
+			menuButtonSpriteBackground.scale9Grid = new Rectangle(15 * dpiScale, 15 * dpiScale, 165 * dpiScale, 75 * dpiScale);
+			menuButtonSpriteBackground.height = stage.fullScreenHeight - y - 120*dpiScale;
+			menuButtonSpriteBackground.y = 100*model.dpiScale;
+			menuButtonSpriteBackground.x = FingerPainting.TOOLBAR_BUTTON_OFFSET_FROM_RIGHT*dpiScale;
 			//toolbarBmp.width = toolbarBmp.scaleY*toolbarBmp.width;
-			addChild(scaledBitmap);
+			addChild(menuButtonSpriteBackground);
+			
+			var scaledBitmap2:ScaleBitmap = new ScaleBitmap(BitmapReference.getInstance().getBitmapByName("mainToolsBackground.png").bitmapData.clone());
+			scaledBitmap2.scale9Grid = new Rectangle(15 * dpiScale, 15 * dpiScale, 165 * dpiScale, 75 * dpiScale);
+			scaledBitmap2.height = 100*model.dpiScale;
+			//toolbarBmp.width = toolbarBmp.scaleY*toolbarBmp.width;
+			addChild(scaledBitmap2);
 			
 			//Setting up the triangle button that spins when opening
 			rotateTriangle(Math.PI);
@@ -125,10 +129,10 @@ package com.shaunhusain.fingerPainting.view
 			hitArea = hitAreaSprite;
 			
 			menuButtonSprite = new ButtonScroller();
-			menuButtonSprite.buttonMaskHeight = stage.fullScreenHeight-180*dpiScale;
+			menuButtonSprite.buttonMaskHeight = stage.fullScreenHeight-140*dpiScale;
 			menuButtonSprite.buttonMaskWidth = 175 * dpiScale;
 			menuButtonSprite.y = 100*dpiScale;
-			menuButtonSprite.x = 120*dpiScale;
+			menuButtonSprite.x = FingerPainting.TOOLBAR_BUTTON_OFFSET_FROM_RIGHT*dpiScale;
 			addChild(menuButtonSprite);
 			menuButtonSprite.addEventListener("instantaneousButtonClicked", instantaneousActionHandler);
 			menuButtonSprite.addEventListener("buttonClicked", deselectAllOthers);
@@ -152,7 +156,7 @@ package com.shaunhusain.fingerPainting.view
 					new RotatingIconButton(br.getBitmapByName("layersIcon.png"), null, new LayerTool(stage), false, false, true, bg, bgs),
 					new RotatingIconButton(br.getBitmapByName("cameraIcon.png"), null, new CameraTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(br.getBitmapByName("galleryIcon.png"), null, new GalleryTool(stage), true, false, true, bg, bgs),
-					/*new RotatingIconButton(br.getBitmapByName("shareIcon.png"), null, new ShareTool(stage), true, false, true, bg, bgs),*/
+					new RotatingIconButton(br.getBitmapByName("shareIcon.png"), null, new ShareTool(stage), true, false, true, bg, bgs),
 					new RotatingIconButton(br.getBitmapByName("saveIcon.png"), null, new SaveTool(stage), true, false, true, bg, bgs)
 				];
 		}
@@ -160,39 +164,6 @@ package com.shaunhusain.fingerPainting.view
 		//--------------------------------------------------------------------------------
 		//				Handlers
 		//--------------------------------------------------------------------------------
-		private function handleTouchBegin(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
-			toolbarMoved = false;
-			mainToolbarStartPoint = new Point(event.stageX,event.stageY);
-		}
-		
-		private function touchMoveHandler(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
-			if(!mainToolbarStartPoint)
-				return;
-			
-			var xChange:Number = mainToolbarStartPoint.x - event.stageX;
-			if(toolbarMoved||Math.abs(xChange) > 5)
-			{
-				model.toolbarMoving = toolbarMoved = true;
-				mainToolbarStartPoint.x = event.stageX;
-				x -= xChange;
-				if(x<stage.fullScreenWidth - 270)
-					x = stage.fullScreenWidth - 270;
-			}
-		}
-		
-		private function handleTouchEnd(event:TouchEvent):void
-		{
-			event.stopImmediatePropagation();
-			if(toolbarMoved)
-			{
-				setTimeout(function():void{model.toolbarMoving = false},500);
-			}
-			mainToolbarStartPoint = null;
-		}
 		
 		private function handleTapped(event:TouchEvent):void
 		{
@@ -201,35 +172,19 @@ package com.shaunhusain.fingerPainting.view
 			if(isOpen)
 			{
 				AccelerometerManager.getIntance().currentlyActive = false;
-				Actuate.tween(this, .5, {arrowRotation:Math.PI, x:stage.fullScreenWidth - FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale});
+				Actuate.tween(menuButtonSprite, .5, {x: FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale});
+				Actuate.tween(menuButtonSpriteBackground, .5, {x: FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale});
+				Actuate.tween(this, .5, {arrowRotation:Math.PI});
 			}
 			else
 			{
 				AccelerometerManager.getIntance().currentlyActive = true;
-				Actuate.tween(this, .5, {arrowRotation:0,x:stage.fullScreenWidth - FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale});
+				Actuate.tween(menuButtonSprite, .5, {x: FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale});
+				Actuate.tween(menuButtonSpriteBackground, .5, {x: 0});
+				Actuate.tween(this, .5, {arrowRotation:0});
 			}
 			isOpen = !isOpen;
 			secondaryPanelManager.hidePanel();
-		}
-		
-		protected function handleRollout(event:TouchEvent):void
-		{
-			if(!mainToolbarStartPoint)
-				return;
-			var xChange:Number = mainToolbarStartPoint.x - event.stageX;
-			if(xChange<0)
-			{
-				isOpen = true;
-				AccelerometerManager.getIntance().currentlyActive = true;
-				Actuate.tween(this, .5, {arrowRotation:0,x:stage.fullScreenWidth - 270});
-			}
-			else
-			{
-				isOpen = false;
-				AccelerometerManager.getIntance().currentlyActive = false;
-				Actuate.tween(this, .5, {arrowRotation:Math.PI, x:stage.fullScreenWidth - 85});
-				secondaryPanelManager.hidePanel();
-			}
 		}
 		
 		private function blockEvent(event:TouchEvent):void

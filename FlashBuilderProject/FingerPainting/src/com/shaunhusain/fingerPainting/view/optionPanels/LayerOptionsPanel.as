@@ -65,16 +65,16 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		private function addedToStageHandler(event:Event):void
 		{
 			if(!layerBackground)
-				layerBackground = new Bitmap(new BitmapData(170*model.dpiScale,170*stage.fullScreenHeight/stage.fullScreenWidth*model.dpiScale,false,0xFFFFFFFF));
+				layerBackground = new Bitmap(new BitmapData(150*model.dpiScale,150*stage.fullScreenHeight/stage.fullScreenWidth*model.dpiScale,false,0xFFFFFFFF));
 			if(!selectedLayerBackground)
-				selectedLayerBackground = new Bitmap(new BitmapData(170*model.dpiScale,170*stage.fullScreenHeight/stage.fullScreenWidth*model.dpiScale,false,0xFFDDDDFF));
+				selectedLayerBackground = new Bitmap(new BitmapData(150*model.dpiScale,150*stage.fullScreenHeight/stage.fullScreenWidth*model.dpiScale,false,0xFFDDDDFF));
 			
 			if(!mainContainer)
 			{
 				mainContainer = new Box();
-				mainContainer.y = 40 * model.dpiScale;
-				mainContainer.x = 30 * model.dpiScale;
-				mainContainer.gap = 40 * model.dpiScale;
+				mainContainer.y = 20 * model.dpiScale;
+				mainContainer.x = 12 * model.dpiScale;
+				mainContainer.gap = 20 * model.dpiScale;
 				mainContainer.direction = "horizontal";
 				addChild(mainContainer);
 			}
@@ -82,7 +82,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!controlContainer)
 			{
 				controlContainer = new Box();
-				controlContainer.gap = 40 * model.dpiScale;
+				controlContainer.gap = 20 * model.dpiScale;
 				mainContainer.addChild(controlContainer);
 			}
 			
@@ -170,7 +170,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				layersDisplay = new ButtonScroller();
 				layersDisplay.gap = 20 * model.dpiScale;
 				layersDisplay.buttonMaskHeight = backgroundSprite.height - 260*model.dpiScale;
-				layersDisplay.buttonMaskWidth = 170*model.dpiScale;
+				layersDisplay.buttonMaskWidth = 150*model.dpiScale;
 				layersDisplay.addEventListener("buttonClicked",layerClickedHandler);
 				layersDisplayContainer.addChild(layersDisplay);
 			}
@@ -225,6 +225,10 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		protected function layerClickedHandler(event:Event):void
 		{
 			layerManager.currentLayer = (event.target as RotatingIconButton).data as Layer;
+			
+			opacitySlider.currentValue = layerManager.currentLayer.bitmap.alpha;
+			visibilityButton.isSelected = layerManager.currentLayer.bitmap.visible;
+			
 			beingShown();
 		}
 		

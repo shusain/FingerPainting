@@ -54,14 +54,19 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			saturation = Math.max(0,Math.min(1,saturation));
 			value = Math.max(0,Math.min(1,value));
 			hue = hue%360;
-			if(hue<0)hue+=360;
+			
+			if(hue<0)
+				hue+=360;
 			hue/=60;
+			
 			var C:Number = value*saturation;
 			var X:Number = C*(1-Math.abs((hue%2)-1));
 			var m:Number = value-C;
+			
 			C=(C+m)*255;
 			X=(X+m)*255;
 			m*=255;
+			
 			if(hue<1) return (Math.round(a*255)<<24)+(C<<16)+(X<<8)+m;
 			if(hue<2) return (Math.round(a*255)<<24)+(X<<16)+(C<<8)+m;
 			if(hue<3) return (Math.round(a*255)<<24)+(m<<16)+(C<<8)+X;

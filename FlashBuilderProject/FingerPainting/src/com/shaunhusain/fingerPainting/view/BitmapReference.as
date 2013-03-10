@@ -6,7 +6,6 @@ package com.shaunhusain.fingerPainting.view
 	import flash.events.IOErrorEvent;
 	import flash.filesystem.File;
 	import flash.system.Capabilities;
-	import flash.text.TextField;
 
 	public class BitmapReference
 	{
@@ -18,7 +17,10 @@ package com.shaunhusain.fingerPainting.view
 		private var filesToLoad:Array;
 		private var currentlyLoading:String;
 		
-		private var debugTextField:TextField;
+		private var loadingDialog:LoadingDialog;
+		
+		private var totalLoaded:int;
+		private var totalToLoad:int;
 		
 		public static function getInstance():BitmapReference
 		{
@@ -32,19 +34,21 @@ package com.shaunhusain.fingerPainting.view
 			brLookup = {};
 		}
 		
-		public function loadBitmaps(callback:Function, debugTextField:TextField):void
+		public function loadBitmaps(callback:Function, loadingDialog:LoadingDialog):void
 		{
 			var curDPI:String;
 			
 			if(Capabilities.screenDPI<=160)
 				curDPI = "160";
-			else if(Capabilities.screenDPI<=240 || Capabilities.screenResolutionY<1000)
+			else if(Capabilities.screenDPI<=240)
 				curDPI = "240";
-			else
+			else if(Capabilities.screenResolutionY>1000)
 				curDPI = "320";
+			else
+				curDPI = "320iPhone";
 			var folderName:String = "images" + curDPI + "/";
 			
-			this.debugTextField = debugTextField;
+			this.loadingDialog = loadingDialog;
 			
 			loadingCompleteCallback = callback;
 			loadFolderOfBitmaps(folderName);
@@ -53,22 +57,25 @@ package com.shaunhusain.fingerPainting.view
 		private function loadFolderOfBitmaps(folderName:String):void
 		{
 			var file:File = File.applicationDirectory.resolvePath(folderName);
-			debugTextField.text = "Loading UI" + folderName;
+			loadingDialog.text = "Loading UI" + folderName;
 			
 			filesToLoad = file.getDirectoryListing();
+			totalToLoad = filesToLoad.length;
+			
 			iterativeLoading();
 		}
 		
 		private function iterativeLoading():void
 		{
 			var fileInDir:File = filesToLoad.shift();
-			
-			if(fileInDir.name == "Thumbs.db")
+			totalLoaded++;
+			if(fileInDir.name == "Thumbs.db" || fileInDir.name == "Phone")
 			{
 				iterativeLoading();
 				return;
 			}
-			debugTextField.text = "Loading UI: " + fileInDir.name;
+			loadingDialog.percentLoaded = totalLoaded/totalToLoad;
+			loadingDialog.text = "Loading UI: " + fileInDir.name;
 			
 			fileInDir.addEventListener(Event.COMPLETE, fileLoadCompleted);
 			fileInDir.addEventListener(IOErrorEvent.IO_ERROR, function(event:IOErrorEvent):void {trace ("IOError loading files." + event.type)});
@@ -98,6 +105,8 @@ package com.shaunhusain.fingerPainting.view
 		protected function loaderCompleted(event:Event):void
 		{
 			brLookup[currentlyLoading] = event.target.content as Bitmap;
+			
+			loadingDialog.text = "Building UI";
 			
 			if(filesToLoad.length>0)
 				iterativeLoading();

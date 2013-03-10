@@ -5,10 +5,12 @@ package com.shaunhusain.fingerPainting.tools
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
+	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.Timer;
 	
 	public class LayerTool extends MultiTouchTool implements ITool
 	{
@@ -27,6 +29,9 @@ package com.shaunhusain.fingerPainting.tools
 		
 		private var visibleDrawingRect:Rectangle;
 		
+		private var delayTimer:Timer;
+		private var dirtyFlag:Boolean;
+		private var lastTwoFingerEvent:TouchEvent;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -36,8 +41,21 @@ package com.shaunhusain.fingerPainting.tools
 			super(stage);
 			secondaryLayerOptions = new LayerOptionsPanel();
 			
+			delayTimer = new Timer(100);
+			delayTimer.addEventListener(TimerEvent.TIMER, updateTwoFingerChange);
+			delayTimer.start();
+			
 			secondaryLayerOptions.x = 100;
 			secondaryLayerOptions.y = 100;
+		}
+		
+		protected function updateTwoFingerChange(event:TimerEvent):void
+		{
+			if(lastTwoFingerEvent)
+			{
+				scaleRotateBitmap(lastTwoFingerEvent);
+				lastTwoFingerEvent = null
+			}
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -123,7 +141,7 @@ package com.shaunhusain.fingerPainting.tools
 		}
 		override protected function twoFingersMoving(event:TouchEvent):void
 		{
-			scaleRotateBitmap(event);
+			lastTwoFingerEvent = event;
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -131,19 +149,23 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		private function scaleRotateBitmap(event:TouchEvent):void
 		{
+			var point1:Point = ptsTracked[eventIds[0]];
+			var point2:Point = ptsTracked[eventIds[1]];
+			if(!point1 || !point2)
+				return;
 			if(!floatingLayer)
 			{
 				visibleDrawingRect = getVisibleBounds(layerM.currentLayer.bitmap);
-				initialScale = Point.distance(ptsTracked[eventIds[0]],ptsTracked[eventIds[1]]);
-				initialAngle = Math.atan2(ptsTracked[eventIds[0]].y - ptsTracked[eventIds[1]].y,	ptsTracked[eventIds[0]].x - ptsTracked[eventIds[1]].x);
+				initialScale = Point.distance(point1,point2);
+				initialAngle = Math.atan2(point1.y - point2.y,	point1.x - point2.x);
 				floatingLayer = layerM.currentLayer.bitmapData.clone();
 				floatingLayerMatrix = new Matrix();
 				layerM.currentLayer.bitmap.bitmapData = floatingLayer;
 			}
 			else
 			{
-				newAngle = Math.atan2(ptsTracked[eventIds[0]].y - ptsTracked[eventIds[1]].y,	ptsTracked[eventIds[0]].x - ptsTracked[eventIds[1]].x);
-				newScale = Point.distance(ptsTracked[eventIds[0]],ptsTracked[eventIds[1]]);
+				newAngle = Math.atan2(point1.y - point2.y,	point1.x - point2.x);
+				newScale = Point.distance(point1,point2);
 				
 				//Doing rotation around the visible part in the layer
 				//initially moving back and up to get the center at the

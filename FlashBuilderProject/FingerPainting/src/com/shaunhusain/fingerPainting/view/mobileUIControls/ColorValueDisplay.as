@@ -3,6 +3,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import com.eclecticdesignstudio.motion.Actuate;
 	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
+	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.model.color.ARGB;
 	import com.shaunhusain.fingerPainting.view.optionPanels.ColorConversionFunctions;
 	
@@ -25,6 +26,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		private var colorSample:Bitmap;
 		private var background:Sprite;
 		private var colorSampleTextFormat:TextFormat;
+		private var model:PaintModel = PaintModel.getInstance();
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -38,7 +40,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				background = new Sprite();
 				background.graphics.clear();
 				background.graphics.beginFill(0x000000, .8);
-				background.graphics.drawRect(0,0,150,150);
+				background.graphics.drawRect(0,0,150*model.dpiScale,150*model.dpiScale);
 				background.graphics.endFill();
 				addChild(background);
 			}
@@ -53,7 +55,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			{
 				colorSampleTextFormat = new TextFormat();
 				colorSampleTextFormat.color = 0xFFFFFF;
-				colorSampleTextFormat.size = 26;
+				colorSampleTextFormat.size = 26 * model.dpiScale;
 				
 				colorSampleText = new TextField();
 				colorSampleText.autoSize = TextFieldAutoSize.LEFT;
@@ -66,9 +68,9 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			if(!colorSample)
 			{
-				colorSample = new Bitmap(new BitmapData(50,50,false,color));
-				colorSample.x = 95;
-				colorSample.y = 15;
+				colorSample = new Bitmap(new BitmapData(50*model.dpiScale,50 * model.dpiScale,false,color));
+				colorSample.x = 95 * model.dpiScale;
+				colorSample.y = 15 * model.dpiScale;
 				colorSampleContainer.addChild(colorSample);
 			}
 			
@@ -105,11 +107,11 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			var thisMatrix:Matrix = colorSampleContainer.transform.matrix.clone();
 			thisMatrix.identity();
-			thisMatrix.tx -= 75;
-			thisMatrix.ty -= 75;
+			thisMatrix.tx -= 75 * model.dpiScale;
+			thisMatrix.ty -= 75 * model.dpiScale;
 			thisMatrix.rotate (angleRadians);
-			thisMatrix.tx += 75;
-			thisMatrix.ty += 75;
+			thisMatrix.tx += 75 * model.dpiScale;
+			thisMatrix.ty += 75 * model.dpiScale;
 			
 			colorSampleContainer.transform.matrix = thisMatrix;
 		}

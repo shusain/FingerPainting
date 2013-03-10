@@ -1,5 +1,6 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
+	import com.quasimondo.geom.ColorMatrix;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.model.color.ARGB;
 	import com.shaunhusain.fingerPainting.model.color.HSV;
@@ -12,6 +13,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.utils.Timer;
@@ -29,6 +31,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		
 		private var lightAndSatGradientSprite:Sprite;
 		private var lightAndSatGradient:Bitmap;
+		/*private var lightAndSatGradientReference:Bitmap;*/
 		private var selectedHueBar:Bitmap;
 		
 		private var selectedColorHBar:Bitmap;
@@ -46,6 +49,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		
 		private var updateHSVTimer:Timer;
 		
+		/*private var colorMatrix:ColorMatrix;
+		private var colorMatrixFilter:ColorMatrixFilter;*/
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -53,6 +58,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		public function ColorOptionsPanel()
 		{
 			super();
+			/*colorMatrix = new ColorMatrix();
+			colorMatrixFilter = new ColorMatrixFilter();*/
 			titleBackground.text = "Color\nPicker";
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -85,7 +92,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				
 				hueBarSprite.addEventListener(TouchEvent.TOUCH_MOVE, hueBarTouchMoveHandler);
 				addChild(hueBarSprite);
-				hueBarSprite.x = 100*model.dpiScale;
+				hueBarSprite.x = 50*model.dpiScale;
 				hueBarSprite.y = 140*model.dpiScale;
 				hueBarSprite.cacheAsBitmap = true;
 				
@@ -96,13 +103,14 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			if(!lightAndSatGradient)
 			{
-				lightAndSatGradient = new Bitmap(new BitmapData(90*model.dpiScale,90*model.dpiScale));
+				lightAndSatGradient = new Bitmap(new BitmapData(45*model.dpiScale,45*model.dpiScale));
+				/*lightAndSatGradientReference = new Bitmap(new BitmapData(45*model.dpiScale,45*model.dpiScale));*/
 				//lightAndSatGradient.cacheAsBitmap = true;
 				lightAndSatGradientSprite = new Sprite();
 				lightAndSatGradientSprite.addChild(lightAndSatGradient);
-				lightAndSatGradient.scaleX = lightAndSatGradient.scaleY = 4;
+				lightAndSatGradient.scaleX = lightAndSatGradient.scaleY = 8;
 				lightAndSatGradientSprite.y = 300 * model.dpiScale;
-				lightAndSatGradientSprite.x = 100 * model.dpiScale;
+				lightAndSatGradientSprite.x = 50 * model.dpiScale;
 				addChild(lightAndSatGradientSprite);
 				lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_BEGIN, lightAndSatGradientTouchBeginHandler);
 				lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_END, lightAndSatGradientTouchEndHandler);
@@ -112,7 +120,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				lightAndSatGradientSprite.addChild(selectedColorHBar);
 				
 				selectedColorVBar = new Bitmap(new BitmapData(2,360*model.dpiScale,false,0xff000000));
-				selectedColorVBar.x=359*model.dpiScale;
+				selectedColorVBar.x=Math.floor(360*model.dpiScale)-1;
 				selectedColorVBar.blendMode = BlendMode.INVERT;
 				lightAndSatGradientSprite.addChild(selectedColorVBar);
 			}
@@ -120,7 +128,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!colorValueDisplay)
 			{
 				colorValueDisplay = new ColorValueDisplay();
-				colorValueDisplay.x = 75*model.dpiScale;
+				colorValueDisplay.x = 12*model.dpiScale;
 				colorValueDisplay.y = _panelBackgroundBmp.height-colorValueDisplay.height;
 				addChild(colorValueDisplay);
 			}
@@ -135,7 +143,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			var curARGB:ARGB = ColorConversionFunctions.parseARGBuint(model.currentColor);
 			currentHSV = ColorConversionFunctions.RGBtoHSV(curARGB);
 			updateSelectionPositions();
-			
+			drawLightAndSatGradient();
 			lightSatRequiresUpdate = colorSampleRequiresUpdate = true;
 		}
 		protected function lightAndSatGradientTouchEndHandler(event:TouchEvent):void
@@ -204,25 +212,41 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		//--------------------------------------------------------------------------------
 		//				Helper functions
 		//--------------------------------------------------------------------------------
+		/*private function updateHue():void
+		{
+			//colorMatrix.reset();
+			//colorMatrix.adjustHue(selectedHueBar.x/model.dpiScale);
+			//colorMatrix.applyFilter(lightAndSatGradient.bitmapData);
+			//colorMatrixFilter.matrix = [colorMatrix];
+			//lightAndSatGradient.bitmapData.applyFilter(lightAndSatGradientReference.bitmapData, lightAndSatGradientReference.bitmapData.rect, new Point(), colorMatrix.filter);
+			//lightAndSatGradientSprite.filters = [new ColorMatrixFilter(colorMatrix)];
+			drawLightAndSatGradient();
+		}*/
 		private function drawLightAndSatGradient():void
 		{
 			lightAndSatGradient.bitmapData.lock();
-			for(var i:Number = 90*model.dpiScale; i >= 0; i--)
-				for(var j:Number= 90*model.dpiScale; j >= 0; j--)
-					lightAndSatGradient.bitmapData.setPixel32(i,90*model.dpiScale-j,ColorConversionFunctions.AHSVtoARGB(1,selectedHueBar.x/model.dpiScale,i/90/model.dpiScale,j/90/model.dpiScale));
+			
+			var preMultiScaling:Number = 45*model.dpiScale;
+			var hue:Number = selectedHueBar.x/model.dpiScale;
+			for(var i:Number = preMultiScaling; i >= 0; i--)
+			{
+				var saturation:Number = i/preMultiScaling;
+				for(var j:Number= preMultiScaling; j >= 0; j--)
+					lightAndSatGradient.bitmapData.setPixel32(i,preMultiScaling-j,ColorConversionFunctions.AHSVtoARGB(1,hue,saturation,j/preMultiScaling));				
+			}
 			lightAndSatGradient.bitmapData.unlock();
 		}
 		
 		private function updateColorSample():void
 		{
-			colorValueDisplay.color = model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x/4,selectedColorHBar.y/4);
+			colorValueDisplay.color = model.currentColor = lightAndSatGradient.bitmapData.getPixel32(selectedColorVBar.x/8,selectedColorHBar.y/8);
 		}
 		
 		private function updateSelectionPositions():void
 		{
 			selectedHueBar.x = currentHSV.hue*model.dpiScale;
-			selectedColorHBar.y = (1-currentHSV.value) * 360*model.dpiScale-1;
-			selectedColorVBar.x = currentHSV.saturation * 360*model.dpiScale-1;
+			selectedColorHBar.y = (1-currentHSV.value) * Math.floor(360*model.dpiScale)-1;
+			selectedColorVBar.x = currentHSV.saturation * Math.floor(360*model.dpiScale)-1;
 		}
 		
 	}

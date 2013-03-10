@@ -60,15 +60,18 @@ package com.shaunhusain.fingerPainting.view.managers
 			if(_currentlyShowing)
 				hidePanel();
 			
-			displayObject.alpha = 0;
 			addChild(displayObject);
 			
-			displayObject.x = stage.fullScreenWidth-displayObject.width-(FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale-FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale)+20;
-			displayObject.y = 115*model.dpiScale;
+			trace("Secondary panel width" + displayObject.width);
+			
+			displayObject.x = stage.fullScreenWidth-displayObject.width-(FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale-FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale);
+			
+			trace("diplayObject.x",displayObject.x)
+			displayObject.y = FingerPainting.TOOLBAR_OFFSET_FROM_TOP*model.dpiScale;
 			_currentlyShowing = displayObject;
 			isShowingPanel = true;
 			
-			Actuate.tween(displayObject, .5, {alpha:1}).autoVisible(false);
+			//Actuate.tween(displayObject, .5, {alpha:1}).autoVisible(false);
 		}
 		public function hidePanel():void
 		{
@@ -80,12 +83,13 @@ package com.shaunhusain.fingerPainting.view.managers
 			isShowingPanel = false;
 			_currentlyShowing = null;
 			
-			var ge:GenericActuator = Actuate.tween(_lastShown, .5, {alpha:0});
+			/*var ge:GenericActuator = Actuate.tween(_lastShown, .5, {alpha:0});
 			ge.autoVisible(false);
 			ge.onComplete(function():void
 			{
 				removeChild(_lastShown);
-			});
+			});*/
+			removeChild(_lastShown);
 		}
 	}
 }

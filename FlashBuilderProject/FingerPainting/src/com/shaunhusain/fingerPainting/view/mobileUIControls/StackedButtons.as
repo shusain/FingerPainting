@@ -4,6 +4,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import com.eclecticdesignstudio.motion.actuators.GenericActuator;
 	import com.shaunhusain.fingerPainting.events.AccBasedOrientationEvent;
 	import com.shaunhusain.fingerPainting.managers.AccelerometerManager;
+	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	
 	import flash.display.Bitmap;
@@ -24,6 +25,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		private var topButtonSprite:Sprite;
 		private var bottomButtonSprite:Sprite;
 		private var rotationContainer:Sprite;
+		private var model:PaintModel = PaintModel.getInstance();
 		
 		public function StackedButtons(topIcon:Bitmap, bottomIcon:Bitmap)
 		{
@@ -85,11 +87,11 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			var thisMatrix:Matrix = rotationContainer.transform.matrix.clone();
 			thisMatrix.identity();
-			thisMatrix.tx -= 88;
-			thisMatrix.ty -= 88;
+			thisMatrix.tx -= 88*model.dpiScale;
+			thisMatrix.ty -= 88*model.dpiScale;
 			thisMatrix.rotate (angleRadians);
-			thisMatrix.tx += 88;
-			thisMatrix.ty += 88;
+			thisMatrix.tx += 88*model.dpiScale;
+			thisMatrix.ty += 88*model.dpiScale;
 			
 			rotationContainer.transform.matrix = thisMatrix;
 		}

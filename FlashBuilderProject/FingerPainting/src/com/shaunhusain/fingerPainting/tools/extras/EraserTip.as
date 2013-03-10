@@ -26,13 +26,9 @@ package com.shaunhusain.fingerPainting.tools.extras
 			var tempMatrix:Matrix = new Matrix();
 			tempMatrix.createGradientBox(width,width,0);
 			temp.graphics.clear();
-			/*temp.graphics.beginFill(0x00FFFF);
-			temp.graphics.drawRect(0,0,width,width);
-			temp.graphics.drawCircle(width/2,width/2,width/2);
-			temp.graphics.endFill();*/
 			
 			temp.graphics.beginGradientFill(GradientType.RADIAL,[0x000000,0x000000],[1,hardness],[0,255],tempMatrix);
-			temp.graphics.drawCircle(width/2,width/2,width/2);
+			temp.graphics.drawCircle(halfWidth,halfWidth,halfWidth);
 			temp.graphics.endFill();
 			
 			brushBitmapData.draw(temp);
@@ -57,10 +53,15 @@ package com.shaunhusain.fingerPainting.tools.extras
 			}
 			else
 			{
-				point.x -= Math.floor(width/2);
-				point.y -= Math.floor(width/2);
+				point.x -= halfWidth;
+				point.y -= halfWidth;
 				
-				destinationBitmap.copyPixels(destinationBitmap,new Rectangle(point.x,point.y,width,width),point,brushBitmapData,new Point(0,0),false);
+				point.x = Math.floor(point.x);
+				point.y = Math.floor(point.y);
+				
+				var drawRect:Rectangle = new Rectangle(point.x,point.y,width,width);
+				
+				destinationBitmap.copyPixels(destinationBitmap, drawRect, point, brushBitmapData, new Point(0,0),false);
 			}
 			
 		}

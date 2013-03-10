@@ -75,8 +75,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			{
 				outerContainer = new Box();
 				outerContainer.gap = 10 * model.dpiScale;
-				outerContainer.x = 50;
-				outerContainer.y = 50;
+				outerContainer.x = 12 * model.dpiScale;
+				outerContainer.y = 12 * model.dpiScale;
 				addChild(outerContainer);
 			}
 			
@@ -116,7 +116,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!lowerLeftAreaContainer)
 			{
 				lowerLeftAreaContainer = new Box();
-				lowerLeftAreaContainer.gap = 40 * model.dpiScale;
+				lowerLeftAreaContainer.gap = 20 * model.dpiScale;
 				lowerLeftAreaContainer.direction = "horizontal"
 				outerContainer.addChild(lowerLeftAreaContainer);
 			}
@@ -124,8 +124,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!controlContainer)
 			{
 				controlContainer = new Box();
-				controlContainer.startPadding = 40 * model.dpiScale;
-				controlContainer.gap = 40 * model.dpiScale;
+				controlContainer.startPadding = 20 * model.dpiScale;
+				controlContainer.gap = 20 * model.dpiScale;
 				lowerLeftAreaContainer.addChild(controlContainer);
 			}
 			
@@ -165,7 +165,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			if(!exampleContainer)
 			{
 				exampleContainer = new Box();
-				exampleContainer.startPadding = 80 * model.dpiScale;
+				exampleContainer.startPadding = 40 * model.dpiScale;
 				lowerLeftAreaContainer.addChild(exampleContainer);
 			}
 			
@@ -263,16 +263,16 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			brushSizeExampleData.draw(tempSprite);
 			
 			var gapBetweenChanges:Number = 20;
-			var halfExampleHeight:Number = (brushSizeExample.height-150)/2;
+			var halfExampleHeight:Number = (brushSizeExample.height-150*model.dpiScale)/2;
 			var leftOverDistance:Number = 0;
 			var i:int;
 			for(i=0; i < halfExampleHeight; i+=gapBetweenChanges)
 			{
-				leftOverDistance = brushTip.stampMaskLine(new Point(75,75+i), new Point(75,75+i+gapBetweenChanges), leftOverDistance, .3+.4*i/halfExampleHeight,brushSizeExampleData);
+				leftOverDistance = brushTip.stampMaskLine(new Point(75*model.dpiScale,75*model.dpiScale+i), new Point(75*model.dpiScale,75*model.dpiScale+i+gapBetweenChanges), leftOverDistance, .3+.4*i/halfExampleHeight,brushSizeExampleData);
 			}
 			for(; i < halfExampleHeight*2; i+=gapBetweenChanges)
 			{
-				leftOverDistance = brushTip.stampMaskLine(new Point(75,75+i), new Point(75,75+i+gapBetweenChanges), leftOverDistance, .7-.4*(i-halfExampleHeight)/halfExampleHeight,brushSizeExampleData);
+				leftOverDistance = brushTip.stampMaskLine(new Point(75*model.dpiScale,75*model.dpiScale+i), new Point(75*model.dpiScale,75*model.dpiScale+i+gapBetweenChanges), leftOverDistance, .7-.4*(i-halfExampleHeight)/halfExampleHeight,brushSizeExampleData);
 			}
 		}
 		

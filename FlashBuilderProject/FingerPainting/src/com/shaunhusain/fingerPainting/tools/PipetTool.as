@@ -62,12 +62,12 @@ package com.shaunhusain.fingerPainting.tools
 		{
 			pipetSprite.graphics.clear();
 			pipetSprite.graphics.beginFill(0x808080);
-			pipetSprite.graphics.drawCircle(0,0,120);
-			pipetSprite.graphics.drawCircle(0,0,100);
+			pipetSprite.graphics.drawCircle(0,0,120*model.dpiScale);
+			pipetSprite.graphics.drawCircle(0,0,100*model.dpiScale);
 			pipetSprite.graphics.endFill();
 			pipetSprite.graphics.beginFill(model.currentColor);
-			pipetSprite.graphics.drawCircle(0,0,100);
-			pipetSprite.graphics.drawCircle(0,0,80);
+			pipetSprite.graphics.drawCircle(0,0,100*model.dpiScale);
+			pipetSprite.graphics.drawCircle(0,0,80*model.dpiScale);
 			pipetSprite.graphics.endFill();
 			
 		}

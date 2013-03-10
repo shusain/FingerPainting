@@ -52,15 +52,15 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				titleTextFormat.size = 36 * model.dpiScale;
 				titleTextFormat.font = "robotoBlack";
 				titleBackground = new CircleButton(_titleBackgroundBmp.bitmapData,_titleBackgroundBmp.bitmapData, titleTextFormat);
-				titleBackground.x = 375*model.dpiScale;
-				titleBackground.y = _panelBackgroundBmp.height-titleBackground.height;
+				titleBackground.x = _panelBackgroundBmp.width-titleBackground.width-12*model.dpiScale;
+				titleBackground.y = _panelBackgroundBmp.height-titleBackground.height-12*model.dpiScale;
 				addChild(titleBackground);
 			}
 			if(!closeButton)
 			{
 				closeButton = new RotatingIconButton(_closeButtonBmp,null,null,true);
 				closeButton.addEventListener("instantaneousButtonClicked", closeButtonHandler);
-				closeButton.x = 448*model.dpiScale;
+				closeButton.x = _panelBackgroundBmp.width - closeButton.width - 12*model.dpiScale;
 				closeButton.y = 12*model.dpiScale;
 				addChild(closeButton);
 			}

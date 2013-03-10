@@ -129,6 +129,11 @@ package com.shaunhusain.fingerPainting.tools.extras
 			_width = value;
 			generateBrush();
 		}
+		
+		public function get halfWidth():Number
+		{
+			return Math.floor(width/2);
+		}
 
 		
 		private var _hardness:Number=.2;
