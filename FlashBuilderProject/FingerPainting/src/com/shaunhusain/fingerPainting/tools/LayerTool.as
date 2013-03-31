@@ -41,7 +41,7 @@ package com.shaunhusain.fingerPainting.tools
 			super(stage);
 			secondaryLayerOptions = new LayerOptionsPanel();
 			
-			delayTimer = new Timer(100);
+			delayTimer = new Timer(33);
 			delayTimer.addEventListener(TimerEvent.TIMER, updateTwoFingerChange);
 			delayTimer.start();
 			

@@ -142,9 +142,11 @@ package com.shaunhusain.fingerPainting.view.managers
 				hidePanel();
 			
 			addChild(displayObject);
+			_currentlyShowing = displayObject;
+			
 			displayObject.x = stage.fullScreenWidth/2-displayObject.width/2;
 			displayObject.y = stage.fullScreenHeight;
-			_currentlyShowing = displayObject;
+			
 			isShowingPanel = true;
 			
 			Actuate.tween(displayObject, .5, {y:stage.fullScreenHeight-displayObject.height-20});

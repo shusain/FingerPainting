@@ -10,13 +10,22 @@ package
 	import com.shaunhusain.fingerPainting.view.managers.LayerManager;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
 	
+	import flash.desktop.NativeApplication;
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
+	import flash.events.InvokeEvent;
 	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	/**
@@ -52,6 +61,51 @@ package
 		public function FingerPainting()
 		{
 			super();
+			
+			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvoke);
+			var file_ani:File;
+			var fs_ani:FileStream;
+			
+			
+			function onInvoke(event:InvokeEvent):void
+			{
+				
+				trace("FileOpenExample.onInvoke(event)");
+				if(event.arguments && event.arguments.length)
+				{
+					
+					var contentUri:String = event.arguments[0] as String;
+					trace("Content:", contentUri);
+					file_ani = new File(contentUri);
+					fs_ani = new FileStream();
+					fs_ani.openAsync(file_ani, FileMode.READ);
+					fs_ani.addEventListener(Event.COMPLETE, onFileComplete, false, 0, true);
+				}
+			}
+			
+			function onFileComplete(event:Event):void
+			{
+				var fs:FileStream = event.target as FileStream;
+				
+				var ba:ByteArray = new ByteArray();
+				fs.readBytes(ba,0,fs.bytesAvailable);
+				
+				var loader:Loader = new Loader();
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, completedLoadingFile);
+				loader.loadBytes(ba);
+				
+				
+				/*var fileContent:String = fs.readUTFBytes(fs.bytesAvailable);
+				trace(fileContent);
+				file_ani = null;
+				fs_ani = null;*/
+			}
+			
+			function completedLoadingFile(event:Event):void
+			{
+				var loaderInfo:LoaderInfo = event.target as LoaderInfo;
+				layerManager.addLayer(loaderInfo.loader);
+			}
 			
 			//Setup stage scaling mode to not scale
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -122,7 +176,7 @@ package
 		{
 			if(!model.menuMoving /*&& !SecondaryPanelManager.getIntance().isShowingPanel*/)
 			{
-				if(event.target == stage)
+				/*if(event.target == stage)
 					switch(event.type)
 					{
 						case TouchEvent.TOUCH_BEGIN:
@@ -134,7 +188,7 @@ package
 						case TouchEvent.TOUCH_END:
 							showToolbarTimer.start();
 							break;
-					}
+					}*/
 				model.currentTool.takeAction(event);
 			}
 		}

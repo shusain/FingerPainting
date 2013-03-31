@@ -92,6 +92,7 @@ package com.shaunhusain.fingerPainting.view
 		//--------------------------------------------------------------------------------
 		private function handleAddedToStage(event:Event):void
 		{
+			trace("Toolbar added");
 			var dpi:Number = Capabilities.screenDPI;
 			var dpiScale:Number = model.dpiScale;
 			//Setting up the background scale9Grid and scaling

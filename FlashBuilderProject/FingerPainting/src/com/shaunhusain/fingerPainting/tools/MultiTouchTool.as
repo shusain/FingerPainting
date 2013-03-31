@@ -19,6 +19,8 @@ package com.shaunhusain.fingerPainting.tools
 		
 		public function takeAction(event:TouchEvent=null):void
 		{
+			if(event.target!=stage)
+				return;
 			switch(event.type)
 			{
 				case TouchEvent.TOUCH_BEGIN:
