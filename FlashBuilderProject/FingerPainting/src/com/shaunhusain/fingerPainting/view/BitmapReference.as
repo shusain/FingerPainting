@@ -57,7 +57,7 @@ package com.shaunhusain.fingerPainting.view
 		private function loadFolderOfBitmaps(folderName:String):void
 		{
 			var file:File = File.applicationDirectory.resolvePath(folderName);
-			loadingDialog.text = "Loading UI" + folderName;
+			loadingDialog.text = "Loading UI from: " + folderName;
 			
 			filesToLoad = file.getDirectoryListing();
 			totalToLoad = filesToLoad.length;
@@ -69,7 +69,7 @@ package com.shaunhusain.fingerPainting.view
 		{
 			var fileInDir:File = filesToLoad.shift();
 			totalLoaded++;
-			if(fileInDir.name == "Thumbs.db" || fileInDir.name == "Phone")
+			if(fileInDir.extension!="png")
 			{
 				iterativeLoading();
 				return;

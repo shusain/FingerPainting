@@ -1,6 +1,5 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
-	import com.quasimondo.geom.ColorMatrix;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
 	import com.shaunhusain.fingerPainting.model.color.ARGB;
 	import com.shaunhusain.fingerPainting.model.color.HSV;
@@ -13,7 +12,6 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
-	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.utils.Timer;
@@ -114,6 +112,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 				addChild(lightAndSatGradientSprite);
 				lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_BEGIN, lightAndSatGradientTouchBeginHandler);
 				lightAndSatGradientSprite.addEventListener(TouchEvent.TOUCH_END, lightAndSatGradientTouchEndHandler);
+				addEventListener(TouchEvent.TOUCH_END, lightAndSatGradientTouchEndHandler, false, int.MAX_VALUE);
 				
 				selectedColorHBar = new Bitmap(new BitmapData(360*model.dpiScale,2,false,0xff000000));
 				selectedColorHBar.blendMode = BlendMode.INVERT;

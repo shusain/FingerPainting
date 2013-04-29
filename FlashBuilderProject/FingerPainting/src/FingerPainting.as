@@ -9,12 +9,17 @@ package
 	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
 	import com.shaunhusain.fingerPainting.view.managers.LayerManager;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
+	import com.shaunhusain.layerdImageVOs.LayeredFileVO;
+	import com.shaunhusain.openRaster.OpenRasterReader;
+	import com.shaunhusain.openRaster.OpenRasterWriter;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
+	import flash.display.StageAspectRatio;
+	import flash.display.StageOrientation;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
@@ -48,7 +53,7 @@ package
 		
 		private var secondaryPanelManagerSprite:SecondaryPanelManager = SecondaryPanelManager.getIntance();
 		
-		private var helpManager:HelpManager = HelpManager.getIntance();
+		private var helpManager:HelpManager;
 		
 		private var layerManager:LayerManager = LayerManager.getIntance();
 		
@@ -63,6 +68,9 @@ package
 			super();
 			
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvoke);
+			NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, autoSave);
+			
+			
 			var file_ani:File;
 			var fs_ani:FileStream;
 			
@@ -77,9 +85,22 @@ package
 					var contentUri:String = event.arguments[0] as String;
 					trace("Content:", contentUri);
 					file_ani = new File(contentUri);
-					fs_ani = new FileStream();
-					fs_ani.openAsync(file_ani, FileMode.READ);
-					fs_ani.addEventListener(Event.COMPLETE, onFileComplete, false, 0, true);
+					if(file_ani.extension == "png")
+					{
+						fs_ani = new FileStream();
+						fs_ani.openAsync(file_ani, FileMode.READ);
+						fs_ani.addEventListener(Event.COMPLETE, onFileComplete, false, 0, true);
+					}
+					else if(file_ani.extension == "ora")
+					{
+						var fs:FileStream = new FileStream();
+						fs.open(file_ani,FileMode.READ);
+						
+						var ba:ByteArray = new ByteArray();
+						fs.readBytes(ba);
+						
+						OpenRasterReader.getInstance().read(ba, handleLoadedFile);
+					}
 				}
 			}
 			
@@ -122,6 +143,32 @@ package
 			BitmapReference.getInstance().loadBitmaps(kickstartApplication, loadingDialog);
 		}
 		
+		private function handleLoadedFile(file:LayeredFileVO):void
+		{
+			layerManager.layers = file.layers;
+		}
+		
+		protected function autoSave(event:Event):void
+		{
+			if(model.untouched)
+				return;
+			var fs:FileStream = new FileStream();
+			
+			fs.open(File.userDirectory.resolvePath("Digital Doodler/autoSave.ora"),FileMode.WRITE);
+			
+			var file:LayeredFileVO = new LayeredFileVO();
+			
+			file.width = stage.fullScreenWidth;
+			file.height = stage.fullScreenHeight;
+			
+			file.layers = layerManager.layers;
+			
+			var openRaster:OpenRasterWriter = OpenRasterWriter.getInstance();
+			var ba:ByteArray = openRaster.write(file);
+			ba.position = 0;
+			fs.writeBytes(ba);
+		}
+		
 		private function kickstartApplication():void
 		{
 			removeChild(loadingDialog);
@@ -153,18 +200,22 @@ package
 			
 			addChild(secondaryPanelManagerSprite);
 			
+			helpManager = HelpManager.getIntance()
 			addChild(helpManager);
 			
 			var startupMessages:Array = [
 				new QueuedMessage(2000,"Welcome to Digital Doodler."),
-				new QueuedMessage(5000,"Click the triangle to open or close the toolbar."),
-				new QueuedMessage(7000,"Select a tool by clicking the icon for it in the toolbar.")]
+				new QueuedMessage(5000,"Touch the triangle to open or close the toolbar."),
+				new QueuedMessage(7000,"Select a tool by touching the icon for it in the toolbar.")]
 			helpManager.showMessage(startupMessages);
 			
 			showToolbarTimer = new Timer(1000,1);
 			showToolbarTimer.addEventListener(TimerEvent.TIMER_COMPLETE, showToolbar);
 			
 			undoManager.addHistoryElement(layerManager.currentLayerBitmap);
+			
+			/*stage.setOrientation(StageOrientation.ROTATED_LEFT);
+			stage.setAspectRatio(StageAspectRatio.LANDSCAPE);*/
 		}
 		private function showToolbar(event:TimerEvent):void
 		{
@@ -189,6 +240,7 @@ package
 							showToolbarTimer.start();
 							break;
 					}*/
+				model.untouched = false;
 				model.currentTool.takeAction(event);
 			}
 		}

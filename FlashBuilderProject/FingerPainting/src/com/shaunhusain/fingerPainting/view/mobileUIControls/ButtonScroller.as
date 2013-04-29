@@ -163,7 +163,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			
 			for( var i:int = 0; i <menuButtons.length; i++)
 			{
-				var ab:RotatingIconButton = menuButtons[i];
+				var ab:DisplayObject = menuButtons[i];
 				ab.y = i*(ab.height+gap);
 				menuButtonSprite.addChild(ab);
 			}

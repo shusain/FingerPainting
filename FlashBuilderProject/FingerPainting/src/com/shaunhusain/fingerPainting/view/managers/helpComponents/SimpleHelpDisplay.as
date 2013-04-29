@@ -1,7 +1,7 @@
 package com.shaunhusain.fingerPainting.view.managers.helpComponents
 {
 	import com.shaunhusain.fingerPainting.view.Box;
-	import com.shaunhusain.fingerPainting.view.mobileUIControls.CircleButton;
+	import com.shaunhusain.fingerPainting.view.GenericBitmappedButton;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -15,7 +15,7 @@ package com.shaunhusain.fingerPainting.view.managers.helpComponents
 		private var textField:TextField;
 		private var textFormat:TextFormat;
 		private var container:Box;
-		private var button:CircleButton;
+		private var button:GenericBitmappedButton;
 		
 		private var _showDismissButton:Boolean=true;
 
@@ -77,7 +77,7 @@ package com.shaunhusain.fingerPainting.view.managers.helpComponents
 			
 			if(!button)
 			{
-				button = new CircleButton();
+				button = new GenericBitmappedButton();
 				button.text = "Dismiss";
 				button.addEventListener("circleButtonClicked", dismissHelpHandler);
 				if(showDismissButton)

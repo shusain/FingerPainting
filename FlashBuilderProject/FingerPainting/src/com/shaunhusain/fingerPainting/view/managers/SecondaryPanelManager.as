@@ -60,14 +60,14 @@ package com.shaunhusain.fingerPainting.view.managers
 			if(_currentlyShowing)
 				hidePanel();
 			
+			displayObject.x = stage.fullScreenWidth-displayObject.width-(FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale-FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale);
+			displayObject.y = FingerPainting.TOOLBAR_OFFSET_FROM_TOP*model.dpiScale;
+			
 			addChild(displayObject);
 			
 			trace("Secondary panel width" + displayObject.width);
-			
-			displayObject.x = stage.fullScreenWidth-displayObject.width-(FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT*model.dpiScale-FingerPainting.TOOLBAR_OFFSET_FROM_RIGHT_OPEN*model.dpiScale);
-			
 			trace("diplayObject.x",displayObject.x)
-			displayObject.y = FingerPainting.TOOLBAR_OFFSET_FROM_TOP*model.dpiScale;
+			
 			_currentlyShowing = displayObject;
 			isShowingPanel = true;
 			

@@ -21,8 +21,8 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		private var br:BitmapReference = BitmapReference.getInstance();
 		
 		public var _transparencyFillBmp:Bitmap = br.getBitmapByName("transparencyFill.png");
-		public var _circleBackgroundBmp:Bitmap = br.getBitmapByName("circleBackground.png");
-		public var _circleBackgroundSelectedBmp:Bitmap = br.getBitmapByName("circleBackgroundSelected.png");
+		public var _circleBackgroundBmp:Bitmap = br.getBitmapByName("buttonDeselected.png");
+		public var _circleBackgroundSelectedBmp:Bitmap = br.getBitmapByName("buttonSelected.png");
 		public var _pressureSensitiveBmp:Bitmap = br.getBitmapByName("pressureSensitive.png");
 		public var _xMirrorBmp:Bitmap = br.getBitmapByName("xMirror.png");
 		public var _yMirrorBmp:Bitmap = br.getBitmapByName("yMirror.png");
@@ -55,7 +55,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		{
 			super();
 			
-			titleBackground.text = "Brush\nOptions";
+			titleText = "Brush\nOptions";
 			this.brushTip = brushTip;
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);

@@ -1,8 +1,6 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
-	import com.shaunhusain.fingerPainting.model.Layer;
 	import com.shaunhusain.fingerPainting.model.PaintModel;
-	import com.shaunhusain.fingerPainting.view.BitmapReference;
 	import com.shaunhusain.fingerPainting.view.Box;
 	import com.shaunhusain.fingerPainting.view.managers.LayerManager;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.ButtonScroller;
@@ -10,6 +8,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.RotatingIconButton;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.StackedButtons;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.TouchSlider;
+	import com.shaunhusain.layerdImageVOs.LayerVO;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -224,7 +223,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		
 		protected function layerClickedHandler(event:Event):void
 		{
-			layerManager.currentLayer = (event.target as RotatingIconButton).data as Layer;
+			layerManager.currentLayer = (event.target as RotatingIconButton).data as LayerVO;
 			
 			opacitySlider.currentValue = layerManager.currentLayer.bitmap.alpha;
 			visibilityButton.isSelected = layerManager.currentLayer.bitmap.visible;
@@ -272,8 +271,9 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		{
 			var tempArray:Array = [];
 			var curIndex:int = 0;
-			for each(var layer:Layer in layerManager.layers)
+			for each(var layer:LayerVO in layerManager.layers)
 			{
+				layer.updateThumbnail();
 				var selected:Boolean = (curIndex++==layerManager.currentLayerIndex);
 				
 				tempArray.unshift(new RotatingIconButton(layer.thumbnailBitmap,null,layer,false,selected,false,layerBackground,selectedLayerBackground));

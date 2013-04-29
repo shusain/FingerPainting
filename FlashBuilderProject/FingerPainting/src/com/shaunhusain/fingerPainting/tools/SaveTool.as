@@ -1,7 +1,7 @@
 package com.shaunhusain.fingerPainting.tools 
 {
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
-	import com.shaunhusain.fingerPainting.view.optionPanels.SavePanel;
+	import com.shaunhusain.fingerPainting.view.optionPanels.FileOptionsPanel;
 	
 	import flash.display.Stage;
 	import flash.events.TouchEvent;
@@ -12,7 +12,7 @@ package com.shaunhusain.fingerPainting.tools
 		//				Variables
 		//--------------------------------------------------------------------------------
 		private var secondaryPanelManager:SecondaryPanelManager = SecondaryPanelManager.getIntance();
-		private var savePanel:SavePanel;
+		private var savePanel:FileOptionsPanel;
 		
 		//--------------------------------------------------------------------------------
 		//				Constructor
@@ -20,7 +20,7 @@ package com.shaunhusain.fingerPainting.tools
 		public function SaveTool(stage:Stage)
 		{
 			super(stage);
-			savePanel = new SavePanel();
+			savePanel = new FileOptionsPanel();
 			savePanel.x = 100;
 			savePanel.y = 100;
 		}

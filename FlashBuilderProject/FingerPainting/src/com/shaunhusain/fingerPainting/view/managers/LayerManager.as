@@ -1,7 +1,7 @@
 package com.shaunhusain.fingerPainting.view.managers
 {
 	import com.shaunhusain.fingerPainting.managers.UndoManager;
-	import com.shaunhusain.fingerPainting.model.Layer;
+	import com.shaunhusain.layerdImageVOs.LayerVO;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -24,7 +24,6 @@ package com.shaunhusain.fingerPainting.view.managers
 		//--------------------------------------------------------------------------------
 		public function LayerManager(se:SingletonEnforcer)
 		{
-			layers = new Vector.<Layer>();
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			mouseChildren = false;
 			mouseEnabled = false;
@@ -57,24 +56,33 @@ package com.shaunhusain.fingerPainting.view.managers
 		}
 		
 		/**
-		 * The currently selected @see Layer
+		 * The currently selected @see LayerVO
 		 */
-		public function get currentLayer():Layer
+		public function get currentLayer():LayerVO
 		{
 			return layers[currentLayerIndex];
 		}
-		public function set currentLayer(layer:Layer):void
+		public function set currentLayer(layer:LayerVO):void
 		{
 			_currentLayerIndex = layers.indexOf(layer);
 		}
 		
-		private var _layers:Vector.<Layer>;
-		public function get layers():Vector.<Layer>
+		private var _layers:Vector.<LayerVO>;
+		public function get layers():Vector.<LayerVO>
 		{
 			return _layers;
 		}
-		public function set layers(value:Vector.<Layer>):void
+		public function set layers(value:Vector.<LayerVO>):void
 		{
+			removeChildren();
+			
+			for each(var layer:LayerVO in value)
+			{
+				layer.updateThumbnail();
+				var bitmapCanvas:Bitmap = layer.bitmap;
+				addChild(bitmapCanvas);
+			}
+			
 			_layers = value;
 		}
 		
@@ -102,12 +110,13 @@ package com.shaunhusain.fingerPainting.view.managers
 				}
 				bitmapData.draw(drawable,scaleMatrix);
 			}
-			var layer:Layer = new Layer(bitmapData,bitmapCanvas);
+			var layer:LayerVO = new LayerVO(bitmapData,bitmapCanvas);
 			addChild(bitmapCanvas);
 			
 			layers.push(layer);
 			currentLayerIndex = layers.length-1;
 		}
+		
 		public function removeLayer():void
 		{
 			if(currentLayerIndex>=layers.length||currentLayerIndex<0)
@@ -128,22 +137,24 @@ package com.shaunhusain.fingerPainting.view.managers
 			removedLayer = null;
 			System.gc();
 		}
+		
 		public function moveLayerUp():void
 		{
 			if(currentLayerIndex<layers.length - 1)
 			{
-				var temp:Layer = layers[currentLayerIndex];
+				var temp:LayerVO = layers[currentLayerIndex];
 				layers[currentLayerIndex] = layers[currentLayerIndex+1];
 				layers[currentLayerIndex+1] = temp;
 				addChildAt(removeChildAt(currentLayerIndex),currentLayerIndex+1);
 				currentLayerIndex++;
 			}
 		}
+		
 		public function moveLayerDown():void
 		{
 			if(currentLayerIndex>0)
 			{
-				var temp:Layer = layers[currentLayerIndex];
+				var temp:LayerVO = layers[currentLayerIndex];
 				layers[currentLayerIndex] = layers[currentLayerIndex-1];
 				layers[currentLayerIndex-1] = temp;
 				addChildAt(removeChildAt(currentLayerIndex),currentLayerIndex-1);
@@ -152,8 +163,8 @@ package com.shaunhusain.fingerPainting.view.managers
 		}
 		public function getFlattenedBitmapData():BitmapData
 		{
-			var temp:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight);
-			for each(var layer:Layer in layers)
+			var temp:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight,true, 0x00000000);
+			for each(var layer:LayerVO in layers)
 			{
 				if(layer.bitmap.visible)
 					temp.draw(layer.bitmapData);
@@ -161,21 +172,29 @@ package com.shaunhusain.fingerPainting.view.managers
 			return temp;
 		}
 		
+		public function buildDefaultLayers():void
+		{
+			layers = new Vector.<LayerVO>();
+			
+			var bitmapData:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0xFFFFFFFF);
+			var bitmapCanvas:Bitmap = new Bitmap(bitmapData);
+			addChild(bitmapCanvas);
+			layers.push(new LayerVO(bitmapData,bitmapCanvas));
+			
+			bitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0x00000000);
+			bitmapCanvas = new Bitmap(bitmapData);
+			addChild(bitmapCanvas);
+			layers.push(new LayerVO(bitmapData,bitmapCanvas));
+			
+			currentLayerIndex=1;
+		}
+		
 		//--------------------------------------------------------------------------------
 		//				Handlers
 		//--------------------------------------------------------------------------------
 		public function addedToStageHandler(event:Event):void
 		{
-			var bitmapData:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0xFFFFFFFF);
-			var bitmapCanvas:Bitmap = new Bitmap(bitmapData);
-			addChild(bitmapCanvas);
-			layers.push(new Layer(bitmapData,bitmapCanvas));
-			
-			bitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0x00000000);
-			bitmapCanvas = new Bitmap(bitmapData);
-			addChild(bitmapCanvas);
-			layers.push(new Layer(bitmapData,bitmapCanvas));
-			
+			buildDefaultLayers();	
 		}
 	}
 }

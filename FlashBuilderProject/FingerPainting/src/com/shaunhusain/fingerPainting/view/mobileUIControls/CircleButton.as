@@ -7,7 +7,6 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
@@ -16,6 +15,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextLineMetrics;
+	import flash.utils.setTimeout;
 	
 	public class CircleButton extends Sprite
 	{
@@ -24,6 +24,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//--------------------------------------------------------------------------------
 		private var model:PaintModel = PaintModel.getInstance();
 		private var buttonBackground:Bitmap;
+		private var toggle:Boolean;
 		
 		private var textField:TextField;
 		private var textContainer:Sprite;
@@ -35,7 +36,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//--------------------------------------------------------------------------------
 		//				Constructor
 		//--------------------------------------------------------------------------------
-		public function CircleButton(backgroundBitmap:BitmapData = null, backgroundBitmapSelected:BitmapData = null, textFormat:TextFormat = null)
+		public function CircleButton(backgroundBitmap:BitmapData = null, backgroundBitmapSelected:BitmapData = null, textFormat:TextFormat = null, toggle:Boolean = true)
 		{
 			super();
 			
@@ -43,6 +44,8 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 				this.backgroundBitmap = backgroundBitmap;
 			if(backgroundBitmapSelected)
 				this.backgroundBitmapSelected = backgroundBitmapSelected;
+			
+			this.toggle = toggle;
 			
 			drawBackground();
 			
@@ -61,11 +64,12 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			{
 				this.textFormat = new TextFormat();
 				this.textFormat.size = 24 * model.dpiScale;
+				this.textFormat.color = 0xFFFFFF;
 				this.textFormat.font = "myFont";
 			}
 			
 			textField = new TextField();
-			textField.blendMode = BlendMode.INVERT;
+			//textField.blendMode = BlendMode.INVERT;
 			textField.defaultTextFormat = this.textFormat;
 			textField.autoSize = TextFieldAutoSize.CENTER;
 			textField.mouseEnabled = false;
@@ -126,6 +130,10 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			textField.x = -maxWidth/2;
 			textField.y = -textLineMetrics.height*textField.numLines/2;
 		}
+		public function get text():String
+		{
+			return _text;
+		}
 		
 		private var _selected:Boolean;
 		public function set selected(value:Boolean):void
@@ -133,6 +141,7 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 			if(_selected == value)
 				return;
 			_selected=value;
+			
 			buttonBackground.bitmapData = selected?backgroundBitmapSelected:backgroundBitmap;
 		}
 		public function get selected():Boolean
@@ -202,7 +211,18 @@ package com.shaunhusain.fingerPainting.view.mobileUIControls
 		//--------------------------------------------------------------------------------
 		private function handleButtonTapped(event:TouchEvent):void
 		{
-			selected = !selected;
+			if(toggle)
+				selected = !selected;
+			else
+			{
+				selected = true;
+				setTimeout(function():void
+				{
+					selected=false;
+				},200);
+			}
+			
+			
 			event.stopImmediatePropagation();
 			dispatchEvent(new Event("circleButtonClicked"));
 		}

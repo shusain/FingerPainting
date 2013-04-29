@@ -19,6 +19,7 @@ package com.shaunhusain.fingerPainting.model
 		
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
+		public var untouched:Boolean = true;
 		
 		public function get dpiScale():Number
 		{

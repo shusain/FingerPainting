@@ -1,6 +1,5 @@
 package com.shaunhusain.fingerPainting.events
 {
-	import flash.events.AccelerometerEvent;
 	import flash.events.Event;
 	
 	/**
