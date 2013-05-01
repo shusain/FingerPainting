@@ -1,6 +1,17 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+*.as3 text
+.project text
+.actionscriptProperties text
+.flexLibProperties text
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.mp3 binary
+*.swc binary
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union
