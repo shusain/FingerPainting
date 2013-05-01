@@ -36,9 +36,7 @@
       <libraryPathEntry kind="1" linkType="1" path="lib"/>
       <libraryPathEntry kind="3" linkType="1" path="/PSDValueObjects/bin/PSDValueObjects.swc" useDefaultLinkType="false"/>
     </libraryPath>
-    <sourceAttachmentPath>
-      <sourceAttachmentPathEntry kind="3" linkType="1" path="C:/Users/Shaun/Adobe Flash Builder 4.7/OpenRasterWriter/lib/fzip.swc" sourcepath="C:/Users/Shaun/Documents/GitHub/fzip/src" useDefaultLinkType="false"/>
-    </sourceAttachmentPath>
+    <sourceAttachmentPath/>
   </compiler>
   <applications>
     <application path="OpenRasterWriter.as"/>

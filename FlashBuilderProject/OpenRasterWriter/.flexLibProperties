@@ -3,6 +3,7 @@
   <includeClasses>
     <classEntry path="com.shaunhusain.openRaster.OpenRasterWriter"/>
     <classEntry path="com.shaunhusain.openRaster.OpenRasterReader"/>
+    <classEntry path="com.adobe.images.PNGEncoder"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

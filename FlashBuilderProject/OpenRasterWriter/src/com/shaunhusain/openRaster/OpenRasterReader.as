@@ -9,6 +9,7 @@ package com.shaunhusain.openRaster
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
 	import deng.fzip.FZip;
@@ -97,9 +98,13 @@ package com.shaunhusain.openRaster
 			var bmp:Bitmap = new Bitmap(bd);
 			bmp.alpha = _alpha;
 			
-			bd.draw(loaderInfo.content,offsetMatrix);
+			bd.copyPixels((loaderInfo.content as Bitmap).bitmapData,bd.rect,new Point(_offsetX,_offsetY));
+			//bd.draw(loaderInfo.content,offsetMatrix);
 			_layeredFileVO.layers.push(new LayerVO(bd,bmp));
 			loadLayers();
+			
+			loaderInfo = null;
+			(loaderInfo.content as Bitmap).bitmapData.dispose();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.shaunhusain.openRaster
 {
+	import com.adobe.images.PNGEncoder;
 	import com.shaunhusain.layerdImageVOs.LayeredFileVO;
 	
 	import flash.display.BitmapData;
@@ -45,7 +46,9 @@ package com.shaunhusain.openRaster
 				trace("copied pixels");
 				
 				var layerSrc:String = "data/layer"+i+".png";
-				fzip.addFile(layerSrc, PNGEncoder2.encode(tempBD));
+				
+				
+				fzip.addFile(layerSrc, PNGEncoder.encode(tempBD));
 				
 				tempBD.dispose();
 				
