@@ -22,7 +22,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 		private var textInput:NativeText;
 		private var saveButton:GenericBitmappedButton;
 		private var layerManager:LayerManager = LayerManager.getIntance();
-		private var chosenOption:String = "Gallery";
+		private var chosenOption:String = "ORA";
 		
 		private var wrapperBox:Box = new Box();
 		
@@ -37,7 +37,9 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			wrapperBox.direction = "horizontal";
 			wrapperBox.addChild(buildButton("Gallery", saveOptionChanged));
-			wrapperBox.addChild(buildButton("ORA", saveOptionChanged));
+			var oraButton:GenericBitmappedButton = buildButton("ORA", saveOptionChanged);
+			oraButton.selected = true;
+			wrapperBox.addChild(oraButton);
 			wrapperBox.addChild(buildButton("PNG", saveOptionChanged));
 			
 			
@@ -45,12 +47,12 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			
 			graphics.beginFill(0xcccccc);
-			graphics.drawRect(0,0,400,1000);
+			graphics.drawRect(0,0,400*model.dpiScale,1000*model.dpiScale);
 			
 			textInput = new NativeText();
 			textInput.borderThickness = 1;
-			textInput.width = 300;
-			textInput.fontSize = 36;
+			textInput.width = 300*model.dpiScale;
+			textInput.fontSize = 36*model.dpiScale;
 			
 			textInput.x = 20 * model.dpiScale;
 			textInput.y = 140 * model.dpiScale;
@@ -61,7 +63,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			}
 			);
 			
-			saveButton = new GenericBitmappedButton();
+			saveButton = new GenericBitmappedButton(null,false);
 			saveButton.addEventListener("circleButtonClicked", saveButtonHandler);
 			saveButton.text = "Save";
 			saveButton.x = 20 * model.dpiScale;

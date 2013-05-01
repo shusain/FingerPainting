@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <actionScriptProperties analytics="false" mainApplicationPath="FingerPainting.as" projectUUID="79596123-5ce4-4874-9367-cbcc278832d9" version="11">
-  <compiler additionalCompilerArguments="-locale en_US" advancedTelemetry="true" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="true" useDebugRSLSwfs="true" useFlashSDK="true" verifyDigests="true" warn="true">
+  <compiler additionalCompilerArguments="-locale en_US -define=CONFIG::android,false" advancedTelemetry="true" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="true" useDebugRSLSwfs="true" useFlashSDK="true" verifyDigests="true" warn="true">
     <compilerSourcePath>
-      <compilerSourcePathEntry kind="1" linkType="1" path="C:/Users/Shaun/Documents/GitHub/Hi-ReS-Stats/src"/>
-      <compilerSourcePathEntry kind="1" linkType="1" path="C:/Users/Shaun/Documents/GitHub/Hi-ReS-Stats/assets"/>
       <compilerSourcePathEntry kind="1" linkType="1" path="resources"/>
     </compilerSourcePath>
     <libraryPath defaultLinkType="0">
@@ -40,7 +38,7 @@
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="lib"/>
       <libraryPathEntry kind="3" linkType="1" path="/OpenRasterWriter/bin/OpenRasterWriter.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="5" linkType="2" path="C:/Users/Shaun/Downloads/AndroidShareANE-master/AndroidShareANE-master/extension/ShareANE.ane"/>
+      <libraryPathEntry kind="5" linkType="2" path="/Users/shaunhusain/Documents/Git/FingerPainting/Extra Resources/ShareANE.ane"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
@@ -54,14 +52,11 @@
   <buildCSSFiles/>
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
-    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="C:/Users/Shaun/Downloads/AppStore_Digital_Doodler.mobileprovision" releasePackageType="ipa-ad-hoc">
-      <airSettings airCertificatePath="C:/Users/Shaun/Downloads/iphone_dev.p12" airTimestamp="true" anePathSet="true" version="1">
+    <buildTarget buildTargetName="device" iosSettingsVersion="2" isCurrent="true" platformId="com.adobe.flexide.multiplatform.ios.platform" provisioningFile="/Users/shaunhusain/Desktop/AdHoc_DigiDoodler.mobileprovision" releasePackageType="ipa-ad-hoc">
+      <airSettings airCertificatePath="/Users/shaunhusain/Documents/selfsignedcert.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes>
-          <pathEntry path="net"/>
-          <pathEntry path="Thumbs.db"/>
           <pathEntry path="Roboto-Medium.ttf"/>
           <pathEntry path="SourceCodePro-Bold.ttf"/>
-          <pathEntry path="hires_stats.png"/>
         </airExcludes>
         <anePaths/>
         <newLaunchParams/>
@@ -73,6 +68,7 @@
       <actionScriptSettings version="1"/>
     </buildTarget>
     <buildTarget buildTargetName="default" isCurrent="false" platformId="com.qnx.flexide.multiplatform.qnx.platform">
+      <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.qnx.flexide.multiplatform.qnx.platform" reducedSizePackaging="false" version="2"/>
       <airSettings airCertificatePath="" airTimestamp="true" anePathSet="false" version="1">
         <airExcludes/>
         <anePaths/>
@@ -81,33 +77,30 @@
         <newPackagingParams/>
         <modifiedPackagingParams/>
       </airSettings>
-      <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.qnx.flexide.multiplatform.qnx.platform" reducedSizePackaging="false" version="2"/>
       <actionScriptSettings version="1"/>
     </buildTarget>
     <buildTarget airDownloadURL="https://market.android.com/details?id=com.adobe.air" androidSettingsVersion="2" buildTargetName="device" isCurrent="true" platformId="com.adobe.flexide.multiplatform.android.platform">
-      <airSettings airCertificatePath="C:/Users/Shaun/Documents/selfsign.p12" airTimestamp="true" anePathSet="true" version="1">
+      <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.android.platform" reducedSizePackaging="false" version="2"/>
+      <airSettings airCertificatePath="/Users/shaunhusain/Documents/selfsignedcert.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes>
+          <pathEntry path="Default.png"/>
+          <pathEntry path="Default@2x.png"/>
+          <pathEntry path="images320iPhone"/>
           <pathEntry path="Roboto-Medium.ttf"/>
           <pathEntry path="SourceCodePro-Bold.ttf"/>
-          <pathEntry path="Default@2x.png"/>
-          <pathEntry path="Default.png"/>
-          <pathEntry path="net"/>
-          <pathEntry path="images320iPhone"/>
-          <pathEntry path="hires_stats.png"/>
-          <pathEntry path="Thumbs.db"/>
         </airExcludes>
         <anePaths>
-          <anePathEntry path="C:/Users/Shaun/Downloads/AndroidShareANE-master/AndroidShareANE-master/extension/ShareANE.ane"/>
+          <anePathEntry path="/Users/shaunhusain/Documents/Git/FingerPainting/Extra Resources/ShareANE.ane"/>
         </anePaths>
         <newLaunchParams/>
         <modifiedLaunchParams/>
         <newPackagingParams/>
         <modifiedPackagingParams/>
       </airSettings>
-      <multiPlatformSettings enabled="true" hideAneLibSymbols="0" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.android.platform" reducedSizePackaging="false" version="2"/>
       <actionScriptSettings version="1"/>
     </buildTarget>
     <buildTarget buildTargetName="default" isCurrent="false" platformId="default">
+      <multiPlatformSettings enabled="false" hideAneLibSymbols="0" includePlatformLibs="false" platformID="default" reducedSizePackaging="false" version="2"/>
       <airSettings airCertificatePath="" airTimestamp="true" anePathSet="false" version="1">
         <airExcludes/>
         <anePaths/>
@@ -116,7 +109,6 @@
         <newPackagingParams/>
         <modifiedPackagingParams/>
       </airSettings>
-      <multiPlatformSettings enabled="false" hideAneLibSymbols="0" includePlatformLibs="false" platformID="default" reducedSizePackaging="false" version="2"/>
       <actionScriptSettings version="1"/>
     </buildTarget>
   </buildTargets>

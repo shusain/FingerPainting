@@ -27,6 +27,7 @@ package com.shaunhusain.fingerPainting.view.managers
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			mouseChildren = false;
 			mouseEnabled = false;
+			scaleX=scaleY = 2;
 		}
 		
 		//--------------------------------------------------------------------------------
@@ -74,16 +75,24 @@ package com.shaunhusain.fingerPainting.view.managers
 		}
 		public function set layers(value:Vector.<LayerVO>):void
 		{
+			var layer:LayerVO;
+			
+			for each(layer in _layers)
+			{
+				layer.bitmapData.dispose();
+				layer.thumbnailBitmapData.dispose();
+			}
+			
 			removeChildren();
 			
-			for each(var layer:LayerVO in value)
+			for each(layer in value)
 			{
 				layer.updateThumbnail();
-				var bitmapCanvas:Bitmap = layer.bitmap;
-				addChild(bitmapCanvas);
+				addChild(layer.bitmap);
 			}
 			
 			_layers = value;
+			currentLayerIndex = layers.length-1;
 		}
 		
 		public function get currentLayerBitmap():BitmapData
@@ -176,12 +185,12 @@ package com.shaunhusain.fingerPainting.view.managers
 		{
 			layers = new Vector.<LayerVO>();
 			
-			var bitmapData:BitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0xFFFFFFFF);
+			var bitmapData:BitmapData = new BitmapData(stage.fullScreenWidth/2,stage.fullScreenHeight/2, true,0xFFFFFFFF);
 			var bitmapCanvas:Bitmap = new Bitmap(bitmapData);
 			addChild(bitmapCanvas);
 			layers.push(new LayerVO(bitmapData,bitmapCanvas));
 			
-			bitmapData = new BitmapData(stage.fullScreenWidth,stage.fullScreenHeight, true,0x00000000);
+			bitmapData = new BitmapData(stage.fullScreenWidth/2,stage.fullScreenHeight/2, true,0x00000000);
 			bitmapCanvas = new Bitmap(bitmapData);
 			addChild(bitmapCanvas);
 			layers.push(new LayerVO(bitmapData,bitmapCanvas));

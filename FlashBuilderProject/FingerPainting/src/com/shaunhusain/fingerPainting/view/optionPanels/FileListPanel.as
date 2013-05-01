@@ -1,5 +1,6 @@
 package com.shaunhusain.fingerPainting.view.optionPanels
 {
+	import com.shaunhusain.fingerPainting.view.managers.HelpManager;
 	import com.shaunhusain.fingerPainting.view.managers.LayerManager;
 	import com.shaunhusain.fingerPainting.view.managers.SecondaryPanelManager;
 	import com.shaunhusain.fingerPainting.view.mobileUIControls.ButtonScroller;
@@ -9,6 +10,7 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -25,13 +27,11 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			titleBackground.text = "File\nList";
 			
 			fileListScroller = new ButtonScroller();
-			fileListScroller.buttonMaskHeight = backgroundSprite.height-24*model.dpiScale;
-			fileListScroller.buttonMaskWidth = backgroundSprite.width - titleBackground.width;
+			fileListScroller.buttonMaskHeight = backgroundSprite.height - 200*model.dpiScale;
+			fileListScroller.buttonMaskWidth = backgroundSprite.width - 50*model.dpiScale;
 			fileListScroller.addEventListener("fileChosen", fileChosenHandler);
-			
+			fileListScroller.y = 75*model.dpiScale;
 			addChild(fileListScroller);
-			
-			
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -72,16 +72,22 @@ package com.shaunhusain.fingerPainting.view.optionPanels
 			
 			var ba:ByteArray = new ByteArray();
 			fs.readBytes(ba,0,fs.bytesAvailable);
+			ba.position = 0;
 			
 			var loader:Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, completedLoadingFile);
+			loader.contentLoaderInfo.addEventListener(Event.INIT, completedLoadingFile);
+			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, handleErrorLoading);
 			loader.loadBytes(ba);
-			
-			
+						
 			/*var fileContent:String = fs.readUTFBytes(fs.bytesAvailable);
 			trace(fileContent);
 			file_ani = null;
 			fs_ani = null;*/
+		}
+		
+		protected function handleErrorLoading(event:IOErrorEvent):void
+		{
+			HelpManager.getIntance().showMessage("There was an error loading the file");
 		}
 		private function completedLoadingFile(event:Event):void
 		{

@@ -20,6 +20,7 @@ package com.shaunhusain.fingerPainting.model
 		public var menuMoving:Boolean;
 		public var toolbarMoving:Boolean;
 		public var untouched:Boolean = true;
+		public var disableNextAutosave:Boolean=false;
 		
 		public function get dpiScale():Number
 		{

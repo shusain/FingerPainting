@@ -37,16 +37,18 @@ package com.shaunhusain.fingerPainting.view
 		public function loadBitmaps(callback:Function, loadingDialog:LoadingDialog):void
 		{
 			var curDPI:String;
-			
-			if(Capabilities.screenDPI<=160)
+			var screenDPI:Number = Capabilities.screenDPI;
+			if(screenDPI<240 && screenDPI > 0)
 				curDPI = "160";
-			else if(Capabilities.screenDPI<=240)
+			else if(screenDPI>=240 && screenDPI<320)
 				curDPI = "240";
 			else if(Capabilities.screenResolutionY>1000)
 				curDPI = "320";
 			else
 				curDPI = "320iPhone";
 			var folderName:String = "images" + curDPI + "/";
+			
+			trace("Loading",folderName);
 			
 			this.loadingDialog = loadingDialog;
 			

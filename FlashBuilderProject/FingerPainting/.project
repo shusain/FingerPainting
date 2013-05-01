@@ -22,16 +22,4 @@
 		<nature>com.adobe.flexbuilder.project.apollonature</nature>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>[source path] assets</name>
-			<type>2</type>
-			<location>C:/Users/Shaun/Documents/GitHub/Hi-ReS-Stats/assets</location>
-		</link>
-		<link>
-			<name>[source path] src</name>
-			<type>2</type>
-			<location>C:/Users/Shaun/Documents/GitHub/Hi-ReS-Stats/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>

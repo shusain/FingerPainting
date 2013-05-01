@@ -35,6 +35,8 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
+			model.disableNextAutosave = true;
+			
 			if( CameraRoll.supportsBrowseForImage )
 			{
 				log( "Browsing for image..." );

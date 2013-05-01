@@ -152,6 +152,11 @@ package
 		{
 			if(model.untouched)
 				return;
+			if(model.disableNextAutosave)
+			{
+				model.disableNextAutosave = false;
+				return;
+			}
 			var fs:FileStream = new FileStream();
 			
 			fs.open(File.userDirectory.resolvePath("Digital Doodler/autoSave.ora"),FileMode.WRITE);

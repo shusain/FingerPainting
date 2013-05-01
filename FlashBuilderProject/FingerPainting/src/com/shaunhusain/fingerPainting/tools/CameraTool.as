@@ -1,6 +1,5 @@
 package com.shaunhusain.fingerPainting.tools 
 {
-	import flash.desktop.NativeApplication;
 	import flash.display.Loader;
 	import flash.display.Stage;
 	import flash.events.ErrorEvent;
@@ -8,7 +7,6 @@ package com.shaunhusain.fingerPainting.tools
 	import flash.events.IOErrorEvent;
 	import flash.events.MediaEvent;
 	import flash.events.TouchEvent;
-	import flash.media.CameraRoll;
 	import flash.media.CameraUI;
 	import flash.media.MediaPromise;
 	import flash.media.MediaType;
@@ -46,6 +44,7 @@ package com.shaunhusain.fingerPainting.tools
 		//--------------------------------------------------------------------------------
 		public function takeAction(event:TouchEvent=null):void
 		{
+			model.disableNextAutosave = true;
 			deviceCameraApp.launch( MediaType.IMAGE );
 		}
 		
